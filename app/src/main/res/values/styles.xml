@@ -3,17 +3,39 @@
     <!-- Base application theme. -->
     <style name="Theme.InventoryPilot" parent="Theme.MaterialComponents.Light.DarkActionBar.Bridge">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="android:statusBarColor">@color/purple_700</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="android:statusBarColor">@color/colorSecondary</item>
         <item name="android:windowActionModeOverlay">true</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="android:windowNoTitle">true</item>
     </style>
 
     <style name="Theme.InventoryPilot.Splash" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="windowSplashScreenBackground">@color/colorWhite</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_screen_icon</item>
         <item name="postSplashScreenTheme">@style/Theme.InventoryPilot</item>
+    </style>
+
+    <!-- Style for TextInputEditText -->
+    <style name="CustomTextInputEditText" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxBackgroundColor">@color/colorBackground</item>
+        <item name="boxStrokeColor">@color/colorPrimary</item>
+        <item name="errorTextColor">@color/colorError</item>
+        <item name="helperTextTextColor">@color/colorPrimary</item>
+        <item name="hintTextColor">@color/colorPrimary</item>
+        <item name="startIconTint">@color/colorPrimary</item>
+        <item name="endIconTint">@color/colorPrimary</item>
+<!--        <item name="errorIconDrawable">@drawable/ic_error</item>-->
+    </style>
+
+    <!-- Style for Button -->
+    <style name="CustomButton" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/button_background_selector</item>
+        <item name="android:textColor">@color/buttonTextColor</item>
+        <item name="height">45dp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:elevation">4dp</item>
+        <item name="android:padding">16dp</item>
     </style>
 
 </resources>
