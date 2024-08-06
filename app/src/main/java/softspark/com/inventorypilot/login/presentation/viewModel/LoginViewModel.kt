@@ -6,14 +6,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import softspark.com.inventorypilot.login.domain.entities.PasswordResult
 import softspark.com.inventorypilot.login.domain.useCases.authentication.LoginUseCase
 import softspark.com.inventorypilot.login.domain.useCases.authentication.ValidateEmailUseCase
+import softspark.com.inventorypilot.login.domain.useCases.authentication.ValidatePasswordUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
-    private val validateEmailUseCase: ValidateEmailUseCase
+    private val validateEmailUseCase: ValidateEmailUseCase,
+    private val validatePasswordUseCase: ValidatePasswordUseCase
 ) : ViewModel() {
 
     private val _loginData = MutableLiveData<Result<Unit>>()
@@ -21,6 +24,9 @@ class LoginViewModel @Inject constructor(
 
     private val _emailValidateData = MutableLiveData<Boolean>()
     val emailValidateData: LiveData<Boolean> get() = _emailValidateData
+
+    private val _passwordValidateData = MutableLiveData<PasswordResult>()
+    val passwordValidateData: LiveData<PasswordResult> get() = _passwordValidateData
 
     fun login(email: String, password: String) {
         viewModelScope.launch {
@@ -30,10 +36,17 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun validateEmail(email: String) {
+    fun validateEmailAndPassword(email: String, password: String) {
         viewModelScope.launch {
             validateEmailUseCase(email).collect { isValid ->
-                _emailValidateData.value = isValid
+                if (isValid) {
+                    _emailValidateData.value = true
+                    validatePasswordUseCase(password).collect { passwordResult ->
+                        _passwordValidateData.value = passwordResult
+                    }
+                } else {
+                    _emailValidateData.value = false
+                }
             }
         }
     }

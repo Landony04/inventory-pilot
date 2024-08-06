@@ -4,7 +4,9 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
+import softspark.com.inventorypilot.R
 import softspark.com.inventorypilot.databinding.LoginActivityBinding
+import softspark.com.inventorypilot.login.domain.entities.PasswordResult
 import softspark.com.inventorypilot.login.presentation.viewModel.LoginViewModel
 
 @AndroidEntryPoint
@@ -25,18 +27,27 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun doLogin() {
-        val password = binding.passwordEditText.text.toString()
-        loginViewModel.login(getEmail(), password)
+        loginViewModel.login(getEmail(), getPassword())
     }
 
     private fun getEmail(): String = binding.emailEditText.text.toString()
 
+    private fun getPassword(): String = binding.passwordEditText.text.toString()
+
     private fun handleIsValidEmail(isValid: Boolean) {
         if (isValid) {
-            println("Email valido")
+            binding.emailInputLayout.error = null
         } else {
-            binding.emailInputLayout.error = "Ingresa un email valido"
-            println("Email invalido")
+            binding.emailInputLayout.error = getString(R.string.text_error_invalid_email)
+        }
+    }
+
+    private fun handleIsValidPassword(passwordResult: PasswordResult) {
+        when (passwordResult) {
+            is PasswordResult.Invalid -> binding.passwordEditText.error =
+                passwordResult.errorMessage
+
+            PasswordResult.Valid -> doLogin()
         }
     }
 
@@ -50,17 +61,19 @@ class LoginActivity : AppCompatActivity() {
 
     private fun initListeners() = with(binding) {
         loginButton.setOnClickListener {
-            validateEmail()
+            validateEmailAndPassword()
         }
-    }
-
-    private fun validateEmail() {
-        loginViewModel.validateEmail(getEmail())
     }
 
     private fun setUpObservers() {
         loginViewModel.loginData.observe(this, ::handleLogin)
 
         loginViewModel.emailValidateData.observe(this, ::handleIsValidEmail)
+
+        loginViewModel.passwordValidateData.observe(this, ::handleIsValidPassword)
+    }
+
+    private fun validateEmailAndPassword() {
+        loginViewModel.validateEmailAndPassword(getEmail(), getPassword())
     }
 }
