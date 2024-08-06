@@ -24,26 +24,43 @@ class LoginActivity : AppCompatActivity() {
         setUpObservers()
     }
 
+    private fun doLogin() {
+        val password = binding.passwordEditText.text.toString()
+        loginViewModel.login(getEmail(), password)
+    }
+
+    private fun getEmail(): String = binding.emailEditText.text.toString()
+
+    private fun handleIsValidEmail(isValid: Boolean) {
+        if (isValid) {
+            println("Email valido")
+        } else {
+            binding.emailInputLayout.error = "Ingresa un email valido"
+            println("Email invalido")
+        }
+    }
+
+    private fun handleLogin(result: Result<Unit>) {
+        if (result.isSuccess) {
+            println("Hemos hecho login")
+        } else {
+            println("Fallo el login")
+        }
+    }
+
     private fun initListeners() = with(binding) {
         loginButton.setOnClickListener {
-            doLogin()
+            validateEmail()
         }
+    }
+
+    private fun validateEmail() {
+        loginViewModel.validateEmail(getEmail())
     }
 
     private fun setUpObservers() {
-        loginViewModel.loginData.observe(this) { result ->
-            if (result.isSuccess) {
-                println("Hemos hecho login")
-            } else {
-                println("Fallo el login")
-            }
-        }
-    }
+        loginViewModel.loginData.observe(this, ::handleLogin)
 
-    private fun doLogin() {
-        val email = binding.emailEditText.text.toString()
-        val password = binding.passwordEditText.text.toString()
-
-        loginViewModel.login(email, password)
+        loginViewModel.emailValidateData.observe(this, ::handleIsValidEmail)
     }
 }
