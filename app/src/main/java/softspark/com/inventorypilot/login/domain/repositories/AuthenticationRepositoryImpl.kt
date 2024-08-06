@@ -12,9 +12,9 @@ class AuthenticationRepositoryImpl : AuthenticationRepository {
         return flow {
             try {
                 Firebase.auth.signInWithEmailAndPassword(email, password).await()
-                Result.success(Unit)
+                emit(Result.success(Unit))
             } catch (exception: Exception) {
-                Result.failure(exception)
+                emit(Result.failure(exception))
             }
         }
     }
