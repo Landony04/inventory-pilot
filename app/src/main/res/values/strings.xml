@@ -3,4 +3,9 @@
     <string name="hint_add_email">Ingresa tu correo</string>
     <string name="hint_add_password">Ingresa tu contraseña</string>
     <string name="text_button_login">Ingresar</string>
+    <string name="text_error_invalid_email">Ingresa un email valido</string>
+    <string name="text_error_size_password">La contraseña debe tener al menos 8 caracteres.</string>
+    <string name="text_error_lower_case_password">La contraseña tiene que tener al menos 1 caracter en minuscula.</string>
+    <string name="text_error_upper_case_password">La contraseña tiene que tener al menos 1 caracter en mayuscula.</string>
+    <string name="text_error_digit_password">La contraseña tiene que tener al menos 1 número.</string>
 </resources>
