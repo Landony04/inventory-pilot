@@ -1,15 +1,20 @@
 package softspark.com.inventorypilot.splash
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import dagger.hilt.android.AndroidEntryPoint
 import softspark.com.inventorypilot.databinding.MainActivityBinding
-import softspark.com.inventorypilot.login.presentation.ui.LoginActivity
+import softspark.com.inventorypilot.navigation.Navigator
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: MainActivityBinding
+
+    @Inject
+    lateinit var navigator: Navigator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
@@ -24,8 +29,11 @@ class MainActivity : AppCompatActivity() {
             false
         }
 
+        navigateToLogin()
+    }
+
+    private fun navigateToLogin() {
         // Navegar a la siguiente actividad después de la pantalla de bienvenida
-        startActivity(Intent(this, LoginActivity::class.java))
-        finish()
+        navigator.navigateToLogin()
     }
 }
