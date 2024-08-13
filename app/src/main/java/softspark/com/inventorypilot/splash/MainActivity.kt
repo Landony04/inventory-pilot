@@ -1,11 +1,13 @@
 package softspark.com.inventorypilot.splash
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import dagger.hilt.android.AndroidEntryPoint
 import softspark.com.inventorypilot.databinding.MainActivityBinding
 import softspark.com.inventorypilot.navigation.Navigator
+import softspark.com.inventorypilot.splash.presentation.viewModel.MainViewModel
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -16,6 +18,8 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var navigator: Navigator
 
+    private val mainViewModel: MainViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
@@ -23,17 +27,31 @@ class MainActivity : AppCompatActivity() {
         binding = MainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        splashScreen.setKeepOnScreenCondition {
-            // Aquí puedes agregar condiciones para mantener la pantalla de bienvenida visible
-            // Por ejemplo, esperar la inicialización de datos
-            false
-        }
+        setUpObservers()
 
-        navigateToLogin()
+        splashScreen.setKeepOnScreenCondition { true }
+
+        validateUserId()
     }
 
-    private fun navigateToLogin() {
-        // Navegar a la siguiente actividad después de la pantalla de bienvenida
-        navigator.navigateToLogin()
+    private fun setUpObservers() {
+        mainViewModel.userIdData.observe(this) { userId ->
+            navigateToLoginOrHome(userId)
+        }
+    }
+
+    private fun navigateToLoginOrHome(userId: String?) {
+        if (userId != null) {
+            // Navigate to home
+            navigator.navigateToHome()
+        } else {
+            // Navigate to login
+            navigator.navigateToLogin()
+        }
+        finish()
+    }
+
+    private fun validateUserId() {
+        mainViewModel.getUserId()
     }
 }

@@ -1,6 +1,7 @@
 package softspark.com.inventorypilot.home.presentation.ui.home
 
 import android.os.Bundle
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
@@ -19,6 +20,7 @@ class HomeActivity : AppCompatActivity() {
         setContentView(homeBinding.root)
 
         initBottomNavBar()
+        initListener()
     }
 
     private fun initBottomNavBar() {
@@ -28,5 +30,11 @@ class HomeActivity : AppCompatActivity() {
 
         // Configurar el BottomNavigationView con NavController
         NavigationUI.setupWithNavController(homeBinding.bottomNavigation, navController)
+    }
+
+    private fun initListener() {
+        onBackPressedDispatcher.addCallback(this) {
+            finish()
+        }
     }
 }
