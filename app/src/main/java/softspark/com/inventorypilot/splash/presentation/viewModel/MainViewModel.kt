@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import softspark.com.inventorypilot.splash.domain.useCases.GetUserIdUseCase
 import javax.inject.Inject
@@ -20,7 +19,6 @@ class MainViewModel @Inject constructor(
 
     fun getUserId() {
         viewModelScope.launch {
-//            delay(200L)
             getUserIdUseCase().collect { userId ->
                 _userIdData.value = userId
             }
