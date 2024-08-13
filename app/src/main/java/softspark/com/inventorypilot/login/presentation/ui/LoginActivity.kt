@@ -8,11 +8,16 @@ import softspark.com.inventorypilot.R
 import softspark.com.inventorypilot.databinding.LoginActivityBinding
 import softspark.com.inventorypilot.login.domain.entities.PasswordResult
 import softspark.com.inventorypilot.login.presentation.viewModel.LoginViewModel
+import softspark.com.inventorypilot.navigation.Navigator
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: LoginActivityBinding
+
+    @Inject
+    lateinit var navigator: Navigator
 
     private val loginViewModel: LoginViewModel by viewModels()
 
@@ -53,7 +58,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun handleLogin(result: Result<Unit>) {
         if (result.isSuccess) {
-            println("Hemos hecho login")
+            navigator.navigateToHome()
         } else {
             println("Fallo el login")
         }
