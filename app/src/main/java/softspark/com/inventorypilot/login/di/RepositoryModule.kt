@@ -1,5 +1,6 @@
 package softspark.com.inventorypilot.login.di
 
+import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -8,6 +9,7 @@ import softspark.com.inventorypilot.login.data.matcher.EmailMatcherImpl
 import softspark.com.inventorypilot.login.data.repositories.AuthenticationRepository
 import softspark.com.inventorypilot.login.domain.matcher.EmailMatcher
 import softspark.com.inventorypilot.login.domain.repositories.AuthenticationRepositoryImpl
+import softspark.com.inventorypilot.login.remote.LoginApi
 import javax.inject.Singleton
 
 @Module
@@ -16,7 +18,11 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideAuthenticationRepository(): AuthenticationRepository = AuthenticationRepositoryImpl()
+    fun provideAuthenticationRepository(
+        firebaseAuth: FirebaseAuth,
+        loginApi: LoginApi
+    ): AuthenticationRepository =
+        AuthenticationRepositoryImpl(firebaseAuth, loginApi)
 
     @Provides
     @Singleton

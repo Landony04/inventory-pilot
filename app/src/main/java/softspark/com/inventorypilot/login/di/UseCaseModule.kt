@@ -9,6 +9,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
 import softspark.com.inventorypilot.login.data.repositories.AuthenticationRepository
 import softspark.com.inventorypilot.login.domain.matcher.EmailMatcher
+import softspark.com.inventorypilot.login.domain.useCases.authentication.GetUserProfileUseCase
+import softspark.com.inventorypilot.login.domain.useCases.authentication.GetUserProfileUseCaseImpl
 import softspark.com.inventorypilot.login.domain.useCases.authentication.LoginUseCase
 import softspark.com.inventorypilot.login.domain.useCases.authentication.LoginUseCaseImpl
 import softspark.com.inventorypilot.login.domain.useCases.authentication.ValidateEmailUseCase
@@ -19,6 +21,12 @@ import softspark.com.inventorypilot.login.domain.useCases.authentication.Validat
 @Module
 @InstallIn(ViewModelComponent::class)
 object UseCaseModule {
+
+    @ViewModelScoped
+    @Provides
+    fun provideGetUserProfileUseCase(
+        authenticationRepository: AuthenticationRepository
+    ): GetUserProfileUseCase = GetUserProfileUseCaseImpl(authenticationRepository)
 
     @ViewModelScoped
     @Provides
