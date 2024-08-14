@@ -77,6 +77,11 @@ dependencies {
     implementation(libs.androidx.navigation.ui.ktx)
     ksp(libs.hilt.android.compiler)
 
+    //Retrofit
+    implementation(libs.retrofit)
+    implementation(libs.converter.moshi)
+    implementation(libs.logging.interceptor)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
