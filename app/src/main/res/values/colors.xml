@@ -33,4 +33,6 @@
     <color name="buttonBackgroundColor">#4CAF50</color> <!-- Green -->
     <color name="buttonBackgroundColorPressed">#388E3C</color> <!-- Dark Green -->
     <color name="buttonBorderColor">#388E3C</color> <!-- Dark Green -->
+
+    <color name="layoutBackground">#E0E0E0</color>
 </resources>
