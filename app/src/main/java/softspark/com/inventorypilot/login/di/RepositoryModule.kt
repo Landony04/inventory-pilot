@@ -6,6 +6,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import softspark.com.inventorypilot.common.data.local.dao.UserProfileDao
+import softspark.com.inventorypilot.common.data.util.DispatcherProvider
 import softspark.com.inventorypilot.login.data.matcher.EmailMatcherImpl
 import softspark.com.inventorypilot.login.data.repositories.AuthenticationRepository
 import softspark.com.inventorypilot.login.domain.matcher.EmailMatcher
@@ -21,10 +22,11 @@ object RepositoryModule {
     @Singleton
     fun provideAuthenticationRepository(
         dao: UserProfileDao,
+        dispatcherProvider: DispatcherProvider,
         firebaseAuth: FirebaseAuth,
         loginApi: LoginApi
     ): AuthenticationRepository =
-        AuthenticationRepositoryImpl(dao, firebaseAuth, loginApi)
+        AuthenticationRepositoryImpl(dao, dispatcherProvider, firebaseAuth, loginApi)
 
     @Provides
     @Singleton
