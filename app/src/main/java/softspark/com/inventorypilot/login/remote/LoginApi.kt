@@ -10,9 +10,9 @@ interface LoginApi {
         const val BASE_URL = "https://inventory-pilot-default-rtdb.firebaseio.com/"
     }
 
-    @GET("businesses/users.json")
+    @GET("businesses/business_info_id_1/users.json")
     suspend fun getUserProfile(): UserProfileResponse
 
-    @PATCH("businesses/users.json")
+    @PATCH("businesses/business_info_id_1/users.json")
     suspend fun insertUser(userProfileDto: UserProfileDto)
 }

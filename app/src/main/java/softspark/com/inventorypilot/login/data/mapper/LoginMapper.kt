@@ -1,5 +1,6 @@
 package softspark.com.inventorypilot.login.data.mapper
 
+import softspark.com.inventorypilot.common.data.local.entity.UserProfileEntity
 import softspark.com.inventorypilot.login.domain.models.UserProfile
 import softspark.com.inventorypilot.login.remote.dto.UserProfileResponse
 
@@ -13,8 +14,17 @@ fun UserProfileResponse.toDomain(email: String): UserProfile {
             email = dto.email,
             firstName = dto.firstName,
             lastName = dto.lastName,
-            role = dto.role,
-            uid = dto.uid
+            role = dto.role
         )
     }.first { it.email == email }
+}
+
+fun UserProfile.toEntity(): UserProfileEntity {
+    return UserProfileEntity(
+        id = id,
+        email = email,
+        firstName = firstName,
+        lastName = lastName,
+        role = role
+    )
 }
