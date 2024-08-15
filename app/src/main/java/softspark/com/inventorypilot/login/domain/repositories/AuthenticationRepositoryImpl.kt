@@ -26,6 +26,7 @@ class AuthenticationRepositoryImpl @Inject constructor(
         flow<Result<UserProfile>> {
             val userProfile = loginApi.getUserProfile().toDomain(email)
             dao.insertUserProfile(userProfile.toEntity())
+            emit(Result.Success(data = userProfile))
         }.catch {
             emit(Result.Error(it))
         }.flowOn(dispatchers.io())

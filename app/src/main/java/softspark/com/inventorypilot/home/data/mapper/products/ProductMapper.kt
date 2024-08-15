@@ -1,9 +1,10 @@
 package softspark.com.inventorypilot.home.data.mapper.products
 
+import softspark.com.inventorypilot.home.data.local.entity.products.ProductCategoryEntity
 import softspark.com.inventorypilot.home.domain.models.products.ProductCategory
 import softspark.com.inventorypilot.home.remote.dto.products.ProductCategoryResponse
 
-fun ProductCategoryResponse.toDomain(): ArrayList<ProductCategory> {
+fun ProductCategoryResponse.toDomain(): List<ProductCategory> {
     return entries.map {
         val id = it.key
         val dto = it.value
@@ -12,5 +13,15 @@ fun ProductCategoryResponse.toDomain(): ArrayList<ProductCategory> {
             id = id,
             name = dto.name
         )
-    }.toMutableList() as ArrayList
+    }
 }
+
+fun ProductCategoryEntity.toDomain(): ProductCategory = ProductCategory(
+    id = id,
+    name = name
+)
+
+fun ProductCategory.toEntity(): ProductCategoryEntity = ProductCategoryEntity(
+    id = id,
+    name = name
+)

@@ -7,19 +7,12 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import softspark.com.inventorypilot.common.data.util.DefaultDispatcherProvider
-import softspark.com.inventorypilot.common.data.util.DispatcherProvider
 import softspark.com.inventorypilot.home.remote.ProductsApi
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object HomeNetworkModule {
-
-    @Provides
-    fun provideDispatcherProvider(): DispatcherProvider {
-        return DefaultDispatcherProvider()
-    }
 
     @Singleton
     @Provides
