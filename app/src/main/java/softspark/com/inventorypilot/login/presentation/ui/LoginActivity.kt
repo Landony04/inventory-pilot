@@ -5,8 +5,10 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
 import softspark.com.inventorypilot.R
+import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.databinding.LoginActivityBinding
 import softspark.com.inventorypilot.login.domain.entities.PasswordResult
+import softspark.com.inventorypilot.login.domain.models.UserProfile
 import softspark.com.inventorypilot.login.presentation.viewModel.LoginViewModel
 import softspark.com.inventorypilot.navigation.Navigator
 import javax.inject.Inject
@@ -56,11 +58,19 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    private fun handleGetUserProfile(result: Result<UserProfile>) {
+        when (result) {
+            is Result.Error -> println("Mostrar el error en un alert ${result.exception.message}")
+            is Result.Success -> navigator.navigateToHome()
+            Result.Loading -> println("Mostrar progress")
+        }
+    }
+
     private fun handleLogin(result: Result<Unit>) {
-        if (result.isSuccess) {
-            navigator.navigateToHome()
-        } else {
-            println("Fallo el login")
+        when (result) {
+            is Result.Error -> println("Fallo el login")
+            is Result.Success -> loginViewModel.getUserProfile(getEmail())
+            Result.Loading -> println("Mostrar progress")
         }
     }
 
@@ -71,6 +81,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun setUpObservers() {
+        loginViewModel.userProfileData.observe(this, ::handleGetUserProfile)
+
         loginViewModel.loginData.observe(this, ::handleLogin)
 
         loginViewModel.emailValidateData.observe(this, ::handleIsValidEmail)
