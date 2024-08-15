@@ -1,0 +1,23 @@
+package softspark.com.inventorypilot.home.di
+
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import softspark.com.inventorypilot.common.data.util.DispatcherProvider
+import softspark.com.inventorypilot.home.data.repositories.ProductCategoriesRepository
+import softspark.com.inventorypilot.home.domain.repositories.products.ProductCategoriesRepositoryImpl
+import softspark.com.inventorypilot.home.remote.ProductsApi
+import javax.inject.Singleton
+
+@Module
+@InstallIn(SingletonComponent::class)
+object HomeRepositoryModule {
+    @Provides
+    @Singleton
+    fun provideProductCategoriesRepository(
+        dispatcherProvider: DispatcherProvider,
+        productsApi: ProductsApi
+    ): ProductCategoriesRepository =
+        ProductCategoriesRepositoryImpl(dispatcherProvider, productsApi)
+}

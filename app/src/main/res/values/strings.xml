@@ -8,7 +8,7 @@
     <string name="text_error_lower_case_password">La contraseña tiene que tener al menos 1 caracter en minuscula.</string>
     <string name="text_error_upper_case_password">La contraseña tiene que tener al menos 1 caracter en mayuscula.</string>
     <string name="text_error_digit_password">La contraseña tiene que tener al menos 1 número.</string>
-    <string name="title_home">Inicio</string>
+    <string name="title_sales_history">Historial</string>
     <string name="title_sales">Ventas</string>
     <string name="title_products">Productos</string>
 </resources>

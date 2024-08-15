@@ -3,20 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/navigation_home">
+    app:startDestination="@id/navigation_products">
 
     <fragment
-        android:id="@+id/navigation_home"
-        android:name="softspark.com.inventorypilot.home.presentation.ui.home.HomeFragment"
-        tools:layout="@layout/fragment_home" />
-
-    <fragment
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_products"
         android:name="softspark.com.inventorypilot.home.presentation.ui.products.ProductsFragment"
         tools:layout="@layout/fragment_products" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="softspark.com.inventorypilot.home.presentation.ui.sales.SalesFragment"
+        android:id="@+id/navigation_shoping_cart"
+        android:name="softspark.com.inventorypilot.home.presentation.ui.home.HomeFragment"
         tools:layout="@layout/fragment_sales" />
+
+    <fragment
+        android:id="@+id/navigation_sales"
+        android:name="softspark.com.inventorypilot.home.presentation.ui.sales.SalesFragment"
+        tools:layout="@layout/fragment_home" />
 </navigation>
