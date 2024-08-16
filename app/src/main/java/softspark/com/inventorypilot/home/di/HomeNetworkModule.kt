@@ -8,6 +8,8 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import softspark.com.inventorypilot.home.remote.ProductsApi
+import softspark.com.inventorypilot.home.remote.SalesApi
+import softspark.com.inventorypilot.login.remote.LoginApi.Companion.BASE_URL
 import javax.inject.Singleton
 
 @Module
@@ -17,9 +19,17 @@ object HomeNetworkModule {
     @Singleton
     @Provides
     fun provideProductsApi(client: OkHttpClient): ProductsApi {
-        return Retrofit.Builder().baseUrl(ProductsApi.BASE_URL).client(client)
+        return Retrofit.Builder().baseUrl(BASE_URL).client(client)
             .addConverterFactory(MoshiConverterFactory.create()).build()
             .create(ProductsApi::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideSalesApi(client: OkHttpClient): SalesApi {
+        return Retrofit.Builder().baseUrl(BASE_URL).client(client)
+            .addConverterFactory(MoshiConverterFactory.create()).build()
+            .create(SalesApi::class.java)
     }
 }
 

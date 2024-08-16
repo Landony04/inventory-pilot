@@ -28,3 +28,26 @@ fun UserProfile.toEntity(): UserProfileEntity {
         role = role
     )
 }
+
+fun UserProfileEntity.toUserProfileDomain(): UserProfile = UserProfile(
+    id = id,
+    email = email,
+    firstName = firstName,
+    lastName = lastName,
+    role = role
+)
+
+fun UserProfileResponse.toUserProfile(): UserProfile {
+    return this.entries.map {
+
+        val dto = it.value
+
+        UserProfile(
+            id = it.key,
+            email = dto.email,
+            firstName = dto.firstName,
+            lastName = dto.lastName,
+            role = dto.role
+        )
+    }.first()
+}
