@@ -21,21 +21,13 @@ fun UserProfileResponse.toDomain(email: String): UserProfile {
 
 fun UserProfile.toEntity(): UserProfileEntity {
     return UserProfileEntity(
-        id = id,
+        userId = id,
         email = email,
         firstName = firstName,
         lastName = lastName,
         role = role
     )
 }
-
-fun UserProfileEntity.toUserProfileDomain(): UserProfile = UserProfile(
-    id = id,
-    email = email,
-    firstName = firstName,
-    lastName = lastName,
-    role = role
-)
 
 fun UserProfileResponse.toUserProfile(): UserProfile {
     return this.entries.map {

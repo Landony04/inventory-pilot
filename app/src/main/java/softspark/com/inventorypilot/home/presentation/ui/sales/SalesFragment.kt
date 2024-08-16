@@ -6,16 +6,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import dagger.hilt.android.AndroidEntryPoint
 import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.databinding.FragmentSalesBinding
 import softspark.com.inventorypilot.home.domain.models.sales.Sale
 
+@AndroidEntryPoint
 class SalesFragment : Fragment() {
 
     private var _binding: FragmentSalesBinding? = null
     private val binding get() = _binding
 
     private val salesViewModel: SalesViewModel by viewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

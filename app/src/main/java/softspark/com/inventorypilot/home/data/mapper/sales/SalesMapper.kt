@@ -1,14 +1,11 @@
 package softspark.com.inventorypilot.home.data.mapper.sales
 
+import softspark.com.inventorypilot.home.data.local.entity.products.SaleProductsList
 import softspark.com.inventorypilot.home.data.local.entity.sales.SaleEntity
-import softspark.com.inventorypilot.home.data.mapper.products.toProductDomain
-import softspark.com.inventorypilot.home.data.mapper.products.toProductEntity
-import softspark.com.inventorypilot.home.data.mapper.products.toProductListDomain
+import softspark.com.inventorypilot.home.domain.models.sales.ProductSale
 import softspark.com.inventorypilot.home.domain.models.sales.Sale
 import softspark.com.inventorypilot.home.remote.dto.sales.GetSalesResponse
-import softspark.com.inventorypilot.login.data.mapper.toEntity
-import softspark.com.inventorypilot.login.data.mapper.toUserProfile
-import softspark.com.inventorypilot.login.data.mapper.toUserProfileDomain
+import softspark.com.inventorypilot.home.remote.dto.sales.ProductsSaleResponse
 
 fun GetSalesResponse.toSaleListDomain(): List<Sale> {
     return entries.map {
@@ -20,26 +17,39 @@ fun GetSalesResponse.toSaleListDomain(): List<Sale> {
             clientId = dto.clientId,
             date = dto.date,
             totalAmount = dto.totalAmount,
-            user = dto.user.toUserProfile(),
-            products = ArrayList(dto.products.toProductListDomain())
+            userId = dto.userId,
+            products = ArrayList(dto.products.toProductSaleDomain())
         )
     }
 }
 
 fun Sale.toSaleEntity(): SaleEntity = SaleEntity(
-    id = id,
+    saleId = id,
     clientId = clientId,
     date = date,
     totalAmount = totalAmount,
-    user = user.toEntity(),
-    products = products.map { it.toProductEntity() }
+    userOwnerId = userId,
+    products = SaleProductsList(products)
 )
 
 fun SaleEntity.toSaleDomain(): Sale = Sale(
-    id = id,
+    id = saleId,
     clientId = clientId,
     date = date,
     totalAmount = totalAmount,
-    user = user.toUserProfileDomain(),
-    products = ArrayList(products.map { it.toProductDomain() })
+    userId = userOwnerId,
+    products = ArrayList(products.products)
 )
+
+fun ProductsSaleResponse.toProductSaleDomain(): List<ProductSale> {
+    return entries.map {
+        val id = it.key
+        val dto = it.value
+
+        ProductSale(
+            id = id,
+            price = dto.price,
+            quantity = dto.quantity
+        )
+    }
+}

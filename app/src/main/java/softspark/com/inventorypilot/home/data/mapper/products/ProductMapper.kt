@@ -20,12 +20,12 @@ fun ProductCategoryResponse.toCategoryListDomain(): List<ProductCategory> {
 }
 
 fun ProductCategoryEntity.toCategoryDomain(): ProductCategory = ProductCategory(
-    id = id,
+    id = categoryId,
     name = name
 )
 
 fun ProductCategory.toCategoryEntity(): ProductCategoryEntity = ProductCategoryEntity(
-    id = id,
+    categoryId = id,
     name = name
 )
 
@@ -46,7 +46,7 @@ fun GetProductsResponse.toProductListDomain(): List<Product> {
 }
 
 fun Product.toProductEntity(): ProductEntity = ProductEntity(
-    id = id,
+    productId = id,
     categoryId = categoryId,
     name = name,
     description = description,
@@ -55,7 +55,7 @@ fun Product.toProductEntity(): ProductEntity = ProductEntity(
 )
 
 fun ProductEntity.toProductDomain(): Product = Product(
-    id = id,
+    id = productId,
     categoryId = categoryId,
     name = name,
     description = description,
