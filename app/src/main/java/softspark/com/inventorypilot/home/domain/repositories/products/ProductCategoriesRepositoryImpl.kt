@@ -9,8 +9,9 @@ import kotlinx.coroutines.withContext
 import softspark.com.inventorypilot.common.data.util.DispatcherProvider
 import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.home.data.local.dao.products.ProductCategoryDao
-import softspark.com.inventorypilot.home.data.mapper.products.toDomain
-import softspark.com.inventorypilot.home.data.mapper.products.toEntity
+import softspark.com.inventorypilot.home.data.mapper.products.toCategoryDomain
+import softspark.com.inventorypilot.home.data.mapper.products.toCategoryEntity
+import softspark.com.inventorypilot.home.data.mapper.products.toCategoryListDomain
 import softspark.com.inventorypilot.home.data.repositories.ProductCategoriesRepository
 import softspark.com.inventorypilot.home.domain.models.products.ProductCategory
 import softspark.com.inventorypilot.home.remote.ProductsApi
@@ -24,13 +25,13 @@ class ProductCategoriesRepositoryImpl @Inject constructor(
     override suspend fun getAllCategories(): Flow<Result<ArrayList<ProductCategory>>> =
         flow<Result<ArrayList<ProductCategory>>> {
 
-            val apiResult = productsApi.getProductCategories().toDomain()
+            val apiResult = productsApi.getProductCategories().toCategoryListDomain()
 
             insertProductCategories(apiResult)
 
             val localResult =
                 productCategoryDao.getProductCategories()
-                    .map { category -> category.toDomain() }
+                    .map { category -> category.toCategoryDomain() }
 
             emit(Result.Success(data = ArrayList(localResult)))
         }.catch {
@@ -53,6 +54,6 @@ class ProductCategoriesRepositoryImpl @Inject constructor(
 
     override suspend fun insertProductCategories(productCategories: List<ProductCategory>) =
         withContext(dispatchers.io()) {
-            productCategoryDao.insertCategories(productCategories.map { productCategory -> async { productCategory.toEntity() }.await() })
+            productCategoryDao.insertCategories(productCategories.map { productCategory -> async { productCategory.toCategoryEntity() }.await() })
         }
 }

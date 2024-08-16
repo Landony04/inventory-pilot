@@ -7,7 +7,7 @@ import softspark.com.inventorypilot.home.domain.models.products.ProductCategory
 import softspark.com.inventorypilot.home.remote.dto.products.GetProductsResponse
 import softspark.com.inventorypilot.home.remote.dto.products.ProductCategoryResponse
 
-fun ProductCategoryResponse.toDomain(): List<ProductCategory> {
+fun ProductCategoryResponse.toCategoryListDomain(): List<ProductCategory> {
     return entries.map {
         val id = it.key
         val dto = it.value
@@ -19,17 +19,17 @@ fun ProductCategoryResponse.toDomain(): List<ProductCategory> {
     }
 }
 
-fun ProductCategoryEntity.toDomain(): ProductCategory = ProductCategory(
+fun ProductCategoryEntity.toCategoryDomain(): ProductCategory = ProductCategory(
     id = id,
     name = name
 )
 
-fun ProductCategory.toEntity(): ProductCategoryEntity = ProductCategoryEntity(
+fun ProductCategory.toCategoryEntity(): ProductCategoryEntity = ProductCategoryEntity(
     id = id,
     name = name
 )
 
-fun GetProductsResponse.toDomain(): List<Product> {
+fun GetProductsResponse.toProductListDomain(): List<Product> {
     return entries.map {
         val id = it.key
         val dto = it.value
@@ -45,7 +45,7 @@ fun GetProductsResponse.toDomain(): List<Product> {
     }
 }
 
-fun Product.toEntity(): ProductEntity = ProductEntity(
+fun Product.toProductEntity(): ProductEntity = ProductEntity(
     id = id,
     categoryId = categoryId,
     name = name,
@@ -54,7 +54,7 @@ fun Product.toEntity(): ProductEntity = ProductEntity(
     stock = stock
 )
 
-fun ProductEntity.toDomain(): Product = Product(
+fun ProductEntity.toProductDomain(): Product = Product(
     id = id,
     categoryId = categoryId,
     name = name,

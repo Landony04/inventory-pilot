@@ -9,12 +9,13 @@ import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.databinding.FragmentProductsBinding
+import softspark.com.inventorypilot.home.domain.models.products.Product
 import softspark.com.inventorypilot.home.domain.models.products.ProductCategory
 
 @AndroidEntryPoint
 class ProductsFragment : Fragment() {
 
-    private val productCategoryViewModel: ProductCategoryViewModel by viewModels()
+    private val productCategoryViewModel: ProductViewModel by viewModels()
 
     private var _binding: FragmentProductsBinding? = null
     private val binding get() = _binding
@@ -31,11 +32,20 @@ class ProductsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setUpObservers()
-        getCategories()
+        getInitData()
     }
 
-    private fun getCategories() {
+    private fun getInitData() {
+        productCategoryViewModel.getAllProducts()
         productCategoryViewModel.getProductCategories()
+    }
+
+    private fun handleGetAllProducts(result: Result<ArrayList<Product>>) {
+        when (result) {
+            is Result.Error -> println("Tenemos este error: ${result.exception.message}")
+            is Result.Success -> println("Tenemos el listado de productos")
+            Result.Loading -> println("Tenemos que mostrar el loading")
+        }
     }
 
     private fun handleGetProductCategory(result: Result<ArrayList<ProductCategory>>) {
@@ -47,6 +57,8 @@ class ProductsFragment : Fragment() {
     }
 
     private fun setUpObservers() {
+        productCategoryViewModel.productsData.observe(viewLifecycleOwner, ::handleGetAllProducts)
+
         productCategoryViewModel.productCategoryData.observe(
             viewLifecycleOwner,
             ::handleGetProductCategory
