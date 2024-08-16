@@ -1,9 +1,11 @@
 package softspark.com.inventorypilot.home.domain.repositories.products
 
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
 import softspark.com.inventorypilot.common.data.util.DispatcherProvider
 import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.home.data.local.dao.products.ProductCategoryDao
@@ -50,5 +52,7 @@ class ProductCategoriesRepositoryImpl @Inject constructor(
         }.flowOn(dispatchers.io())
 
     override suspend fun insertProductCategories(productCategories: List<ProductCategory>) =
-        productCategoryDao.insertCategories(productCategories.map { it.toEntity() })
+        withContext(dispatchers.io()) {
+            productCategoryDao.insertCategories(productCategories.map { productCategory -> async { productCategory.toEntity() }.await() })
+        }
 }
