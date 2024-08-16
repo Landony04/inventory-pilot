@@ -3,7 +3,7 @@ package softspark.com.inventorypilot.common.data.local.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "user_profile")
+@Entity
 data class UserProfileEntity(
     @PrimaryKey(autoGenerate = false)
     val id: String,

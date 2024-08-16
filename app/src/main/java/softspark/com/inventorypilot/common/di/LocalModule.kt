@@ -24,10 +24,17 @@ object LocalModule {
 
 
     @Provides
-    fun provideUserProfileDao(belDatabase: InventoryPilotDatabase) =
-        belDatabase.userProfileDao()
+    @Singleton
+    fun provideUserProfileDao(inventoryPilotDatabase: InventoryPilotDatabase) =
+        inventoryPilotDatabase.userProfileDao()
 
     @Provides
-    fun provideProductCategoryDao(belDatabase: InventoryPilotDatabase) =
-        belDatabase.productCategoryDao()
+    @Singleton
+    fun provideProductCategoryDao(inventoryPilotDatabase: InventoryPilotDatabase) =
+        inventoryPilotDatabase.productCategoryDao()
+
+    @Provides
+    @Singleton
+    fun provideProductDao(inventoryPilotDatabase: InventoryPilotDatabase) =
+        inventoryPilotDatabase.productDao()
 }

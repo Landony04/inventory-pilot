@@ -4,8 +4,12 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class ProductCategoryEntity(
+data class ProductEntity(
     @PrimaryKey(autoGenerate = false)
     val id: String,
-    val name: String
+    val categoryId: String,
+    val name: String,
+    val description: String,
+    val price: Double,
+    val stock: Int
 )

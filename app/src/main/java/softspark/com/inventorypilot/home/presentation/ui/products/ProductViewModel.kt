@@ -7,17 +7,31 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import softspark.com.inventorypilot.common.entities.base.Result
+import softspark.com.inventorypilot.home.domain.models.products.Product
 import softspark.com.inventorypilot.home.domain.models.products.ProductCategory
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductCategoriesUseCase
+import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsUseCase
 import javax.inject.Inject
 
 @HiltViewModel
-class ProductCategoryViewModel @Inject constructor(
+class ProductViewModel @Inject constructor(
+    private val getProductsUseCase: GetProductsUseCase,
     private val getProductCategoriesUseCase: GetProductCategoriesUseCase
 ) : ViewModel() {
 
     private val _productCategoryData = MutableLiveData<Result<ArrayList<ProductCategory>>>()
     val productCategoryData: LiveData<Result<ArrayList<ProductCategory>>> get() = _productCategoryData
+
+    private val _productsData = MutableLiveData<Result<ArrayList<Product>>>()
+    val productsData: LiveData<Result<ArrayList<Product>>> get() = _productsData
+
+    fun getAllProducts() {
+        viewModelScope.launch {
+            getProductsUseCase().collect { result ->
+                _productsData.value = result
+            }
+        }
+    }
 
     fun getProductCategories() {
         viewModelScope.launch {

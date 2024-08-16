@@ -6,12 +6,21 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
 import softspark.com.inventorypilot.home.data.repositories.ProductCategoriesRepository
+import softspark.com.inventorypilot.home.data.repositories.ProductsRepository
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductCategoriesUseCase
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductCategoriesUseCaseImpl
+import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsUseCase
+import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsUseCaseImpl
 
 @Module
 @InstallIn(ViewModelComponent::class)
 object HomeUseCaseModule {
+
+    @ViewModelScoped
+    @Provides
+    fun provideGetProductsUseCase(
+        productsRepository: ProductsRepository
+    ): GetProductsUseCase = GetProductsUseCaseImpl(productsRepository)
 
     @ViewModelScoped
     @Provides
