@@ -8,10 +8,6 @@ import softspark.com.inventorypilot.home.remote.dto.products.ProductCategoryResp
 
 interface ProductsApi {
 
-    companion object {
-        const val BASE_URL = "https://inventory-pilot-default-rtdb.firebaseio.com/"
-    }
-
     @GET("businesses/business_info_id_1/categories.json")
     suspend fun getProductCategories(): ProductCategoryResponse
 

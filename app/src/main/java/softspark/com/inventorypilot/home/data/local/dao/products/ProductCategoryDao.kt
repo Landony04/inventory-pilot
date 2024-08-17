@@ -14,7 +14,7 @@ interface ProductCategoryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCategories(productCategories: List<ProductCategoryEntity>)
 
-    @Query("SELECT * FROM ProductCategoryEntity WHERE id = :id")
+    @Query("SELECT * FROM ProductCategoryEntity WHERE categoryId = :id")
     fun getCategoryById(id: String): ProductCategoryEntity
 
     @Query("SELECT * FROM ProductCategoryEntity")

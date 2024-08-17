@@ -21,10 +21,25 @@ fun UserProfileResponse.toDomain(email: String): UserProfile {
 
 fun UserProfile.toEntity(): UserProfileEntity {
     return UserProfileEntity(
-        id = id,
+        userId = id,
         email = email,
         firstName = firstName,
         lastName = lastName,
         role = role
     )
+}
+
+fun UserProfileResponse.toUserProfile(): UserProfile {
+    return this.entries.map {
+
+        val dto = it.value
+
+        UserProfile(
+            id = it.key,
+            email = dto.email,
+            firstName = dto.firstName,
+            lastName = dto.lastName,
+            role = dto.role
+        )
+    }.first()
 }

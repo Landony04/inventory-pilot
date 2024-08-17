@@ -2,7 +2,6 @@ package softspark.com.inventorypilot.common.data.util
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import javax.inject.Inject
 
 interface DispatcherProvider {
 
