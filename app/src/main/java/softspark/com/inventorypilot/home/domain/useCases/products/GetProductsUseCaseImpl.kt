@@ -9,6 +9,8 @@ import javax.inject.Inject
 class GetProductsUseCaseImpl @Inject constructor(
     private val productsRepository: ProductsRepository
 ) : GetProductsUseCase {
-    override suspend fun invoke(): Flow<Result<ArrayList<Product>>> =
-        productsRepository.getAllProducts()
+    override suspend fun invoke(
+        page: Int
+    ): Flow<Result<ArrayList<Product>>> =
+        productsRepository.getProductsForPage(page, 20)
 }

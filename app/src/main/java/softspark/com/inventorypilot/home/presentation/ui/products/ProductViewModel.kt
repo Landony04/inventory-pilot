@@ -25,9 +25,12 @@ class ProductViewModel @Inject constructor(
     private val _productsData = MutableLiveData<Result<ArrayList<Product>>>()
     val productsData: LiveData<Result<ArrayList<Product>>> get() = _productsData
 
+    private var currentPage: Int = 1
+
     fun getAllProducts() {
+        currentPage++
         viewModelScope.launch {
-            getProductsUseCase().collect { result ->
+            getProductsUseCase(currentPage).collect { result ->
                 _productsData.value = result
             }
         }

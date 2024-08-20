@@ -6,11 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.databinding.FragmentProductsBinding
 import softspark.com.inventorypilot.home.domain.models.products.Product
 import softspark.com.inventorypilot.home.domain.models.products.ProductCategory
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ProductsFragment : Fragment() {
@@ -19,6 +22,10 @@ class ProductsFragment : Fragment() {
 
     private var _binding: FragmentProductsBinding? = null
     private val binding get() = _binding
+
+    @Inject
+    lateinit var productsAdapter: ProductsAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -33,18 +40,33 @@ class ProductsFragment : Fragment() {
 
         setUpObservers()
         getInitData()
+        initAdapter()
+        initListeners()
     }
 
     private fun getInitData() {
-        productCategoryViewModel.getAllProducts()
+        getProducts()
         productCategoryViewModel.getProductCategories()
+    }
+
+    private fun getProducts() {
+        productCategoryViewModel.getAllProducts()
     }
 
     private fun handleGetAllProducts(result: Result<ArrayList<Product>>) {
         when (result) {
-            is Result.Error -> println("Tenemos este error: ${result.exception.message}")
-            is Result.Success -> println("Tenemos el listado de productos")
-            Result.Loading -> println("Tenemos que mostrar el loading")
+            is Result.Error -> {
+                binding?.progressBarBottom?.visibility = View.GONE
+            }
+
+            is Result.Success -> {
+                binding?.progressBarBottom?.visibility = View.GONE
+                productsAdapter.submitList(result.data)
+            }
+
+            Result.Loading -> {
+                binding?.progressBarBottom?.visibility = View.VISIBLE
+            }
         }
     }
 
@@ -55,6 +77,28 @@ class ProductsFragment : Fragment() {
             Result.Loading -> println("Tenemos que mostrar el loading")
         }
     }
+
+    private fun initAdapter() {
+        binding?.productsRv?.apply {
+            setHasFixedSize(true)
+            layoutManager = GridLayoutManager(requireContext(), 2)
+            adapter = productsAdapter
+        }
+    }
+
+    private fun initListeners() {
+        binding?.productsRv?.addOnScrollListener(onScrollCallback)
+    }
+
+    private val onScrollCallback = (object : RecyclerView.OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+
+            if (!recyclerView.canScrollVertically(1)) {
+                getProducts()
+            }
+        }
+    })
 
     private fun setUpObservers() {
         productCategoryViewModel.productsData.observe(viewLifecycleOwner, ::handleGetAllProducts)

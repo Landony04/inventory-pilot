@@ -5,5 +5,7 @@ import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.home.domain.models.products.Product
 
 interface GetProductsUseCase {
-    suspend operator fun invoke(): Flow<Result<ArrayList<Product>>>
+    suspend operator fun invoke(
+        page: Int
+    ): Flow<Result<ArrayList<Product>>>
 }
