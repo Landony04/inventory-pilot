@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
+import softspark.com.inventorypilot.R
 import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.databinding.FragmentProductsBinding
 import softspark.com.inventorypilot.home.domain.models.products.Product
@@ -38,6 +40,7 @@ class ProductsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setUpActionBar()
         setUpObservers()
         getInitData()
         initAdapter()
@@ -99,6 +102,11 @@ class ProductsFragment : Fragment() {
             }
         }
     })
+
+    private fun setUpActionBar() {
+        (requireActivity() as AppCompatActivity).supportActionBar?.title =
+            getString(R.string.title_action_bar_products)
+    }
 
     private fun setUpObservers() {
         productCategoryViewModel.productsData.observe(viewLifecycleOwner, ::handleGetAllProducts)

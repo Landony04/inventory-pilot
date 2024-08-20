@@ -11,4 +11,6 @@
     <string name="title_sales_history">Historial</string>
     <string name="title_sales">Ventas</string>
     <string name="title_products">Productos</string>
+
+    <string name="title_action_bar_products">Listado de productos</string>
 </resources>

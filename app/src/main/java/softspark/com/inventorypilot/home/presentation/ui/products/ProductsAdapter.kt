@@ -19,15 +19,16 @@ class ProductsAdapter @Inject constructor(
         private val itemBinding: ItemLayoutCardProductBinding,
     ) : RecyclerView.ViewHolder(itemBinding.root) {
         fun bind(
-            cardSection: Product,
-            cardSelected: (Product) -> Unit
+            productSection: Product,
+            productSelected: (Product) -> Unit
         ) {
             with(itemBinding) {
 
-                titleProductTv.text = cardSection.name
+                titleProductTv.text = productSection.name
+                descriptionProductTv.text = productSection.description
 
                 cardContainerProduct.setOnClickListener {
-                    cardSelected(cardSection)
+                    productSelected(productSection)
                 }
             }
         }
@@ -48,7 +49,7 @@ class ProductsAdapter @Inject constructor(
 
     override fun onBindViewHolder(holder: ProductsAdapter.ProductViewHolder, position: Int) {
         val card = getItem(position)
-        holder.bind(cardSection = card) { cardSelected ->
+        holder.bind(productSection = card) { productSelected ->
         }
     }
 }
