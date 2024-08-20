@@ -52,4 +52,10 @@
         <item name="maxLines">2</item>
     </style>
 
+    <style name="SpinnerTheme" parent="android:Widget.Material.Spinner.Underlined">
+        <item name="android:background">@drawable/spinner_background</item>
+        <item name="android:popupBackground">@drawable/spinner_background</item>
+        <item name="android:textAlignment">textStart</item>
+        <item name="dropDownBackgroundTint">@color/colorBlack</item>
+    </style>
 </resources>

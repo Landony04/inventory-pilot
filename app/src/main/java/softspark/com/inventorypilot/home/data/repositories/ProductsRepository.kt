@@ -10,5 +10,9 @@ interface ProductsRepository {
         pageSize: Int
     ): Flow<Result<ArrayList<Product>>>
 
+    suspend fun getProductsByCategoryId(
+        categoryId: String
+    ): Flow<Result<ArrayList<Product>>>
+
     suspend fun insertProducts(products: List<Product>)
 }

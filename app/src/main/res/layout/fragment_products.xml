@@ -24,9 +24,10 @@
             style="@style/CustomTextInputEditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="Busca por nombre el producto"
+            android:hint="@string/hint_search_product"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/filter_spinner"
+            app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -34,17 +35,22 @@
                 android:id="@+id/search_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
-                android:nextFocusForward="@id/password_edit_text" />
+                android:drawableEnd="@drawable/ic_search"
+                android:imeOptions="actionSearch"
+                android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <Spinner
+        <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/filter_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/SpinnerTheme"
+            android:layout_width="0dp"
+            android:layout_height="55dp"
+            android:layout_marginStart="10dp"
+            android:elevation="4dp"
             android:spinnerMode="dropdown"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="0.5"
             app:layout_constraintStart_toEndOf="@id/search_il"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>

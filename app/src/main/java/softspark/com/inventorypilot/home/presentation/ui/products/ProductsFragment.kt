@@ -4,14 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import softspark.com.inventorypilot.R
 import softspark.com.inventorypilot.common.entities.base.Result
+import softspark.com.inventorypilot.common.presentation.products.SpinnerAdapter
+import softspark.com.inventorypilot.common.utils.Constants.VALUE_ZERO
 import softspark.com.inventorypilot.databinding.FragmentProductsBinding
 import softspark.com.inventorypilot.home.domain.models.products.Product
 import softspark.com.inventorypilot.home.domain.models.products.ProductCategory
@@ -76,7 +81,7 @@ class ProductsFragment : Fragment() {
     private fun handleGetProductCategory(result: Result<ArrayList<ProductCategory>>) {
         when (result) {
             is Result.Error -> println("Tenemos este error: ${result.exception.message}")
-            is Result.Success -> println("Tenemos el listado")
+            is Result.Success -> initAdapterSpinner(result.data)
             Result.Loading -> println("Tenemos que mostrar el loading")
         }
     }
@@ -89,17 +94,56 @@ class ProductsFragment : Fragment() {
         }
     }
 
+    private fun initAdapterSpinner(categories: ArrayList<ProductCategory>) {
+        val allCategories =
+            listOf(
+                ProductCategory(
+                    VALUE_ZERO.toString(),
+                    getString(R.string.title_first_option_spinner)
+                )
+            ) + categories
+
+        val adapter = SpinnerAdapter(requireContext(), ArrayList(allCategories))
+        binding?.filterSpinner?.adapter = adapter
+    }
+
     private fun initListeners() {
+        binding?.filterSpinner?.onItemSelectedListener = onItemSelectedSpinner
+
         binding?.productsRv?.addOnScrollListener(onScrollCallback)
+
+        binding?.searchEditText?.doOnTextChanged { text, _, _, _ ->
+            updateSearchEditText(text)
+        }
     }
 
     private val onScrollCallback = (object : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
 
-            if (!recyclerView.canScrollVertically(1)) {
-                getProducts()
+            if (dy > VALUE_ZERO) {
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val visibleItemCount = layoutManager.childCount
+                val totalItemCount = layoutManager.itemCount
+                val pastVisibleItems = layoutManager.findFirstVisibleItemPosition()
+
+                if ((visibleItemCount + pastVisibleItems) > totalItemCount) {
+                    getProducts()
+                }
             }
+        }
+    })
+
+    private val onItemSelectedSpinner = (object : AdapterView.OnItemSelectedListener {
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            if (position > VALUE_ZERO) {
+                val selectedCategory = parent?.getItemAtPosition(position) as ProductCategory
+                productCategoryViewModel.getProductsByCategoryId(selectedCategory.id)
+            }
+        }
+
+        override fun onNothingSelected(p0: AdapterView<*>?) {
+
         }
     })
 
@@ -117,8 +161,18 @@ class ProductsFragment : Fragment() {
         )
     }
 
+    private fun updateSearchEditText(text: CharSequence?) {
+        binding?.searchEditText?.setCompoundDrawablesWithIntrinsicBounds(
+            VALUE_ZERO,
+            VALUE_ZERO,
+            if (text.isNullOrEmpty()) R.drawable.ic_search else R.drawable.ic_clear,
+            VALUE_ZERO
+        )
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
+        productCategoryViewModel.productsData.removeObservers(viewLifecycleOwner)
         productCategoryViewModel.productCategoryData.removeObservers(viewLifecycleOwner)
         _binding = null
     }

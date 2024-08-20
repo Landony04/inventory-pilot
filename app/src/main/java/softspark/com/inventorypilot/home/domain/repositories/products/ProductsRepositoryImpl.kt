@@ -58,6 +58,20 @@ class ProductsRepositoryImpl @Inject constructor(
             emit(Result.Error(it))
         }.flowOn(dispatchers.io())
 
+    override suspend fun getProductsByCategoryId(categoryId: String): Flow<Result<ArrayList<Product>>> =
+        flow<Result<ArrayList<Product>>> {
+            val localResult =
+                productDao.getProductsByCategoryId(categoryId)
+                    .map { productEntity -> productEntity.toProductDomain() }
+
+            emit(Result.Success(ArrayList(localResult)))
+
+        }.onStart {
+            emit(Result.Loading)
+        }.catch {
+            emit(Result.Error(it))
+        }.flowOn(dispatchers.io())
+
     override suspend fun insertProducts(products: List<Product>) = withContext(dispatchers.io()) {
         productDao.insertProducts(products.map { product -> async { product.toProductEntity() }.await() })
     }
