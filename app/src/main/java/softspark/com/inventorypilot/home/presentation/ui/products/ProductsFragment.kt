@@ -1,29 +1,34 @@
 package softspark.com.inventorypilot.home.presentation.ui.products
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import softspark.com.inventorypilot.R
 import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.common.presentation.products.SpinnerAdapter
 import softspark.com.inventorypilot.common.utils.Constants.VALUE_ZERO
+import softspark.com.inventorypilot.common.utils.components.ItemSelectedFromSpinnerListener
+import softspark.com.inventorypilot.common.utils.components.ItemSelectedSpinner
+import softspark.com.inventorypilot.common.utils.components.ScrollRecyclerView
+import softspark.com.inventorypilot.common.utils.components.ScrollRecyclerViewListener
 import softspark.com.inventorypilot.databinding.FragmentProductsBinding
 import softspark.com.inventorypilot.home.domain.models.products.Product
 import softspark.com.inventorypilot.home.domain.models.products.ProductCategory
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ProductsFragment : Fragment() {
+class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ScrollRecyclerViewListener {
 
     private val productCategoryViewModel: ProductViewModel by viewModels()
 
@@ -32,6 +37,9 @@ class ProductsFragment : Fragment() {
 
     @Inject
     lateinit var productsAdapter: ProductsAdapter
+
+    private var userInteraction = false
+    private var endClearDrawable: Drawable? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,6 +52,8 @@ class ProductsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        endClearDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_clear)
 
         setUpActionBar()
         setUpObservers()
@@ -80,9 +90,17 @@ class ProductsFragment : Fragment() {
 
     private fun handleGetProductCategory(result: Result<ArrayList<ProductCategory>>) {
         when (result) {
-            is Result.Error -> println("Tenemos este error: ${result.exception.message}")
-            is Result.Success -> initAdapterSpinner(result.data)
-            Result.Loading -> println("Tenemos que mostrar el loading")
+            is Result.Error -> {
+                binding?.spinnerProgressBar?.visibility = View.GONE
+            }
+
+            is Result.Success -> {
+                binding?.spinnerProgressBar?.visibility = View.GONE
+                binding?.filterSpinner?.visibility = View.VISIBLE
+                initAdapterSpinner(result.data)
+            }
+
+            Result.Loading -> binding?.spinnerProgressBar?.visibility = View.VISIBLE
         }
     }
 
@@ -108,44 +126,26 @@ class ProductsFragment : Fragment() {
     }
 
     private fun initListeners() {
-        binding?.filterSpinner?.onItemSelectedListener = onItemSelectedSpinner
+        binding?.filterSpinner?.setOnTouchListener { view, event ->
+            if (event.action == MotionEvent.ACTION_UP) {
+                userInteraction = true
+                view.performClick()
+            }
+            false
+        }
 
-        binding?.productsRv?.addOnScrollListener(onScrollCallback)
+        binding?.filterSpinner?.onItemSelectedListener = ItemSelectedSpinner(this)
+
+        binding?.productsRv?.addOnScrollListener(ScrollRecyclerView(this))
 
         binding?.searchEditText?.doOnTextChanged { text, _, _, _ ->
             updateSearchEditText(text)
         }
+
+        binding?.searchIl?.setEndIconOnClickListener {
+            validateIfCleanSearchInput()
+        }
     }
-
-    private val onScrollCallback = (object : RecyclerView.OnScrollListener() {
-        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-            super.onScrolled(recyclerView, dx, dy)
-
-            if (dy > VALUE_ZERO) {
-                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                val visibleItemCount = layoutManager.childCount
-                val totalItemCount = layoutManager.itemCount
-                val pastVisibleItems = layoutManager.findFirstVisibleItemPosition()
-
-                if ((visibleItemCount + pastVisibleItems) > totalItemCount) {
-                    getProducts()
-                }
-            }
-        }
-    })
-
-    private val onItemSelectedSpinner = (object : AdapterView.OnItemSelectedListener {
-        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            if (position > VALUE_ZERO) {
-                val selectedCategory = parent?.getItemAtPosition(position) as ProductCategory
-                productCategoryViewModel.getProductsByCategoryId(selectedCategory.id)
-            }
-        }
-
-        override fun onNothingSelected(p0: AdapterView<*>?) {
-
-        }
-    })
 
     private fun setUpActionBar() {
         (requireActivity() as AppCompatActivity).supportActionBar?.title =
@@ -162,12 +162,22 @@ class ProductsFragment : Fragment() {
     }
 
     private fun updateSearchEditText(text: CharSequence?) {
-        binding?.searchEditText?.setCompoundDrawablesWithIntrinsicBounds(
-            VALUE_ZERO,
-            VALUE_ZERO,
-            if (text.isNullOrEmpty()) R.drawable.ic_search else R.drawable.ic_clear,
-            VALUE_ZERO
-        )
+        val icSearch = ContextCompat.getDrawable(requireContext(), R.drawable.ic_search)
+
+        binding?.searchIl?.endIconDrawable =
+            if (text.isNullOrEmpty()) icSearch else endClearDrawable
+
+        text?.let { textValue ->
+            productCategoryViewModel.getProductsByName(textValue.toString())
+        }
+    }
+
+    private fun validateIfCleanSearchInput() {
+        val endDrawable = binding?.searchIl?.endIconDrawable
+        if (endDrawable != null && endDrawable.constantState == endClearDrawable?.constantState) {
+            binding?.searchEditText?.text?.clear()
+            getProducts()
+        }
     }
 
     override fun onDestroyView() {
@@ -175,5 +185,24 @@ class ProductsFragment : Fragment() {
         productCategoryViewModel.productsData.removeObservers(viewLifecycleOwner)
         productCategoryViewModel.productCategoryData.removeObservers(viewLifecycleOwner)
         _binding = null
+    }
+
+    override fun itemSelected(parent: AdapterView<*>?, position: Int) {
+        if (!userInteraction) {
+            return
+        }
+
+        userInteraction = false
+
+        if (position > VALUE_ZERO) {
+            val selectedCategory = parent?.getItemAtPosition(position) as ProductCategory
+            productCategoryViewModel.getProductsByCategoryId(selectedCategory.id)
+        } else {
+            getProducts()
+        }
+    }
+
+    override fun invoke() {
+        getProducts()
     }
 }

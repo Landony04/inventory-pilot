@@ -24,5 +24,8 @@ interface ProductDao {
     suspend fun getProductsForPage(limit: Int, offset: Int): List<ProductEntity>
 
     @Query("SELECT * FROM ProductEntity WHERE categoryId = :categoryId")
-    fun getProductsByCategoryId(categoryId: String): List<ProductEntity>
+    suspend fun getProductsByCategoryId(categoryId: String): List<ProductEntity>
+
+    @Query("SELECT * FROM ProductEntity WHERE name LIKE :query || '%'")
+    suspend fun getProductsByName(query: String): List<ProductEntity>
 }

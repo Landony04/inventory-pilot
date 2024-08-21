@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.withContext
 import softspark.com.inventorypilot.common.data.util.DispatcherProvider
 import softspark.com.inventorypilot.common.entities.base.Result
+import softspark.com.inventorypilot.common.utils.NetworkUtils
 import softspark.com.inventorypilot.home.data.local.dao.products.ProductDao
 import softspark.com.inventorypilot.home.data.mapper.products.toProductDomain
 import softspark.com.inventorypilot.home.data.mapper.products.toProductEntity
@@ -21,7 +22,8 @@ import javax.inject.Inject
 class ProductsRepositoryImpl @Inject constructor(
     private val dispatchers: DispatcherProvider,
     private val productsApi: ProductsApi,
-    private val productDao: ProductDao
+    private val productDao: ProductDao,
+    private val networkUtils: NetworkUtils
 ) : ProductsRepository {
 
     companion object {
@@ -37,14 +39,15 @@ class ProductsRepositoryImpl @Inject constructor(
             val offset = (page - 1) * pageSize
 
             if (page > VALUE_ZERO) {
-                val apiResult = productsApi.getAllProducts().toProductListDomain()
-
-                insertProducts(apiResult)
+                if (networkUtils.isInternetAvailable()) {
+                    val apiResult = productsApi.getAllProducts().toProductListDomain()
+                    insertProducts(apiResult)
+                }
             }
 
-            val localResult =
-                productDao.getProductsForPage(pageSize, offset)
-                    .map { productEntity -> productEntity.toProductDomain() }
+            val localResult = productDao.getProductsForPage(pageSize, offset).map { productEntity ->
+                productEntity.toProductDomain()
+            }
 
             val valueResult =
                 if (localResult.size < pageSize) productDao.getProductsForPage(pageSize, VALUE_ZERO)
@@ -60,9 +63,23 @@ class ProductsRepositoryImpl @Inject constructor(
 
     override suspend fun getProductsByCategoryId(categoryId: String): Flow<Result<ArrayList<Product>>> =
         flow<Result<ArrayList<Product>>> {
-            val localResult =
-                productDao.getProductsByCategoryId(categoryId)
-                    .map { productEntity -> productEntity.toProductDomain() }
+            val localResult = productDao.getProductsByCategoryId(categoryId).map { productEntity ->
+                productEntity.toProductDomain()
+            }
+
+            emit(Result.Success(ArrayList(localResult)))
+
+        }.onStart {
+            emit(Result.Loading)
+        }.catch {
+            emit(Result.Error(it))
+        }.flowOn(dispatchers.io())
+
+    override suspend fun getProductsByName(query: String): Flow<Result<ArrayList<Product>>> =
+        flow<Result<ArrayList<Product>>> {
+            val localResult = productDao.getProductsByName(query.lowercase()).map { productEntity ->
+                productEntity.toProductDomain()
+            }
 
             emit(Result.Success(ArrayList(localResult)))
 

@@ -14,5 +14,9 @@ interface ProductsRepository {
         categoryId: String
     ): Flow<Result<ArrayList<Product>>>
 
+    suspend fun getProductsByName(
+        query: String
+    ): Flow<Result<ArrayList<Product>>>
+
     suspend fun insertProducts(products: List<Product>)
 }

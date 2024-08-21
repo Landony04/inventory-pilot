@@ -25,6 +25,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="@string/hint_search_product"
+            app:endIconDrawable="@drawable/ic_search"
+            app:endIconMode="custom"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/filter_spinner"
             app:layout_constraintHorizontal_weight="1"
@@ -35,9 +37,8 @@
                 android:id="@+id/search_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableEnd="@drawable/ic_search"
                 android:imeOptions="actionSearch"
-                android:inputType="text" />
+                android:inputType="textFilter" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.appcompat.widget.AppCompatSpinner
@@ -48,9 +49,20 @@
             android:layout_marginStart="10dp"
             android:elevation="4dp"
             android:spinnerMode="dropdown"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_weight="0.5"
+            app:layout_constraintStart_toEndOf="@id/search_il"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ProgressBar
+            android:id="@+id/spinner_progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/search_il"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
