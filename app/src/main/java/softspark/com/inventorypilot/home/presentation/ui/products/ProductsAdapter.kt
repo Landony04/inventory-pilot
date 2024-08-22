@@ -38,18 +38,18 @@ class ProductsAdapter @Inject constructor(
         parent: ViewGroup,
         viewType: Int
     ): ProductViewHolder {
-        val unassociatedCardBinding = ItemLayoutCardProductBinding.inflate(
+        val productCardBinding = ItemLayoutCardProductBinding.inflate(
             LayoutInflater.from(context),
             parent,
             false
         )
 
-        return ProductViewHolder(unassociatedCardBinding)
+        return ProductViewHolder(productCardBinding)
     }
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
-        val card = getItem(position)
-        holder.bind(productSection = card) { productSelected ->
+        val product = getItem(position)
+        holder.bind(productSection = product) { productSelected ->
         }
     }
 }

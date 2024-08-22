@@ -4,8 +4,6 @@ import kotlinx.coroutines.flow.Flow
 import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.home.domain.models.sales.Sale
 
-interface GetSalesUseCase {
-    suspend operator fun invoke(
-        page: Int
-    ): Flow<Result<ArrayList<Sale>>>
+interface GetSalesByDateUseCase {
+    suspend operator fun invoke(date: String): Flow<Result<ArrayList<Sale>>>
 }

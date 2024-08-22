@@ -6,10 +6,9 @@ import softspark.com.inventorypilot.home.data.repositories.SalesRepository
 import softspark.com.inventorypilot.home.domain.models.sales.Sale
 import javax.inject.Inject
 
-class GetSalesUseCaseImpl @Inject constructor(
+class GetSalesByDateUseCaseImpl @Inject constructor(
     private val salesRepository: SalesRepository
-) : GetSalesUseCase {
-    override suspend fun invoke(
-        page: Int
-    ): Flow<Result<ArrayList<Sale>>> = salesRepository.getSalesForPage(page, 20)
+) : GetSalesByDateUseCase {
+    override suspend fun invoke(date: String): Flow<Result<ArrayList<Sale>>> =
+        salesRepository.getSalesByDate(date)
 }

@@ -20,6 +20,10 @@ interface SalesDao {
     fun getSaleById(id: String): SaleEntity
 
     @Transaction
-    @Query("SELECT * FROM SaleEntity")
-    fun getAllSales(): List<SaleEntity>
+    @Query("SELECT * FROM SaleEntity ORDER BY saleId ASC LIMIT :limit OFFSET :offset")
+    fun getSalesForPage(limit: Int, offset: Int): List<SaleEntity>
+
+    @Transaction
+    @Query("SELECT * FROM SaleEntity WHERE date = :date")
+    fun getSalesByDate(date: String): List<SaleEntity>
 }
