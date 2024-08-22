@@ -1,5 +1,6 @@
 package softspark.com.inventorypilot.home.data.mapper.sales
 
+import softspark.com.inventorypilot.common.data.extension.formatUtcToReadableDate
 import softspark.com.inventorypilot.home.data.local.entity.products.SaleProductsList
 import softspark.com.inventorypilot.home.data.local.entity.sales.SaleEntity
 import softspark.com.inventorypilot.home.domain.models.sales.ProductSale
@@ -35,7 +36,7 @@ fun Sale.toSaleEntity(): SaleEntity = SaleEntity(
 fun SaleEntity.toSaleDomain(): Sale = Sale(
     id = saleId,
     clientId = clientId,
-    date = date,
+    date = date.formatUtcToReadableDate(),
     totalAmount = totalAmount,
     userId = userOwnerId,
     products = ArrayList(products.products)

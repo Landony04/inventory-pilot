@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.qualifiers.ApplicationContext
+import softspark.com.inventorypilot.R
 import softspark.com.inventorypilot.databinding.ItemLayoutCardProductBinding
 import softspark.com.inventorypilot.home.domain.models.products.Product
 import javax.inject.Inject
@@ -19,13 +20,25 @@ class ProductsAdapter @Inject constructor(
         private val itemBinding: ItemLayoutCardProductBinding,
     ) : RecyclerView.ViewHolder(itemBinding.root) {
         fun bind(
+            context: Context,
             productSection: Product,
             productSelected: (Product) -> Unit
         ) {
             with(itemBinding) {
 
                 titleProductTv.text = productSection.name
+
                 descriptionProductTv.text = productSection.description
+
+                priceProductTv.text = String.format(
+                    context.getString(R.string.text_price_product),
+                    productSection.price.toString()
+                )
+
+                stockProductTv.text = String.format(
+                    context.getString(R.string.text_quantity_product),
+                    productSection.stock.toString()
+                )
 
                 cardContainerProduct.setOnClickListener {
                     productSelected(productSection)
@@ -49,7 +62,7 @@ class ProductsAdapter @Inject constructor(
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         val product = getItem(position)
-        holder.bind(productSection = product) { productSelected ->
+        holder.bind(context = context, productSection = product) { productSelected ->
         }
     }
 }

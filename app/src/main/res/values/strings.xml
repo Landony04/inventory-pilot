@@ -20,4 +20,6 @@
     <!-- SALES   -->
     <string name="title_action_bar_sales">Ventas recientes</string>
     <string name="text_details_sale">%1$s artículos - GTQ %2$s</string>
+    <string name="text_price_product">Precio: GTQ %1$s</string>
+    <string name="text_quantity_product">Cantidad: %1$s</string>
 </resources>
