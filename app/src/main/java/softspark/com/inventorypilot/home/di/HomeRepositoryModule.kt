@@ -5,6 +5,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import softspark.com.inventorypilot.common.data.util.DispatcherProvider
+import softspark.com.inventorypilot.common.utils.NetworkUtils
 import softspark.com.inventorypilot.home.data.local.dao.products.ProductCategoryDao
 import softspark.com.inventorypilot.home.data.local.dao.products.ProductDao
 import softspark.com.inventorypilot.home.data.local.dao.sales.SalesDao
@@ -26,17 +27,25 @@ object HomeRepositoryModule {
     fun provideProductCategoriesRepository(
         dispatcherProvider: DispatcherProvider,
         productsApi: ProductsApi,
-        productCategoryDao: ProductCategoryDao
+        productCategoryDao: ProductCategoryDao,
+        networkUtils: NetworkUtils
     ): ProductCategoriesRepository =
-        ProductCategoriesRepositoryImpl(dispatcherProvider, productsApi, productCategoryDao)
+        ProductCategoriesRepositoryImpl(
+            dispatcherProvider,
+            productsApi,
+            productCategoryDao,
+            networkUtils
+        )
 
     @Provides
     @Singleton
     fun provideProductsRepository(
         dispatcherProvider: DispatcherProvider,
         productsApi: ProductsApi,
-        productDao: ProductDao
-    ): ProductsRepository = ProductsRepositoryImpl(dispatcherProvider, productsApi, productDao)
+        productDao: ProductDao,
+        networkUtils: NetworkUtils
+    ): ProductsRepository =
+        ProductsRepositoryImpl(dispatcherProvider, productsApi, productDao, networkUtils)
 
     @Provides
     @Singleton

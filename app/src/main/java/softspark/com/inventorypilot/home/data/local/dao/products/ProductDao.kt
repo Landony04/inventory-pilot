@@ -19,4 +19,13 @@ interface ProductDao {
 
     @Query("SELECT * FROM ProductEntity")
     fun getAllProducts(): List<ProductEntity>
+
+    @Query("SELECT * FROM ProductEntity ORDER BY productId ASC LIMIT :limit OFFSET :offset")
+    suspend fun getProductsForPage(limit: Int, offset: Int): List<ProductEntity>
+
+    @Query("SELECT * FROM ProductEntity WHERE categoryId = :categoryId")
+    suspend fun getProductsByCategoryId(categoryId: String): List<ProductEntity>
+
+    @Query("SELECT * FROM ProductEntity WHERE name LIKE :query || '%'")
+    suspend fun getProductsByName(query: String): List<ProductEntity>
 }

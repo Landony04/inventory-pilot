@@ -10,6 +10,10 @@ import softspark.com.inventorypilot.home.data.repositories.ProductsRepository
 import softspark.com.inventorypilot.home.data.repositories.SalesRepository
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductCategoriesUseCase
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductCategoriesUseCaseImpl
+import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsByCategoryIdUseCase
+import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsByCategoryIdUseCaseImpl
+import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsByNameUseCase
+import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsByNameUseCaseImpl
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsUseCase
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsUseCaseImpl
 import softspark.com.inventorypilot.home.domain.useCases.sales.GetSalesUseCase
@@ -36,4 +40,16 @@ object HomeUseCaseModule {
     fun provideGetSalesUseCase(
         salesRepository: SalesRepository
     ): GetSalesUseCase = GetSalesUseCaseImpl(salesRepository)
+
+    @ViewModelScoped
+    @Provides
+    fun provideGetProductsByCategoryId(
+        productsRepository: ProductsRepository
+    ): GetProductsByCategoryIdUseCase = GetProductsByCategoryIdUseCaseImpl(productsRepository)
+
+    @ViewModelScoped
+    @Provides
+    fun provideGetProductsByName(
+        productsRepository: ProductsRepository
+    ): GetProductsByNameUseCase = GetProductsByNameUseCaseImpl(productsRepository)
 }
