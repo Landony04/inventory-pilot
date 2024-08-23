@@ -52,6 +52,13 @@
         <item name="maxLines">2</item>
     </style>
 
+    <style name="DetailsTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionMode.Subtitle">
+        <item name="android:textColor">@color/color_gray</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="maxLines">2</item>
+    </style>
+
     <style name="SpinnerTheme" parent="android:Widget.Material.Spinner.Underlined">
         <item name="android:background">@drawable/spinner_background</item>
         <item name="android:popupBackground">@drawable/spinner_background</item>

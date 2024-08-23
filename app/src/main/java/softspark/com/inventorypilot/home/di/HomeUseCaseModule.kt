@@ -16,6 +16,8 @@ import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsByN
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsByNameUseCaseImpl
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsUseCase
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsUseCaseImpl
+import softspark.com.inventorypilot.home.domain.useCases.sales.GetSalesByDateUseCase
+import softspark.com.inventorypilot.home.domain.useCases.sales.GetSalesByDateUseCaseImpl
 import softspark.com.inventorypilot.home.domain.useCases.sales.GetSalesUseCase
 import softspark.com.inventorypilot.home.domain.useCases.sales.GetSalesUseCaseImpl
 
@@ -25,15 +27,31 @@ object HomeUseCaseModule {
 
     @ViewModelScoped
     @Provides
+    fun provideGetProductCategoriesUseCase(
+        productCategoriesRepository: ProductCategoriesRepository
+    ): GetProductCategoriesUseCase = GetProductCategoriesUseCaseImpl(productCategoriesRepository)
+
+    @ViewModelScoped
+    @Provides
+    fun provideGetProductsByCategoryId(
+        productsRepository: ProductsRepository
+    ): GetProductsByCategoryIdUseCase = GetProductsByCategoryIdUseCaseImpl(productsRepository)
+
+    //USE CASES FOR PRODUCTS
+
+    @ViewModelScoped
+    @Provides
     fun provideGetProductsUseCase(
         productsRepository: ProductsRepository
     ): GetProductsUseCase = GetProductsUseCaseImpl(productsRepository)
 
     @ViewModelScoped
     @Provides
-    fun provideGetProductCategoriesUseCase(
-        productCategoriesRepository: ProductCategoriesRepository
-    ): GetProductCategoriesUseCase = GetProductCategoriesUseCaseImpl(productCategoriesRepository)
+    fun provideGetProductsByName(
+        productsRepository: ProductsRepository
+    ): GetProductsByNameUseCase = GetProductsByNameUseCaseImpl(productsRepository)
+
+    //USE CASES FOR SALES
 
     @ViewModelScoped
     @Provides
@@ -43,13 +61,7 @@ object HomeUseCaseModule {
 
     @ViewModelScoped
     @Provides
-    fun provideGetProductsByCategoryId(
-        productsRepository: ProductsRepository
-    ): GetProductsByCategoryIdUseCase = GetProductsByCategoryIdUseCaseImpl(productsRepository)
-
-    @ViewModelScoped
-    @Provides
-    fun provideGetProductsByName(
-        productsRepository: ProductsRepository
-    ): GetProductsByNameUseCase = GetProductsByNameUseCaseImpl(productsRepository)
+    fun provideGetSalesByDateUseCase(
+        salesRepository: SalesRepository
+    ): GetSalesByDateUseCase = GetSalesByDateUseCaseImpl(salesRepository)
 }

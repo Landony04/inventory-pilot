@@ -12,7 +12,14 @@
     <string name="title_sales">Ventas</string>
     <string name="title_products">Productos</string>
 
+    <!-- PRODUCTS   -->
     <string name="title_action_bar_products">Listado de productos</string>
     <string name="title_first_option_spinner">Todas las categoríaa</string>
     <string name="hint_search_product">Buscar producto</string>
+
+    <!-- SALES   -->
+    <string name="title_action_bar_sales">Ventas recientes</string>
+    <string name="text_details_sale">%1$s artículos - GTQ %2$s</string>
+    <string name="text_price_product">Precio: GTQ %1$s</string>
+    <string name="text_quantity_product">Cantidad: %1$s</string>
 </resources>

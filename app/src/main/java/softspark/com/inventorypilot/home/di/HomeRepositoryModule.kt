@@ -52,6 +52,7 @@ object HomeRepositoryModule {
     fun provideSalesRepository(
         dispatcherProvider: DispatcherProvider,
         salesApi: SalesApi,
-        salesDao: SalesDao
-    ): SalesRepository = SalesRepositoryImpl(dispatcherProvider, salesApi, salesDao)
+        salesDao: SalesDao,
+        networkUtils: NetworkUtils
+    ): SalesRepository = SalesRepositoryImpl(dispatcherProvider, networkUtils, salesApi, salesDao)
 }
