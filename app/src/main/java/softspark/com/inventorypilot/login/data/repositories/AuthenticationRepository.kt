@@ -7,5 +7,8 @@ import softspark.com.inventorypilot.login.domain.models.UserProfile
 interface AuthenticationRepository {
 
     suspend fun getUserProfile(email: String): Flow<Result<UserProfile>>
+
+    suspend fun insertUsers(users: List<UserProfile>)
+
     suspend fun login(email: String, password: String): Flow<Result<Unit>>
 }

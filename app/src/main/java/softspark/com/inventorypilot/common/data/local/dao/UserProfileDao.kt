@@ -9,8 +9,11 @@ import softspark.com.inventorypilot.common.data.local.entity.UserProfileEntity
 @Dao
 interface UserProfileDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertUserProfile(userProfileEntity: UserProfileEntity)
+    suspend fun insertUsers(userProfileEntity: List<UserProfileEntity>)
 
     @Query("SELECT * FROM UserProfileEntity WHERE userId = :id")
     fun getUserProfileById(id: String): UserProfileEntity
+
+    @Query("SELECT * FROM UserProfileEntity WHERE email = :email")
+    fun getUserProfileByEmail(email: String): UserProfileEntity
 }

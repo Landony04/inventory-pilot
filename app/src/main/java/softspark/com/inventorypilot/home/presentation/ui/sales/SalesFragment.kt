@@ -80,16 +80,20 @@ class SalesFragment : Fragment() {
     }
 
     private fun initListeners() {
-        binding?.calendarIb?.setOnClickListener {
-            dialogBuilder.showDatePickerDialog(requireContext()) { selectedDate, selectedDateUTC ->
-                binding?.dateSaleTv?.text = selectedDate
-                salesViewModel.getSalesByDate(selectedDateUTC)
-            }
+        binding?.dateFilterContainer?.setOnClickListener {
+            showDatePicker()
         }
     }
 
     private fun setInitDate() {
         binding?.dateSaleTv?.text = salesViewModel.getCurrentDate()
+    }
+
+    private fun showDatePicker() {
+        dialogBuilder.showDatePickerDialog(requireContext()) { selectedDate, selectedDateUTC ->
+            binding?.dateSaleTv?.text = selectedDate
+            salesViewModel.getSalesByDate(selectedDateUTC)
+        }
     }
 
     private fun setUpActionBar() {
