@@ -21,6 +21,7 @@ data class SaleEntity(
     val saleId: String,
     val clientId: String,
     val date: String,
+    val dateWithoutHours: String,
     val totalAmount: Double,
     @ColumnInfo(name = "userOwnerId")
     // ID del usuario que realizó la venta (ForeignKey)

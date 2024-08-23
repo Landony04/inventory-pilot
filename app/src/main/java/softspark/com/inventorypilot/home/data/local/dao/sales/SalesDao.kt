@@ -24,6 +24,6 @@ interface SalesDao {
     fun getSalesForPage(limit: Int, offset: Int): List<SaleEntity>
 
     @Transaction
-    @Query("SELECT * FROM SaleEntity WHERE date = :date")
+    @Query("SELECT * FROM SaleEntity WHERE dateWithoutHours = :date")
     fun getSalesByDate(date: String): List<SaleEntity>
 }

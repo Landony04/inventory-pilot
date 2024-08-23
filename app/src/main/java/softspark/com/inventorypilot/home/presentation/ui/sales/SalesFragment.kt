@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import softspark.com.inventorypilot.R
 import softspark.com.inventorypilot.common.entities.base.Result
+import softspark.com.inventorypilot.common.utils.dialogs.DialogBuilder
 import softspark.com.inventorypilot.databinding.FragmentSalesBinding
 import softspark.com.inventorypilot.home.domain.models.sales.Sale
 import javax.inject.Inject
@@ -25,6 +26,9 @@ class SalesFragment : Fragment() {
 
     @Inject
     lateinit var salesAdapter: SalesAdapter
+
+    @Inject
+    lateinit var dialogBuilder: DialogBuilder
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,6 +46,8 @@ class SalesFragment : Fragment() {
         setUpActionBar()
         setUpObservers()
         getInitialData()
+        initListeners()
+        setInitDate()
     }
 
     private fun getInitialData() {
@@ -71,6 +77,19 @@ class SalesFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = salesAdapter
         }
+    }
+
+    private fun initListeners() {
+        binding?.calendarIb?.setOnClickListener {
+            dialogBuilder.showDatePickerDialog(requireContext()) { selectedDate, selectedDateUTC ->
+                binding?.dateSaleTv?.text = selectedDate
+                salesViewModel.getSalesByDate(selectedDateUTC)
+            }
+        }
+    }
+
+    private fun setInitDate() {
+        binding?.dateSaleTv?.text = salesViewModel.getCurrentDate()
     }
 
     private fun setUpActionBar() {
