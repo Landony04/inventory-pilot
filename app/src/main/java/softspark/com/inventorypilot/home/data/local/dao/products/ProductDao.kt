@@ -28,4 +28,10 @@ interface ProductDao {
 
     @Query("SELECT * FROM ProductEntity WHERE name LIKE :query || '%'")
     suspend fun getProductsByName(query: String): List<ProductEntity>
+
+    @Query("UPDATE ProductEntity SET stock = stock + :quantity WHERE productId = :productId")
+    suspend fun increaseStock(productId: String, quantity: Int)
+
+    @Query("UPDATE ProductEntity SET stock = stock - :quantity WHERE productId = :productId")
+    suspend fun decreaseStock(productId: String, quantity: Int)
 }

@@ -36,4 +36,6 @@
 
     <color name="layoutBackground">#E0E0E0</color>
     <color name="color_gray">#A2A2A2</color>
+
+    <color name="color_gray_4">#EDEDED</color>
 </resources>

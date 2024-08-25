@@ -5,9 +5,14 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
+import softspark.com.inventorypilot.home.data.repositories.CartRepository
 import softspark.com.inventorypilot.home.data.repositories.ProductCategoriesRepository
 import softspark.com.inventorypilot.home.data.repositories.ProductsRepository
 import softspark.com.inventorypilot.home.data.repositories.SalesRepository
+import softspark.com.inventorypilot.home.domain.useCases.cart.DecreaseQuantityUseCase
+import softspark.com.inventorypilot.home.domain.useCases.cart.DecreaseQuantityUseCaseImpl
+import softspark.com.inventorypilot.home.domain.useCases.cart.IncreaseQuantityUseCase
+import softspark.com.inventorypilot.home.domain.useCases.cart.IncreaseQuantityUseCaseImpl
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductCategoriesUseCase
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductCategoriesUseCaseImpl
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsByCategoryIdUseCase
@@ -64,4 +69,35 @@ object HomeUseCaseModule {
     fun provideGetSalesByDateUseCase(
         salesRepository: SalesRepository
     ): GetSalesByDateUseCase = GetSalesByDateUseCaseImpl(salesRepository)
+
+    //USE CASES FOR CART
+    @ViewModelScoped
+    @Provides
+    fun provideAddProductToCartUseCase(
+        cartRepository: CartRepository
+    ): AddProductToCartUseCase = AddProductToCartUseCaseImpl(cartRepository)
+
+    @ViewModelScoped
+    @Provides
+    fun provideEmptyCartUseCase(
+        cartRepository: CartRepository
+    ): EmptyCartUseCase = EmptyCartUseCaseImpl(cartRepository)
+
+    @ViewModelScoped
+    @Provides
+    fun provideGetCartUseCase(
+        cartRepository: CartRepository
+    ): GetCartUseCase = GetCartUseCaseImpl(cartRepository)
+
+    @ViewModelScoped
+    @Provides
+    fun provideDecreaseStockUseCase(
+        cartRepository: CartRepository
+    ): DecreaseQuantityUseCase = DecreaseQuantityUseCaseImpl(cartRepository)
+
+    @ViewModelScoped
+    @Provides
+    fun provideIncreaseStockUseCase(
+        cartRepository: CartRepository
+    ): IncreaseQuantityUseCase = IncreaseQuantityUseCaseImpl(cartRepository)
 }

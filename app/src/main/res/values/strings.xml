@@ -22,4 +22,10 @@
     <string name="text_details_sale">%1$s artículos - GTQ %2$s</string>
     <string name="text_price_product">Precio: GTQ %1$s</string>
     <string name="text_quantity_product">Cantidad: %1$s</string>
+
+    <!--CART  -->
+    <string name="title_action_bar_cart">Realizar Venta</string>
+    <string name="text_button_details">Detalles</string>
+    <string name="text_status_completed">Completada</string>
+    <string name="text_pay_for_item">GTQ%1$s</string>
 </resources>
