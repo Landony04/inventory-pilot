@@ -1,6 +1,7 @@
 package softspark.com.inventorypilot.login.presentation.ui
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -60,17 +61,35 @@ class LoginActivity : AppCompatActivity() {
 
     private fun handleGetUserProfile(result: Result<UserProfile>) {
         when (result) {
-            is Result.Error -> println("Mostrar el error en un alert ${result.exception.message}")
-            is Result.Success -> navigator.navigateToHome()
+            is Result.Error -> {
+                binding.loginProgressBar.visibility = View.GONE
+                binding.loginButton.visibility = View.VISIBLE
+                println("Mostrar el error en un alert ${result.exception.message}")
+            }
+
+            is Result.Success -> {
+                binding.loginProgressBar.visibility = View.GONE
+                navigator.navigateToHome()
+            }
+
             Result.Loading -> println("Mostrar progress")
         }
     }
 
     private fun handleLogin(result: Result<Unit>) {
         when (result) {
-            is Result.Error -> println("Fallo el login")
+            is Result.Error -> {
+                println("Fallo el login")
+                binding.loginProgressBar.visibility = View.GONE
+                binding.loginButton.visibility = View.VISIBLE
+            }
+
             is Result.Success -> loginViewModel.getUserProfile(getEmail())
-            Result.Loading -> println("Mostrar progress")
+
+            Result.Loading -> {
+                binding.loginButton.visibility = View.GONE
+                binding.loginProgressBar.visibility = View.VISIBLE
+            }
         }
     }
 

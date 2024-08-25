@@ -8,9 +8,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.common.utils.Constants
+import softspark.com.inventorypilot.common.utils.Constants.DD_MMM_DATE_FORMAT
 import softspark.com.inventorypilot.home.domain.models.sales.Sale
 import softspark.com.inventorypilot.home.domain.useCases.sales.GetSalesByDateUseCase
 import softspark.com.inventorypilot.home.domain.useCases.sales.GetSalesUseCase
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -39,5 +43,10 @@ class SalesViewModel @Inject constructor(
                 _salesData.value = result
             }
         }
+    }
+
+    fun getCurrentDate(): String {
+        val sdf = SimpleDateFormat(DD_MMM_DATE_FORMAT, Locale.getDefault())
+        return sdf.format(Date())
     }
 }
