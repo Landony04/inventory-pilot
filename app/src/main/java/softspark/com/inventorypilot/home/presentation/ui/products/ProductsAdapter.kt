@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.qualifiers.ApplicationContext
 import softspark.com.inventorypilot.R
-import softspark.com.inventorypilot.common.utils.Constants.VALUE_ONE
 import softspark.com.inventorypilot.common.utils.Constants.VALUE_ZERO
 import softspark.com.inventorypilot.databinding.ItemLayoutCardProductBinding
 import softspark.com.inventorypilot.home.domain.models.products.Product
@@ -73,19 +72,11 @@ class ProductsAdapter @Inject constructor(
         val product = getItem(position)
         holder.bind(context = context, productSection = product) { productSelected ->
             productSelectedListener.addToCartProductSelected(productSelected, position)
-            updateProduct(position)
         }
     }
 
     fun initListeners(listener: ProductSelectedListener) {
         productSelectedListener = listener
-    }
-
-    private fun updateProduct(position: Int) {
-        val product = getItem(position)
-        product.stock -= VALUE_ONE
-
-        notifyItemChanged(position)
     }
 }
 

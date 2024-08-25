@@ -10,4 +10,5 @@ object Constants {
     const val FRIENDLY_DATE_FORMAT = "dd MMMM yyyy - hh:mm aa"
     const val DD_MMM_DATE_FORMAT = "dd MMM"
     const val EMPTY_STRING = ""
+    const val REQUEST_DELAY = 1000L
 }
