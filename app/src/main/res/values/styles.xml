@@ -25,7 +25,7 @@
         <item name="hintTextColor">@color/colorPrimary</item>
         <item name="startIconTint">@color/colorPrimary</item>
         <item name="endIconTint">@color/colorPrimary</item>
-<!--        <item name="errorIconDrawable">@drawable/ic_error</item>-->
+        <!--        <item name="errorIconDrawable">@drawable/ic_error</item>-->
     </style>
 
     <!-- Style for Button -->
@@ -36,6 +36,8 @@
         <item name="android:textAllCaps">true</item>
         <item name="android:elevation">4dp</item>
         <item name="android:padding">16dp</item>
+        <item name="autoSizeMinTextSize">40dp</item>
+        <item name="autoSizeMaxTextSize">60dp</item>
     </style>
 
     <style name="CartButton" parent="Widget.AppCompat.Button">
@@ -50,22 +52,36 @@
 
     <style name="TitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionMode.Title">
         <item name="android:textColor">@color/colorBlack</item>
+        <item name="autoSizeMinTextSize">14sp</item>
+        <item name="autoSizeMaxTextSize">20sp</item>
         <item name="android:textSize">20sp</item>
         <item name="android:ellipsize">end</item>
         <item name="maxLines">2</item>
+        <item name="layout_constraintHeight_default">wrap</item>
+        <item name="autoSizeStepGranularity">2dp</item>
     </style>
 
     <style name="DescriptionTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionMode.Subtitle">
         <item name="android:textColor">@color/colorBlack</item>
         <item name="android:textSize">16sp</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMinTextSize">10sp</item>
+        <item name="autoSizeMaxTextSize">18sp</item>
         <item name="android:ellipsize">end</item>
+        <item name="layout_constraintHeight_default">wrap</item>
+        <item name="autoSizeStepGranularity">2dp</item>
         <item name="maxLines">2</item>
     </style>
 
     <style name="DetailsTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionMode.Subtitle">
         <item name="android:textColor">@color/color_gray</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMinTextSize">12sp</item>
+        <item name="autoSizeMaxTextSize">16sp</item>
         <item name="android:textSize">16sp</item>
         <item name="android:ellipsize">end</item>
+        <item name="layout_constraintHeight_default">wrap</item>
+        <item name="autoSizeStepGranularity">2dp</item>
         <item name="maxLines">2</item>
     </style>
 

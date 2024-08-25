@@ -19,4 +19,8 @@ interface ProductsRepository {
     ): Flow<Result<ArrayList<Product>>>
 
     suspend fun insertProducts(products: List<Product>)
+
+    suspend fun increaseStock(productId: String): Flow<Result<Unit>>
+
+    suspend fun decreaseStock(productId: String): Flow<Result<Unit>>
 }

@@ -12,6 +12,7 @@ import softspark.com.inventorypilot.R
 import softspark.com.inventorypilot.common.utils.Constants.VALUE_ONE
 import softspark.com.inventorypilot.databinding.ItemLayoutCardCartBinding
 import softspark.com.inventorypilot.home.domain.models.cart.CartSelectedType
+import softspark.com.inventorypilot.databinding.ItemLayoutCardCartBinding
 import softspark.com.inventorypilot.home.domain.models.sales.CartItem
 import javax.inject.Inject
 
@@ -20,7 +21,6 @@ class CartAdapter @Inject constructor(
 ) : ListAdapter<CartItem, CartAdapter.CartViewHolder>(CartDiffCallback()) {
 
     private lateinit var cartSelectedEvents: CartSelectedEvents
-
     class CartViewHolder(
         private val itemBinding: ItemLayoutCardCartBinding
     ) : RecyclerView.ViewHolder(itemBinding.root) {

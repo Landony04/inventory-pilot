@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_container_product"
     android:layout_width="match_parent"
-    android:layout_height="225dp"
+    android:layout_height="wrap_content"
     android:padding="10dp">
 
     <androidx.cardview.widget.CardView
@@ -32,6 +32,7 @@
                 android:id="@+id/product_iv"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:layout_margin="5dp"
                 android:contentDescription="product_image"
                 android:src="@drawable/ic_inventory_product"
                 app:layout_constraintBottom_toTopOf="@id/title_product_tv"
@@ -43,10 +44,12 @@
                 android:id="@+id/title_product_tv"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:gravity="center"
                 android:textAppearance="@style/TitleTextStyle"
                 app:layout_constraintBottom_toTopOf="@id/description_product_tv"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/product_iv"
                 tools:text="Este es un producto" />
@@ -55,42 +58,66 @@
                 android:id="@+id/description_product_tv"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:gravity="center"
                 android:textAppearance="@style/DescriptionTextStyle"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintBottom_toTopOf="@+id/price_product_tv"
+                app:layout_constraintBottom_toTopOf="@+id/price_and_quantity_container"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/title_product_tv"
                 tools:text="Esta es la descripcion de un producto" />
 
-            <TextView
-                android:id="@+id/price_product_tv"
-                android:layout_width="0dp"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/price_and_quantity_container"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:gravity="start"
-                android:textAppearance="@style/DescriptionTextStyle"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/stock_product_tv"
+                android:layout_margin="5dp"
+                app:layout_constraintBottom_toTopOf="@+id/add_cart_button"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/description_product_tv"
-                tools:text="Precio: GTQ 50" />
+                app:layout_constraintTop_toBottomOf="@+id/description_product_tv">
 
-            <TextView
-                android:id="@+id/stock_product_tv"
-                android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/price_product_tv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:gravity="start"
+                    android:textAppearance="@style/DescriptionTextStyle"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/stock_product_tv"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Precio: GTQ 50" />
+
+                <TextView
+                    android:id="@+id/stock_product_tv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:gravity="end"
+                    android:textAppearance="@style/DescriptionTextStyle"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/price_product_tv"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Cantidad: 50" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <Button
+                android:id="@+id/add_cart_button"
+                style="@style/CustomButton"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:gravity="end"
-                android:textAppearance="@style/DescriptionTextStyle"
-                android:textStyle="bold"
+                android:layout_margin="8dp"
+                android:text="Agregar al carrito"
+                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/price_product_tv"
-                app:layout_constraintTop_toBottomOf="@+id/description_product_tv"
-                tools:text="Cantidad: 50" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/price_and_quantity_container" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 

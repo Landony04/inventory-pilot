@@ -12,11 +12,12 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import softspark.com.inventorypilot.R
 import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.common.presentation.products.SpinnerAdapter
+import softspark.com.inventorypilot.common.utils.Constants.VALUE_ONE
 import softspark.com.inventorypilot.common.utils.Constants.VALUE_ZERO
 import softspark.com.inventorypilot.common.utils.components.ItemSelectedFromSpinnerListener
 import softspark.com.inventorypilot.common.utils.components.ItemSelectedSpinner
@@ -25,12 +26,15 @@ import softspark.com.inventorypilot.common.utils.components.ScrollRecyclerViewLi
 import softspark.com.inventorypilot.databinding.FragmentProductsBinding
 import softspark.com.inventorypilot.home.domain.models.products.Product
 import softspark.com.inventorypilot.home.domain.models.products.ProductCategory
+import softspark.com.inventorypilot.home.presentation.ui.cart.CartViewModel
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ScrollRecyclerViewListener {
+class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ScrollRecyclerViewListener,
+    ProductSelectedListener {
 
     private val productCategoryViewModel: ProductViewModel by viewModels()
+    private val cartViewModel: CartViewModel by viewModels()
 
     private var _binding: FragmentProductsBinding? = null
     private val binding get() = _binding
@@ -107,8 +111,8 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ScrollRecy
     private fun initAdapter() {
         binding?.productsRv?.apply {
             setHasFixedSize(true)
-            layoutManager = GridLayoutManager(requireContext(), 2)
             adapter = productsAdapter
+            layoutManager = LinearLayoutManager(requireContext())
         }
     }
 
@@ -145,6 +149,8 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ScrollRecy
         binding?.searchIl?.setEndIconOnClickListener {
             validateIfCleanSearchInput()
         }
+
+        productsAdapter.initListeners(this)
     }
 
     private fun setUpActionBar() {
@@ -204,5 +210,9 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ScrollRecy
 
     override fun invoke() {
         getProducts()
+    }
+
+    override fun addToCartProductSelected(product: Product, position: Int) {
+        cartViewModel.addProductToCart(product, VALUE_ONE)
     }
 }
