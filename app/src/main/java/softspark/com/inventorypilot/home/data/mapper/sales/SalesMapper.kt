@@ -20,7 +20,8 @@ fun GetSalesResponse.toSaleListDomain(): List<Sale> {
             date = dto.date,
             totalAmount = dto.totalAmount,
             userId = dto.userId,
-            products = ArrayList(dto.products.toProductSaleDomain())
+            products = ArrayList(dto.products.toProductSaleDomain()),
+            status = dto.status
         )
     }
 }
@@ -32,7 +33,8 @@ fun Sale.toSaleEntity(): SaleEntity = SaleEntity(
     totalAmount = totalAmount,
     userOwnerId = userId,
     products = SaleProductsList(products),
-    dateWithoutHours = date.formatDateUTCWithoutHours()
+    dateWithoutHours = date.formatDateUTCWithoutHours(),
+    status = status
 )
 
 fun SaleEntity.toSaleDomain(): Sale = Sale(
@@ -41,7 +43,8 @@ fun SaleEntity.toSaleDomain(): Sale = Sale(
     date = date.formatUtcToReadableDate(),
     totalAmount = totalAmount,
     userId = userOwnerId,
-    products = ArrayList(products.products)
+    products = ArrayList(products.products),
+    status = status
 )
 
 fun ProductsSaleResponse.toProductSaleDomain(): List<ProductSale> {

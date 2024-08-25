@@ -7,13 +7,17 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.qualifiers.ApplicationContext
+import softspark.com.inventorypilot.R
 import softspark.com.inventorypilot.databinding.ItemLayoutCardCartBinding
+import softspark.com.inventorypilot.home.domain.models.cart.CartSelectedType
 import softspark.com.inventorypilot.home.domain.models.sales.CartItem
 import javax.inject.Inject
 
 class CartAdapter @Inject constructor(
     @ApplicationContext private val context: Context
 ) : ListAdapter<CartItem, CartAdapter.CartViewHolder>(CartDiffCallback()) {
+
+    private lateinit var cartSelectedEvents: CartSelectedEvents
 
     class CartViewHolder(
         private val itemBinding: ItemLayoutCardCartBinding
@@ -22,11 +26,28 @@ class CartAdapter @Inject constructor(
         fun bind(
             context: Context,
             cartItemSection: CartItem,
-            cartItemSelected: (CartItem) -> Unit
+            cartItemSelected: (CartItem) -> Unit,
+            increaseSelected: () -> Unit,
+            decreaseSelected: () -> Unit
         ) {
             with(itemBinding) {
+
+                productNameTv.text = cartItemSection.productName
+
                 quantityTv.text = "${cartItemSection.quantity}"
-                totalPriceTv.text = "${cartItemSection.price}"
+
+                totalPriceTv.text = String.format(
+                    context.getString(R.string.text_pay_for_item),
+                    cartItemSection.totalAmount.toString()
+                )
+
+                increaseQuantityTv.setOnClickListener {
+                    increaseSelected()
+                }
+
+                decreaseQuantityTv.setOnClickListener {
+                    decreaseSelected()
+                }
             }
         }
     }
@@ -43,8 +64,26 @@ class CartAdapter @Inject constructor(
 
     override fun onBindViewHolder(holder: CartViewHolder, position: Int) {
         val cartItem = getItem(position)
-        holder.bind(context = context, cartItemSection = cartItem) { cartItemSelected ->
-        }
+        holder.bind(context = context, cartItemSection = cartItem, {
+
+        }, {
+            cartSelectedEvents.updateQuantity(CartSelectedType.IncreaseQuantity(cartItem.cartItemId.toString()))
+            updateQuantity(position, +1)
+        }, {
+            cartSelectedEvents.updateQuantity(CartSelectedType.DecreaseQuantity(cartItem.cartItemId.toString()))
+            updateQuantity(position, -1)
+        })
+    }
+
+    private fun updateQuantity(position: Int, quantity: Int) {
+        val cartItem = getItem(position)
+        cartItem.quantity += quantity
+        cartItem.totalAmount = (cartItem.quantity * cartItem.price)
+        notifyItemChanged(position)
+    }
+
+    fun initListener(listener: CartSelectedEvents) {
+        cartSelectedEvents = listener
     }
 }
 

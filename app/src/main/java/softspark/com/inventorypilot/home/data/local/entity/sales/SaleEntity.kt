@@ -19,12 +19,13 @@ data class SaleEntity(
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "saleId")
     val saleId: String,
-    val clientId: String,
+    val clientId: String?,
     val date: String,
     val dateWithoutHours: String,
     val totalAmount: Double,
     @ColumnInfo(name = "userOwnerId")
     // ID del usuario que realizó la venta (ForeignKey)
     val userOwnerId: String,
-    val products: SaleProductsList
+    val products: SaleProductsList,
+    val status: String
 )

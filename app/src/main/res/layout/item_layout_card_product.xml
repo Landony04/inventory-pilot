@@ -5,7 +5,7 @@
     android:id="@+id/card_container_product"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp">
+    android:padding="5dp">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card_contract"
@@ -71,7 +71,6 @@
                 android:id="@+id/price_and_quantity_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
                 app:layout_constraintBottom_toTopOf="@+id/add_cart_button"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -82,7 +81,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:gravity="start"
+                    android:gravity="center"
                     android:textAppearance="@style/DescriptionTextStyle"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -96,7 +95,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:gravity="end"
+                    android:gravity="center"
                     android:textAppearance="@style/DescriptionTextStyle"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -112,7 +111,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:text="Agregar al carrito"
+                android:text="Agregar"
                 android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

@@ -5,21 +5,26 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.home.data.mapper.products.toCartItem
 import softspark.com.inventorypilot.home.domain.models.products.Product
 import softspark.com.inventorypilot.home.domain.models.sales.CartItem
 import softspark.com.inventorypilot.home.domain.useCases.cart.AddProductToCartUseCase
+import softspark.com.inventorypilot.home.domain.useCases.cart.DecreaseQuantityUseCase
 import softspark.com.inventorypilot.home.domain.useCases.cart.EmptyCartUseCase
 import softspark.com.inventorypilot.home.domain.useCases.cart.GetCartUseCase
+import softspark.com.inventorypilot.home.domain.useCases.cart.IncreaseQuantityUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class CartViewModel @Inject constructor(
     private val addProductToCartUseCase: AddProductToCartUseCase,
     private val getCartUseCase: GetCartUseCase,
-    private val emptyCartUseCase: EmptyCartUseCase
+    private val emptyCartUseCase: EmptyCartUseCase,
+    private val decreaseQuantityUseCase: DecreaseQuantityUseCase,
+    private val increaseQuantityUseCase: IncreaseQuantityUseCase
 ) : ViewModel() {
 
     private val _addProductToCartData = MutableLiveData<Result<Boolean>>()
@@ -52,6 +57,18 @@ class CartViewModel @Inject constructor(
             emptyCartUseCase().collect { result ->
                 _emptyCartData.value = result
             }
+        }
+    }
+
+    fun decreaseQuantity(cartItemId: String) {
+        viewModelScope.launch {
+            decreaseQuantityUseCase(cartItemId).collect()
+        }
+    }
+
+    fun increaseQuantity(cartItemId: String) {
+        viewModelScope.launch {
+            increaseQuantityUseCase(cartItemId).collect()
         }
     }
 }

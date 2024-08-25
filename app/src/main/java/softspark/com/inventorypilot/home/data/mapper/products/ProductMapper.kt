@@ -67,5 +67,6 @@ fun ProductEntity.toProductDomain(): Product = Product(
 fun Product.toCartItem(quantity: Int): CartItem = CartItem(
     productId = id,
     quantity = quantity,
-    price = price
+    price = price,
+    productName = name
 )

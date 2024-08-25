@@ -10,4 +10,8 @@ interface CartRepository {
     suspend fun getCart(): Flow<Result<ArrayList<CartItem>>>
 
     suspend fun emptyCart(): Flow<Result<Boolean>>
+
+    suspend fun increaseQuantity(cartItemId: String): Flow<Result<Unit>>
+
+    suspend fun decreaseQuantity(cartItemId: String): Flow<Result<Unit>>
 }

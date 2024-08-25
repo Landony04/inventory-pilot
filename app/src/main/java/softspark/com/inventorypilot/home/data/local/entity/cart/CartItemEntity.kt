@@ -9,5 +9,7 @@ data class CartItemEntity(
     val cartItemId: Int?,
     val productId: String,
     val quantity: Int,
-    val price: Double
+    val price: Double,
+    val totalAmount: Double,
+    val productName: String
 )

@@ -7,13 +7,17 @@ fun CartItem.toCartItemEntity(): CartItemEntity = CartItemEntity(
     cartItemId = cartItemId,
     productId = productId,
     quantity = quantity,
-    price = price
+    price = price,
+    totalAmount = totalAmount ?: price,
+    productName = productName
 )
 
 fun CartItemEntity.toCartItem(): CartItem = CartItem(
     cartItemId = cartItemId,
     productId = productId,
     quantity = quantity,
-    price = price
+    price = price,
+    productName = productName,
+    totalAmount = totalAmount
 )
 

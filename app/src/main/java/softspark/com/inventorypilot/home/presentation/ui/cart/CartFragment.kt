@@ -13,16 +13,17 @@ import softspark.com.inventorypilot.R
 import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.common.utils.Constants.VALUE_ZERO
 import softspark.com.inventorypilot.databinding.FragmentCartBinding
+import softspark.com.inventorypilot.home.domain.models.cart.CartSelectedType
 import softspark.com.inventorypilot.home.domain.models.sales.CartItem
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CartFragment : Fragment() {
+class CartFragment : Fragment(), CartSelectedEvents {
 
     private var _binding: FragmentCartBinding? = null
     private val binding get() = _binding
 
-    val cartViewModel: CartViewModel by viewModels()
+    private val cartViewModel: CartViewModel by viewModels()
 
     @Inject
     lateinit var cartAdapter: CartAdapter
@@ -117,6 +118,8 @@ class CartFragment : Fragment() {
         }
 
         binding?.finishSaleButton?.setOnClickListener { }
+
+        cartAdapter.initListener(this)
     }
 
     private fun setUpActionBar() {
@@ -136,5 +139,13 @@ class CartFragment : Fragment() {
         cartViewModel.emptyCartData.removeObservers(viewLifecycleOwner)
         cartViewModel.getCartData.removeObservers(viewLifecycleOwner)
         _binding = null
+    }
+
+    override fun updateQuantity(cartSelectedType: CartSelectedType) = with(cartSelectedType) {
+        when (this) {
+            is CartSelectedType.DecreaseQuantity -> cartViewModel.decreaseQuantity(this.itemCartId)
+            is CartSelectedType.IncreaseQuantity -> cartViewModel.increaseQuantity(this.itemCartId)
+            is CartSelectedType.RemoveCartItem -> TODO()
+        }
     }
 }
