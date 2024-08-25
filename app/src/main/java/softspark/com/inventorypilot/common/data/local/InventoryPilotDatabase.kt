@@ -18,7 +18,7 @@ import softspark.com.inventorypilot.home.data.local.typeconverter.SalesTypeConve
 @TypeConverters(value = [SalesTypeConverters::class])
 @Database(
     entities = [UserProfileEntity::class, ProductCategoryEntity::class, ProductEntity::class, SaleEntity::class, CartItemEntity::class],
-    version = 2,
+    version = 1,
     exportSchema = false
 )
 abstract class InventoryPilotDatabase : RoomDatabase() {

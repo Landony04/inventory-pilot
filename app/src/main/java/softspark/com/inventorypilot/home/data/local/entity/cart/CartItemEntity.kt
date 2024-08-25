@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity
 data class CartItemEntity(
     @PrimaryKey(autoGenerate = true)
-    val cartItemId: Int,
+    val cartItemId: Int?,
     val productId: String,
     val quantity: Int,
     val price: Double
