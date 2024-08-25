@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import softspark.com.inventorypilot.R
@@ -112,7 +113,7 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ScrollRecy
         binding?.productsRv?.apply {
             setHasFixedSize(true)
             adapter = productsAdapter
-            layoutManager = LinearLayoutManager(requireContext())
+            layoutManager = GridLayoutManager(requireContext(), 2)
         }
     }
 

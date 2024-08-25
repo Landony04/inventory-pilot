@@ -5,5 +5,6 @@ data class SaleDto(
     val date: String,
     val totalAmount: Double,
     val userId: String,
-    val products: ProductsSaleResponse
+    val products: ProductsSaleResponse,
+    val status: String
 )
