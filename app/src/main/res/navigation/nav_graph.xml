@@ -12,11 +12,11 @@
 
     <fragment
         android:id="@+id/navigation_shoping_cart"
-        android:name="softspark.com.inventorypilot.home.presentation.ui.home.HomeFragment"
+        android:name="softspark.com.inventorypilot.home.presentation.ui.cart.CartFragment"
         tools:layout="@layout/fragment_sales" />
 
     <fragment
         android:id="@+id/navigation_sales"
         android:name="softspark.com.inventorypilot.home.presentation.ui.sales.SalesFragment"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_cart" />
 </navigation>

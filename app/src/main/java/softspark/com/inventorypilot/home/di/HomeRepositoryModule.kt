@@ -6,12 +6,15 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import softspark.com.inventorypilot.common.data.util.DispatcherProvider
 import softspark.com.inventorypilot.common.utils.NetworkUtils
+import softspark.com.inventorypilot.home.data.local.dao.cart.CartDao
 import softspark.com.inventorypilot.home.data.local.dao.products.ProductCategoryDao
 import softspark.com.inventorypilot.home.data.local.dao.products.ProductDao
 import softspark.com.inventorypilot.home.data.local.dao.sales.SalesDao
+import softspark.com.inventorypilot.home.data.repositories.CartRepository
 import softspark.com.inventorypilot.home.data.repositories.ProductCategoriesRepository
 import softspark.com.inventorypilot.home.data.repositories.ProductsRepository
 import softspark.com.inventorypilot.home.data.repositories.SalesRepository
+import softspark.com.inventorypilot.home.domain.repositories.cart.CartRepositoryImpl
 import softspark.com.inventorypilot.home.domain.repositories.products.ProductCategoriesRepositoryImpl
 import softspark.com.inventorypilot.home.domain.repositories.products.ProductsRepositoryImpl
 import softspark.com.inventorypilot.home.domain.repositories.sales.SalesRepositoryImpl
@@ -55,4 +58,11 @@ object HomeRepositoryModule {
         salesDao: SalesDao,
         networkUtils: NetworkUtils
     ): SalesRepository = SalesRepositoryImpl(dispatcherProvider, networkUtils, salesApi, salesDao)
+
+    @Provides
+    @Singleton
+    fun provideCartRepository(
+        dispatcherProvider: DispatcherProvider,
+        cartDao: CartDao
+    ): CartRepository = CartRepositoryImpl(cartDao, dispatcherProvider)
 }

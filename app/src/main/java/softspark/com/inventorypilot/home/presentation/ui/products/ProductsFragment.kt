@@ -12,7 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import softspark.com.inventorypilot.R
 import softspark.com.inventorypilot.common.entities.base.Result
@@ -28,7 +28,8 @@ import softspark.com.inventorypilot.home.domain.models.products.ProductCategory
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ScrollRecyclerViewListener {
+class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ScrollRecyclerViewListener,
+    ProductSelectedListener {
 
     private val productCategoryViewModel: ProductViewModel by viewModels()
 
@@ -107,8 +108,8 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ScrollRecy
     private fun initAdapter() {
         binding?.productsRv?.apply {
             setHasFixedSize(true)
-            layoutManager = GridLayoutManager(requireContext(), 2)
             adapter = productsAdapter
+            layoutManager = LinearLayoutManager(requireContext())
         }
     }
 
@@ -145,6 +146,8 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ScrollRecy
         binding?.searchIl?.setEndIconOnClickListener {
             validateIfCleanSearchInput()
         }
+
+        productsAdapter.initListeners(this)
     }
 
     private fun setUpActionBar() {
@@ -204,5 +207,9 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ScrollRecy
 
     override fun invoke() {
         getProducts()
+    }
+
+    override fun addToCartProductSelected(product: Product, position: Int) {
+
     }
 }
