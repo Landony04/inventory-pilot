@@ -57,6 +57,7 @@ class CartRepositoryImpl @Inject constructor(
     override suspend fun increaseQuantity(cartItemId: String): Flow<Result<Unit>> =
         flow<Result<Unit>> {
             cartDao.increaseQuantity(cartItemId, 1)
+            cartDao.updateTotalAmount(cartItemId)
             emit(Result.Success(Unit))
         }.onStart {
             emit(Result.Loading)
@@ -67,6 +68,7 @@ class CartRepositoryImpl @Inject constructor(
     override suspend fun decreaseQuantity(cartItemId: String): Flow<Result<Unit>> =
         flow<Result<Unit>> {
             cartDao.decreaseQuantity(cartItemId, 1)
+            cartDao.updateTotalAmount(cartItemId)
             emit(Result.Success(Unit))
         }.onStart {
             emit(Result.Loading)

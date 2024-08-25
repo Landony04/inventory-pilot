@@ -5,6 +5,6 @@ data class CartItem(
     val productId: String,
     var quantity: Int,
     val price: Double,
-    val totalPrice: Double,
+    var totalAmount: Double? = null,
     val productName: String
 )

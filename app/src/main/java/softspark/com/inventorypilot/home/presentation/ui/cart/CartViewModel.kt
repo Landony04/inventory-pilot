@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.home.data.mapper.products.toCartItem
@@ -61,13 +62,13 @@ class CartViewModel @Inject constructor(
 
     fun decreaseQuantity(cartItemId: String) {
         viewModelScope.launch {
-            decreaseQuantityUseCase(cartItemId)
+            decreaseQuantityUseCase(cartItemId).collect()
         }
     }
 
     fun increaseQuantity(cartItemId: String) {
         viewModelScope.launch {
-            increaseQuantityUseCase(cartItemId)
+            increaseQuantityUseCase(cartItemId).collect()
         }
     }
 }

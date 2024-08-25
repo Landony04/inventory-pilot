@@ -11,7 +11,7 @@
         android:id="@+id/cart_rv"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_margin="10dp"
+        android:layout_marginTop="15dp"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/cart_pb"
         app:layout_constraintEnd_toEndOf="parent"

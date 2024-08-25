@@ -3,16 +3,13 @@ package softspark.com.inventorypilot.home.presentation.ui.cart
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.qualifiers.ApplicationContext
 import softspark.com.inventorypilot.R
-import softspark.com.inventorypilot.common.utils.Constants.VALUE_ONE
 import softspark.com.inventorypilot.databinding.ItemLayoutCardCartBinding
 import softspark.com.inventorypilot.home.domain.models.cart.CartSelectedType
-import softspark.com.inventorypilot.databinding.ItemLayoutCardCartBinding
 import softspark.com.inventorypilot.home.domain.models.sales.CartItem
 import javax.inject.Inject
 
@@ -21,6 +18,7 @@ class CartAdapter @Inject constructor(
 ) : ListAdapter<CartItem, CartAdapter.CartViewHolder>(CartDiffCallback()) {
 
     private lateinit var cartSelectedEvents: CartSelectedEvents
+
     class CartViewHolder(
         private val itemBinding: ItemLayoutCardCartBinding
     ) : RecyclerView.ViewHolder(itemBinding.root) {
@@ -34,22 +32,13 @@ class CartAdapter @Inject constructor(
         ) {
             with(itemBinding) {
 
-                if (cartItemSection.quantity <= VALUE_ONE) {
-                    decreaseQuantityTv.setCompoundDrawables(
-                        ContextCompat.getDrawable(
-                            context,
-                            R.drawable.ic_delete_25
-                        ), null, null, null
-                    )
-                }
-
                 productNameTv.text = cartItemSection.productName
 
                 quantityTv.text = "${cartItemSection.quantity}"
 
                 totalPriceTv.text = String.format(
                     context.getString(R.string.text_pay_for_item),
-                    cartItemSection.totalPrice.toString()
+                    cartItemSection.totalAmount.toString()
                 )
 
                 increaseQuantityTv.setOnClickListener {
@@ -89,6 +78,7 @@ class CartAdapter @Inject constructor(
     private fun updateQuantity(position: Int, quantity: Int) {
         val cartItem = getItem(position)
         cartItem.quantity += quantity
+        cartItem.totalAmount = (cartItem.quantity * cartItem.price)
         notifyItemChanged(position)
     }
 

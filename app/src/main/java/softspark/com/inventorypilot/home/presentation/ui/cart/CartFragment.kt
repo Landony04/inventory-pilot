@@ -120,6 +120,7 @@ class CartFragment : Fragment(), CartSelectedEvents {
         binding?.finishSaleButton?.setOnClickListener { }
 
         cartAdapter.initListener(this)
+    }
 
     private fun setUpActionBar() {
         (requireActivity() as AppCompatActivity).supportActionBar?.title =

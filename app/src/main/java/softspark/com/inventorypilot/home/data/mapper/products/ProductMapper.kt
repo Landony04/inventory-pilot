@@ -68,6 +68,5 @@ fun Product.toCartItem(quantity: Int): CartItem = CartItem(
     productId = id,
     quantity = quantity,
     price = price,
-    productName = name,
-    totalPrice = (price * quantity)
+    productName = name
 )

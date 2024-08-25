@@ -8,7 +8,7 @@ fun CartItem.toCartItemEntity(): CartItemEntity = CartItemEntity(
     productId = productId,
     quantity = quantity,
     price = price,
-    totalPrice = (quantity * price),
+    totalAmount = totalAmount ?: price,
     productName = productName
 )
 
@@ -18,6 +18,6 @@ fun CartItemEntity.toCartItem(): CartItem = CartItem(
     quantity = quantity,
     price = price,
     productName = productName,
-    totalPrice = (quantity * price)
+    totalAmount = totalAmount
 )
 
