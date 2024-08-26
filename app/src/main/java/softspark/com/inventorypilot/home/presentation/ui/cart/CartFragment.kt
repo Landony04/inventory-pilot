@@ -63,37 +63,32 @@ class CartFragment : Fragment(), CartSelectedEvents {
     private fun handleEmptyCart(result: Result<Boolean>) {
         when (result) {
             is Result.Error -> {
-                binding?.cartPb?.visibility = View.GONE
-                println("Error al obtener el carro")
-            }
-
-            is Result.Success -> {
-                binding?.cartPb?.visibility = View.GONE
                 getCart()
             }
 
-            Result.Loading -> binding?.cartPb?.visibility = View.VISIBLE
+            is Result.Success -> {
+                getCart()
+            }
+
+            Result.Loading -> println("Mostrar algún progress")
         }
     }
 
     private fun handleGetCart(result: Result<ArrayList<CartItem>>) {
         when (result) {
             is Result.Error -> {
-                binding?.cartPb?.visibility = View.GONE
                 println("Error al obtener el carro")
             }
 
             is Result.Success -> {
-                binding?.cartPb?.visibility = View.GONE
-                binding?.buttonsContainer?.visibility =
-                    if (result.data.size > VALUE_ZERO) View.VISIBLE else View.INVISIBLE
+                val showList = result.data.size > VALUE_ZERO
+                binding?.withoutCartIv?.visibility = if (!showList) View.VISIBLE else View.GONE
+                binding?.cartRv?.visibility = if (showList) View.VISIBLE else View.GONE
+                binding?.buttonsContainer?.visibility = if (showList) View.VISIBLE else View.GONE
                 cartAdapter.submitList(result.data)
             }
 
-            Result.Loading -> {
-                binding?.cartPb?.visibility = View.VISIBLE
-                binding?.buttonsContainer?.visibility = View.INVISIBLE
-            }
+            Result.Loading -> println("Mostrar algun progress")
         }
     }
 

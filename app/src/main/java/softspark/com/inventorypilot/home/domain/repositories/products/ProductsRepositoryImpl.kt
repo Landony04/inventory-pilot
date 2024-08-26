@@ -45,23 +45,14 @@ class ProductsRepositoryImpl @Inject constructor(
                 }
             }
 
-            val localResult: ArrayList<Product> = arrayListOf()
+            val localResult = productDao.getProductsForPage(pageSize, offset)
+                .map { productEntity -> productEntity.toProductDomain() }
 
-            productDao.getProductsForPage(pageSize, offset).collect {
-                localResult.addAll(it.map { productEntity ->
-                    productEntity.toProductDomain()
-                })
-            }
+            val valueResult =
+                if (localResult.size < pageSize) productDao.getProductsForPage(pageSize, VALUE_ZERO)
+                    .map { productEntity -> productEntity.toProductDomain() } else localResult
 
-            if (localResult.size < pageSize) {
-                productDao.getProductsForPage(pageSize, VALUE_ZERO).collect {
-                    localResult.addAll(it.map { productEntity ->
-                        productEntity.toProductDomain()
-                    })
-                }
-            }
-
-            emit(Result.Success(data = localResult))
+            emit(Result.Success(data = ArrayList(valueResult)))
 
         }.onStart {
             emit(Result.Success(data = arrayListOf()))
@@ -71,7 +62,7 @@ class ProductsRepositoryImpl @Inject constructor(
 
     override suspend fun getProductsByCategoryId(categoryId: String): Flow<Result<ArrayList<Product>>> =
         flow<Result<ArrayList<Product>>> {
-            val localResult = productDao.getProductsByCategoryId(categoryId).collect {
+            productDao.getProductsByCategoryId(categoryId).collect {
                 val result = it.map { productEntity ->
                     productEntity.toProductDomain()
                 }

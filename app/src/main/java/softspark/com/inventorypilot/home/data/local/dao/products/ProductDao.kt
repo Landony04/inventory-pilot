@@ -22,7 +22,7 @@ interface ProductDao {
     fun getAllProducts(): List<ProductEntity>
 
     @Query("SELECT * FROM ProductEntity ORDER BY productId ASC LIMIT :limit OFFSET :offset")
-    fun getProductsForPage(limit: Int, offset: Int): Flow<List<ProductEntity>>
+    suspend fun getProductsForPage(limit: Int, offset: Int): List<ProductEntity>
 
     @Query("SELECT * FROM ProductEntity WHERE categoryId = :categoryId ORDER BY productId ASC")
     fun getProductsByCategoryId(categoryId: String): Flow<List<ProductEntity>>
