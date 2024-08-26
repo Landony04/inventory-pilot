@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 import softspark.com.inventorypilot.home.data.local.entity.products.ProductEntity
 
 @Dao
@@ -17,15 +18,15 @@ interface ProductDao {
     @Query("SELECT * FROM ProductEntity WHERE productId = :id")
     fun getProductById(id: String): ProductEntity
 
-    @Query("SELECT * FROM ProductEntity")
+    @Query("SELECT * FROM ProductEntity ORDER BY productId ASC")
     fun getAllProducts(): List<ProductEntity>
 
     @Query("SELECT * FROM ProductEntity ORDER BY productId ASC LIMIT :limit OFFSET :offset")
-    suspend fun getProductsForPage(limit: Int, offset: Int): List<ProductEntity>
+    fun getProductsForPage(limit: Int, offset: Int): Flow<List<ProductEntity>>
 
-    @Query("SELECT * FROM ProductEntity WHERE categoryId = :categoryId")
-    suspend fun getProductsByCategoryId(categoryId: String): List<ProductEntity>
+    @Query("SELECT * FROM ProductEntity WHERE categoryId = :categoryId ORDER BY productId ASC")
+    fun getProductsByCategoryId(categoryId: String): Flow<List<ProductEntity>>
 
-    @Query("SELECT * FROM ProductEntity WHERE name LIKE :query || '%'")
-    suspend fun getProductsByName(query: String): List<ProductEntity>
+    @Query("SELECT * FROM ProductEntity WHERE name LIKE :query || '%' ORDER BY productId ASC")
+    fun getProductsByName(query: String): Flow<List<ProductEntity>>
 }

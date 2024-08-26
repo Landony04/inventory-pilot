@@ -5,5 +5,5 @@ import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.home.domain.models.sales.CartItem
 
 interface AddProductToCartUseCase {
-    suspend operator fun invoke(cartItem: CartItem): Flow<Result<Boolean>>
+    suspend operator fun invoke(cartItem: CartItem)
 }

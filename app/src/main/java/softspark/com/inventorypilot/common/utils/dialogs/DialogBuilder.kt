@@ -7,4 +7,9 @@ interface DialogBuilder {
         context: Context,
         selectedDates: (selectedDate: String, selectedDateUTC: String) -> Unit
     )
+
+    fun showToast(
+        context: Context,
+        message: String
+    )
 }

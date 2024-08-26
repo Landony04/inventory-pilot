@@ -8,6 +8,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.qualifiers.ApplicationContext
 import softspark.com.inventorypilot.R
+import softspark.com.inventorypilot.common.utils.Constants.EMPTY_STRING
+import softspark.com.inventorypilot.common.utils.Constants.VALUE_ONE
+import softspark.com.inventorypilot.common.utils.Constants.VALUE_ZERO
 import softspark.com.inventorypilot.databinding.ItemLayoutCardCartBinding
 import softspark.com.inventorypilot.home.domain.models.cart.CartSelectedType
 import softspark.com.inventorypilot.home.domain.models.sales.CartItem
@@ -26,11 +29,20 @@ class CartAdapter @Inject constructor(
         fun bind(
             context: Context,
             cartItemSection: CartItem,
-            cartItemSelected: (CartItem) -> Unit,
+            cartItemDelete: () -> Unit,
             increaseSelected: () -> Unit,
             decreaseSelected: () -> Unit
         ) {
             with(itemBinding) {
+                if (cartItemSection.quantity <= VALUE_ONE) {
+                    decreaseQuantityTv.text = EMPTY_STRING
+                    decreaseQuantityTv.setCompoundDrawablesWithIntrinsicBounds(
+                        R.drawable.ic_delete_25,
+                        VALUE_ZERO,
+                        VALUE_ZERO,
+                        VALUE_ZERO
+                    )
+                }
 
                 productNameTv.text = cartItemSection.productName
 
@@ -46,7 +58,11 @@ class CartAdapter @Inject constructor(
                 }
 
                 decreaseQuantityTv.setOnClickListener {
-                    decreaseSelected()
+                    if (cartItemSection.quantity <= VALUE_ONE) {
+                        cartItemDelete()
+                    } else {
+                        decreaseSelected()
+                    }
                 }
             }
         }
@@ -65,13 +81,18 @@ class CartAdapter @Inject constructor(
     override fun onBindViewHolder(holder: CartViewHolder, position: Int) {
         val cartItem = getItem(position)
         holder.bind(context = context, cartItemSection = cartItem, {
-
+            cartSelectedEvents.updateQuantity(
+                CartSelectedType.RemoveCartItem(
+                    cartItem.cartItemId.toString(),
+                    holder.adapterPosition
+                )
+            )
         }, {
             cartSelectedEvents.updateQuantity(CartSelectedType.IncreaseQuantity(cartItem.cartItemId.toString()))
-            updateQuantity(position, +1)
+            updateQuantity(holder.adapterPosition, +1)
         }, {
             cartSelectedEvents.updateQuantity(CartSelectedType.DecreaseQuantity(cartItem.cartItemId.toString()))
-            updateQuantity(position, -1)
+            updateQuantity(holder.adapterPosition, -1)
         })
     }
 
@@ -80,6 +101,12 @@ class CartAdapter @Inject constructor(
         cartItem.quantity += quantity
         cartItem.totalAmount = (cartItem.quantity * cartItem.price)
         notifyItemChanged(position)
+    }
+
+    fun deleteItem(position: Int) {
+        val currentList = currentList.toMutableList()
+        currentList.removeAt(position)
+        submitList(currentList) //
     }
 
     fun initListener(listener: CartSelectedEvents) {
@@ -99,6 +126,6 @@ class CartDiffCallback : DiffUtil.ItemCallback<CartItem>() {
         oldItem: CartItem,
         newItem: CartItem
     ): Boolean {
-        return oldItem == newItem
+        return oldItem.cartItemId == newItem.cartItemId
     }
 }

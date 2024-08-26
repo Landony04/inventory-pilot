@@ -1,5 +1,5 @@
 package softspark.com.inventorypilot.home.domain.useCases.cart
 
-interface IncreaseQuantityUseCase {
+interface DeleteCartItemUseCase {
     suspend operator fun invoke(cartItemId: String)
 }

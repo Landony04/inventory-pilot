@@ -13,6 +13,8 @@ import softspark.com.inventorypilot.home.domain.useCases.cart.AddProductToCartUs
 import softspark.com.inventorypilot.home.domain.useCases.cart.AddProductToCartUseCaseImpl
 import softspark.com.inventorypilot.home.domain.useCases.cart.DecreaseQuantityUseCase
 import softspark.com.inventorypilot.home.domain.useCases.cart.DecreaseQuantityUseCaseImpl
+import softspark.com.inventorypilot.home.domain.useCases.cart.DeleteCartItemUseCase
+import softspark.com.inventorypilot.home.domain.useCases.cart.DeleteCartItemUseCaseImpl
 import softspark.com.inventorypilot.home.domain.useCases.cart.EmptyCartUseCase
 import softspark.com.inventorypilot.home.domain.useCases.cart.EmptyCartUseCaseImpl
 import softspark.com.inventorypilot.home.domain.useCases.cart.GetCartUseCase
@@ -106,4 +108,10 @@ object HomeUseCaseModule {
     fun provideIncreaseStockUseCase(
         cartRepository: CartRepository
     ): IncreaseQuantityUseCase = IncreaseQuantityUseCaseImpl(cartRepository)
+
+    @ViewModelScoped
+    @Provides
+    fun provideDeleteCartItemUseCase(
+        cartRepository: CartRepository
+    ): DeleteCartItemUseCase = DeleteCartItemUseCaseImpl(cartRepository)
 }

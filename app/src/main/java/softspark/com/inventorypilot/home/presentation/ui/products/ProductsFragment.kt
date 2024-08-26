@@ -13,7 +13,6 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import softspark.com.inventorypilot.R
 import softspark.com.inventorypilot.common.entities.base.Result
@@ -24,6 +23,7 @@ import softspark.com.inventorypilot.common.utils.components.ItemSelectedFromSpin
 import softspark.com.inventorypilot.common.utils.components.ItemSelectedSpinner
 import softspark.com.inventorypilot.common.utils.components.ScrollRecyclerView
 import softspark.com.inventorypilot.common.utils.components.ScrollRecyclerViewListener
+import softspark.com.inventorypilot.common.utils.dialogs.DialogBuilder
 import softspark.com.inventorypilot.databinding.FragmentProductsBinding
 import softspark.com.inventorypilot.home.domain.models.products.Product
 import softspark.com.inventorypilot.home.domain.models.products.ProductCategory
@@ -42,6 +42,9 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ScrollRecy
 
     @Inject
     lateinit var productsAdapter: ProductsAdapter
+
+    @Inject
+    lateinit var dialogBuilder: DialogBuilder
 
     private var userInteraction = false
     private var endClearDrawable: Drawable? = null
@@ -168,6 +171,10 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ScrollRecy
         )
     }
 
+    private fun showToast(message: String) {
+        dialogBuilder.showToast(requireContext(), message)
+    }
+
     private fun updateSearchEditText(text: CharSequence?) {
         val icSearch = ContextCompat.getDrawable(requireContext(), R.drawable.ic_search)
 
@@ -214,6 +221,7 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ScrollRecy
     }
 
     override fun addToCartProductSelected(product: Product, position: Int) {
+        showToast("Producto agregado exitosamente.")
         cartViewModel.addProductToCart(product, VALUE_ONE)
     }
 }

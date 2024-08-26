@@ -28,4 +28,6 @@
     <string name="text_button_details">Detalles</string>
     <string name="text_status_completed">Completada</string>
     <string name="text_pay_for_item">GTQ%1$s</string>
+    <string name="text_add_product">Agregar</string>
+    <string name="product_image_description">product_image</string>
 </resources>

@@ -11,7 +11,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import softspark.com.inventorypilot.R
 import softspark.com.inventorypilot.common.entities.base.Result
+import softspark.com.inventorypilot.common.utils.Constants.VALUE_ONE
 import softspark.com.inventorypilot.common.utils.Constants.VALUE_ZERO
+import softspark.com.inventorypilot.common.utils.dialogs.DialogBuilder
 import softspark.com.inventorypilot.databinding.FragmentCartBinding
 import softspark.com.inventorypilot.home.domain.models.cart.CartSelectedType
 import softspark.com.inventorypilot.home.domain.models.sales.CartItem
@@ -24,13 +26,16 @@ class CartFragment : Fragment(), CartSelectedEvents {
     private val binding get() = _binding
 
     private val cartViewModel: CartViewModel by viewModels()
+//    private val salesViewModel: SalesViewModel by viewModels()
 
     @Inject
     lateinit var cartAdapter: CartAdapter
 
+    @Inject
+    lateinit var dialogBuilder: DialogBuilder
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentCartBinding.inflate(inflater, container, false)
@@ -40,11 +45,11 @@ class CartFragment : Fragment(), CartSelectedEvents {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        getCart()
         initAdapter()
+        setUpObservers()
         initListeners()
         setUpActionBar()
-        setUpObservers()
+        getCart()
     }
 
     private fun emptyCart() {
@@ -53,14 +58,6 @@ class CartFragment : Fragment(), CartSelectedEvents {
 
     private fun getCart() {
         cartViewModel.getCart()
-    }
-
-    private fun handleAddProductToCart(result: Result<Boolean>) {
-        when (result) {
-            is Result.Error -> TODO()
-            is Result.Success -> TODO()
-            Result.Loading -> TODO()
-        }
     }
 
     private fun handleEmptyCart(result: Result<Boolean>) {
@@ -88,19 +85,15 @@ class CartFragment : Fragment(), CartSelectedEvents {
 
             is Result.Success -> {
                 binding?.cartPb?.visibility = View.GONE
-
-                if (result.data.size > VALUE_ZERO) {
-                    binding?.cartRv?.visibility = View.VISIBLE
-                    binding?.buttonsContainer?.visibility = View.VISIBLE
-                    cartAdapter.submitList(result.data)
-                } else {
-                    binding?.cartRv?.visibility = View.GONE
-                    binding?.buttonsContainer?.visibility = View.GONE
-                    cartAdapter.submitList(arrayListOf())
-                }
+                binding?.buttonsContainer?.visibility =
+                    if (result.data.size > VALUE_ZERO) View.VISIBLE else View.INVISIBLE
+                cartAdapter.submitList(result.data)
             }
 
-            Result.Loading -> binding?.cartPb?.visibility = View.VISIBLE
+            Result.Loading -> {
+                binding?.cartPb?.visibility = View.VISIBLE
+                binding?.buttonsContainer?.visibility = View.INVISIBLE
+            }
         }
     }
 
@@ -128,14 +121,17 @@ class CartFragment : Fragment(), CartSelectedEvents {
     }
 
     private fun setUpObservers() {
-        cartViewModel.addProductToCartData.observe(viewLifecycleOwner, ::handleAddProductToCart)
         cartViewModel.emptyCartData.observe(viewLifecycleOwner, ::handleEmptyCart)
+
         cartViewModel.getCartData.observe(viewLifecycleOwner, ::handleGetCart)
+    }
+
+    private fun showToast(message: String) {
+        dialogBuilder.showToast(requireContext(), message)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        cartViewModel.addProductToCartData.removeObservers(viewLifecycleOwner)
         cartViewModel.emptyCartData.removeObservers(viewLifecycleOwner)
         cartViewModel.getCartData.removeObservers(viewLifecycleOwner)
         _binding = null
@@ -145,7 +141,15 @@ class CartFragment : Fragment(), CartSelectedEvents {
         when (this) {
             is CartSelectedType.DecreaseQuantity -> cartViewModel.decreaseQuantity(this.itemCartId)
             is CartSelectedType.IncreaseQuantity -> cartViewModel.increaseQuantity(this.itemCartId)
-            is CartSelectedType.RemoveCartItem -> TODO()
+            is CartSelectedType.RemoveCartItem -> {
+                cartViewModel.deleteItemCart(this.itemCartId)
+                cartAdapter.deleteItem(position)
+                showToast("Producto eliminado exitosamente.")
+
+                if (cartAdapter.currentList.size <= VALUE_ONE) {
+                    getCart()
+                }
+            }
         }
     }
 }
