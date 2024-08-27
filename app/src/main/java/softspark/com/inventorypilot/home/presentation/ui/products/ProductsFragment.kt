@@ -221,7 +221,7 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ScrollRecy
     }
 
     override fun addToCartProductSelected(product: Product, position: Int) {
-        showToast("Producto agregado exitosamente.")
+        showToast(getString(R.string.text_add_item_from_sale_success))
         cartViewModel.addProductToCart(product, VALUE_ONE)
     }
 }

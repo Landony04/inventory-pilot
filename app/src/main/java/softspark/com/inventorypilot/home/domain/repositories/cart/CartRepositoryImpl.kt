@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.withContext
 import softspark.com.inventorypilot.common.data.util.DispatcherProvider
 import softspark.com.inventorypilot.common.entities.base.Result
+import softspark.com.inventorypilot.common.utils.Constants.VALUE_ONE
 import softspark.com.inventorypilot.home.data.local.dao.cart.CartDao
 import softspark.com.inventorypilot.home.data.mapper.cart.toCartItem
 import softspark.com.inventorypilot.home.data.mapper.cart.toCartItemEntity
@@ -22,7 +23,15 @@ class CartRepositoryImpl @Inject constructor(
 ) : CartRepository {
 
     override suspend fun addToCart(cartItem: CartItem) = withContext(dispatchers.io()) {
-        cartDao.addToCart(cartItem.toCartItemEntity())
+        val cartProduct = cartDao.getCartByProductId(cartItem.productId)
+        if (cartProduct != null) {
+            cartProduct.cartItemId.let { cartItemId ->
+                cartDao.increaseQuantity(cartItemId.toString(), VALUE_ONE)
+                cartDao.updateTotalAmount(cartItemId.toString())
+            }
+        } else {
+            cartDao.addToCart(cartItem.toCartItemEntity())
+        }
     }
 
     override suspend fun getCart(): Flow<Result<ArrayList<CartItem>>> =
@@ -46,12 +55,12 @@ class CartRepositoryImpl @Inject constructor(
         }.flowOn(dispatchers.io()).distinctUntilChanged()
 
     override suspend fun increaseQuantity(cartItemId: String) = withContext(dispatchers.io()) {
-        cartDao.increaseQuantity(cartItemId, 1)
+        cartDao.increaseQuantity(cartItemId, VALUE_ONE)
         cartDao.updateTotalAmount(cartItemId)
     }
 
     override suspend fun decreaseQuantity(cartItemId: String) = withContext(dispatchers.io()) {
-        cartDao.decreaseQuantity(cartItemId, 1)
+        cartDao.decreaseQuantity(cartItemId, VALUE_ONE)
         cartDao.updateTotalAmount(cartItemId)
     }
 

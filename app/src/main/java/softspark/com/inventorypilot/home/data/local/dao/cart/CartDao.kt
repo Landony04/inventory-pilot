@@ -14,6 +14,9 @@ interface CartDao {
     @Query("SELECT * FROM CartItemEntity ORDER BY productId ASC")
     fun getCart(): Flow<List<CartItemEntity>>
 
+    @Query("SELECT * FROM CartItemEntity WHERE productId = :productId")
+    fun getCartByProductId(productId: String): CartItemEntity?
+
     @Query("DELETE FROM CartItemEntity")
     suspend fun emptyCart()
 
