@@ -42,7 +42,7 @@ class SalesSyncWorker @AssistedInject constructor(
 
     private suspend fun sync(saleSyncEntity: SaleSyncEntity) {
         val sale =
-            salesDao.getSaleById(saleSyncEntity.id.toString()).toSaleDomain().toSaleRequestDto()
+            salesDao.getSaleById(saleSyncEntity.id).toSaleDomain().toSaleRequestDto()
         resultOf {
             salesApi.insertSale(sale)
         }.onSuccess {

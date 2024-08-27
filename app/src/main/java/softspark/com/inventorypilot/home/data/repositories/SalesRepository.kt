@@ -16,7 +16,7 @@ interface SalesRepository {
 
     suspend fun insertSales(sales: List<Sale>)
 
-    suspend fun insertSale(sale: Sale): Flow<Result<Sale>>
+    suspend fun insertSale(sale: Sale)
 
     suspend fun syncSales()
 }

@@ -43,7 +43,7 @@ fun Sale.toSaleEntity(): SaleEntity = SaleEntity(
 fun SaleEntity.toSaleDomain(): Sale = Sale(
     id = saleId,
     clientId = clientId,
-    date = date.formatUtcToReadableDate(),
+    date = date,
     totalAmount = totalAmount,
     userId = userOwnerId,
     products = ArrayList(products.products),
@@ -63,7 +63,7 @@ fun ProductsSaleResponse.toProductSaleDomain(): List<ProductSale> {
     }
 }
 
-fun Sale.toSyncEntity(): SaleSyncEntity = SaleSyncEntity(id = id.toInt())
+fun Sale.toSyncEntity(): SaleSyncEntity = SaleSyncEntity(id = id)
 
 fun Sale.toSaleRequestDto(): GetSalesResponse {
     val dto = SaleDto(

@@ -6,5 +6,5 @@ import androidx.room.PrimaryKey
 @Entity
 data class SaleSyncEntity(
     @PrimaryKey(autoGenerate = false)
-    val id: Int
+    val id: String
 )

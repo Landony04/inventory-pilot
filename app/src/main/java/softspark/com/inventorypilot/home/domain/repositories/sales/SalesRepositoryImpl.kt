@@ -29,6 +29,7 @@ import softspark.com.inventorypilot.home.data.repositories.SalesRepository
 import softspark.com.inventorypilot.home.data.sync.SalesSyncWorker
 import softspark.com.inventorypilot.home.domain.models.sales.Sale
 import softspark.com.inventorypilot.home.remote.SalesApi
+import softspark.com.inventorypilot.home.remote.util.resultOf
 import java.time.Duration
 import javax.inject.Inject
 
@@ -86,22 +87,15 @@ class SalesRepositoryImpl @Inject constructor(
         salesDao.insertSales(sales.map { sale -> async { sale.toSaleEntity() }.await() })
     }
 
-    override suspend fun insertSale(sale: Sale): Flow<Result<Sale>> =
-        flow {
-            salesDao.insertSale(sale.toSaleEntity())
-            if (networkUtils.isInternetAvailable()) {
-                salesApi.insertSale(sale.toSaleRequestDto())
-                emit(Result.Success(data = sale))
-            } else {
-                salesDao.insertSaleSync(sale.toSyncEntity())
-                emit(Result.Error(Throwable("No intert conection")))
-            }
-        }.onStart {
-            emit(Result.Loading)
-        }.catch {
+    override suspend fun insertSale(sale: Sale) {
+        salesDao.insertSale(sale.toSaleEntity())
+
+        resultOf {
+            salesApi.insertSale(sale.toSaleRequestDto())
+        }.onFailure {
             salesDao.insertSaleSync(sale.toSyncEntity())
-            emit(Result.Error(it))
-        }.flowOn(dispatchers.io())
+        }
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun syncSales() {

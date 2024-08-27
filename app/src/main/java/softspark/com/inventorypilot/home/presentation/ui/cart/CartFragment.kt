@@ -52,6 +52,13 @@ class CartFragment : Fragment(), CartSelectedEvents {
         getCart()
     }
 
+    private fun addSale() {
+        salesViewModel.insertSale(
+            cartAdapter.currentList.toList(),
+            calculateTotalAmount(cartAdapter.currentList)
+        )
+    }
+
     private fun emptyCart() {
         cartViewModel.emptyCart()
     }
@@ -97,7 +104,10 @@ class CartFragment : Fragment(), CartSelectedEvents {
             emptyCart()
         }
 
-        binding?.finishSaleButton?.setOnClickListener { }
+        binding?.finishSaleButton?.setOnClickListener {
+            addSale()
+            emptyCart()
+        }
 
         cartAdapter.initListener(this)
     }

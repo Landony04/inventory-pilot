@@ -5,19 +5,19 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import softspark.com.inventorypilot.home.data.sync.CustomWorkerFactory
-import javax.inject.Singleton
+//import softspark.com.inventorypilot.home.data.sync.CustomWorkerFactory
+//import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 
 object WorkerModule {
 
-    @Provides
-    @Singleton
-    fun provideWorkerFactory(
-        customWorkerFactory: CustomWorkerFactory
-    ): WorkerFactory {
-        return customWorkerFactory
-    }
+//    @Provides
+//    @Singleton
+//    fun provideWorkerFactory(
+//        customWorkerFactory: CustomWorkerFactory
+//    ): WorkerFactory {
+//        return customWorkerFactory
+//    }
 }

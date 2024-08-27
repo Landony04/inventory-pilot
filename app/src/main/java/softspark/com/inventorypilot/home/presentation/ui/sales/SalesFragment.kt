@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import softspark.com.inventorypilot.R
 import softspark.com.inventorypilot.common.entities.base.Result
+import softspark.com.inventorypilot.common.utils.Constants
 import softspark.com.inventorypilot.common.utils.dialogs.DialogBuilder
 import softspark.com.inventorypilot.databinding.FragmentSalesBinding
 import softspark.com.inventorypilot.home.domain.models.sales.Sale
@@ -86,7 +87,7 @@ class SalesFragment : Fragment() {
     }
 
     private fun setInitDate() {
-        binding?.dateSaleTv?.text = salesViewModel.getCurrentDate()
+        binding?.dateSaleTv?.text = salesViewModel.getCurrentDate(Constants.DD_MMM_DATE_FORMAT)
     }
 
     private fun showDatePicker() {

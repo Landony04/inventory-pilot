@@ -33,6 +33,8 @@ import softspark.com.inventorypilot.home.domain.useCases.sales.GetSalesByDateUse
 import softspark.com.inventorypilot.home.domain.useCases.sales.GetSalesByDateUseCaseImpl
 import softspark.com.inventorypilot.home.domain.useCases.sales.GetSalesUseCase
 import softspark.com.inventorypilot.home.domain.useCases.sales.GetSalesUseCaseImpl
+import softspark.com.inventorypilot.home.domain.useCases.sales.InsertSaleUseCase
+import softspark.com.inventorypilot.home.domain.useCases.sales.InsertSaleUseCaseImpl
 import softspark.com.inventorypilot.home.domain.useCases.sales.SyncSalesUseCase
 import softspark.com.inventorypilot.home.domain.useCases.sales.SyncSalesUseCaseImpl
 
@@ -85,6 +87,12 @@ object HomeUseCaseModule {
     fun provideSyncSalesUseCase(
         salesRepository: SalesRepository
     ): SyncSalesUseCase = SyncSalesUseCaseImpl(salesRepository)
+
+    @ViewModelScoped
+    @Provides
+    fun provideInsertSaleUseCase(
+        salesRepository: SalesRepository
+    ): InsertSaleUseCase = InsertSaleUseCaseImpl(salesRepository)
 
     //USE CASES FOR CART
     @ViewModelScoped
