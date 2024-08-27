@@ -15,6 +15,7 @@ import softspark.com.inventorypilot.home.domain.useCases.products.GetProductCate
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsByCategoryIdUseCase
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsByNameUseCase
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsUseCase
+import softspark.com.inventorypilot.home.domain.useCases.sales.SyncSalesUseCase
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,8 +23,13 @@ class ProductViewModel @Inject constructor(
     private val getProductsUseCase: GetProductsUseCase,
     private val getProductCategoriesUseCase: GetProductCategoriesUseCase,
     private val getProductsByCategoryIdUseCase: GetProductsByCategoryIdUseCase,
-    private val getProductsByNameUseCase: GetProductsByNameUseCase
+    private val getProductsByNameUseCase: GetProductsByNameUseCase,
+    private val syncSalesUseCase: SyncSalesUseCase
 ) : ViewModel() {
+
+    init {
+        syncSales()
+    }
 
     private val _productCategoryData = MutableLiveData<Result<ArrayList<ProductCategory>>>()
     val productCategoryData: LiveData<Result<ArrayList<ProductCategory>>> get() = _productCategoryData
@@ -65,6 +71,12 @@ class ProductViewModel @Inject constructor(
                     _productsData.value = result
                 }
             }
+        }
+    }
+
+    private fun syncSales() {
+        viewModelScope.launch {
+            syncSalesUseCase()
         }
     }
 }

@@ -45,9 +45,8 @@ class ProductsRepositoryImpl @Inject constructor(
                 }
             }
 
-            val localResult = productDao.getProductsForPage(pageSize, offset).map { productEntity ->
-                productEntity.toProductDomain()
-            }
+            val localResult = productDao.getProductsForPage(pageSize, offset)
+                .map { productEntity -> productEntity.toProductDomain() }
 
             val valueResult =
                 if (localResult.size < pageSize) productDao.getProductsForPage(pageSize, VALUE_ZERO)
@@ -56,18 +55,20 @@ class ProductsRepositoryImpl @Inject constructor(
             emit(Result.Success(data = ArrayList(valueResult)))
 
         }.onStart {
-            emit(Result.Loading)
+            emit(Result.Success(data = arrayListOf()))
         }.catch {
             emit(Result.Error(it))
         }.flowOn(dispatchers.io())
 
     override suspend fun getProductsByCategoryId(categoryId: String): Flow<Result<ArrayList<Product>>> =
         flow<Result<ArrayList<Product>>> {
-            val localResult = productDao.getProductsByCategoryId(categoryId).map { productEntity ->
-                productEntity.toProductDomain()
-            }
+            productDao.getProductsByCategoryId(categoryId).collect {
+                val result = it.map { productEntity ->
+                    productEntity.toProductDomain()
+                }
 
-            emit(Result.Success(ArrayList(localResult)))
+                emit(Result.Success(ArrayList(result)))
+            }
 
         }.onStart {
             emit(Result.Loading)
@@ -77,12 +78,13 @@ class ProductsRepositoryImpl @Inject constructor(
 
     override suspend fun getProductsByName(query: String): Flow<Result<ArrayList<Product>>> =
         flow<Result<ArrayList<Product>>> {
-            val localResult = productDao.getProductsByName(query.lowercase()).map { productEntity ->
-                productEntity.toProductDomain()
+            productDao.getProductsByName(query.lowercase()).collect {
+                val result = it.map { productEntity ->
+                    productEntity.toProductDomain()
+                }
+
+                emit(Result.Success(ArrayList(result)))
             }
-
-            emit(Result.Success(ArrayList(localResult)))
-
         }.onStart {
             emit(Result.Loading)
         }.catch {

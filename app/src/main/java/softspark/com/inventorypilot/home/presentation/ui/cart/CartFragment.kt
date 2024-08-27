@@ -11,10 +11,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import softspark.com.inventorypilot.R
 import softspark.com.inventorypilot.common.entities.base.Result
-import softspark.com.inventorypilot.common.utils.Constants.VALUE_ZERO
+import softspark.com.inventorypilot.common.utils.Constants.VALUE_ONE
+import softspark.com.inventorypilot.common.utils.dialogs.DialogBuilder
 import softspark.com.inventorypilot.databinding.FragmentCartBinding
 import softspark.com.inventorypilot.home.domain.models.cart.CartSelectedType
 import softspark.com.inventorypilot.home.domain.models.sales.CartItem
+import softspark.com.inventorypilot.home.presentation.ui.sales.SalesViewModel
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -24,13 +26,16 @@ class CartFragment : Fragment(), CartSelectedEvents {
     private val binding get() = _binding
 
     private val cartViewModel: CartViewModel by viewModels()
+    private val salesViewModel: SalesViewModel by viewModels()
 
     @Inject
     lateinit var cartAdapter: CartAdapter
 
+    @Inject
+    lateinit var dialogBuilder: DialogBuilder
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentCartBinding.inflate(inflater, container, false)
@@ -40,11 +45,18 @@ class CartFragment : Fragment(), CartSelectedEvents {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        getCart()
         initAdapter()
+        setUpObservers()
         initListeners()
         setUpActionBar()
-        setUpObservers()
+        getCart()
+    }
+
+    private fun addSale() {
+        salesViewModel.insertSale(
+            cartAdapter.currentList.toList(),
+            calculateTotalAmount(cartAdapter.currentList)
+        )
     }
 
     private fun emptyCart() {
@@ -55,53 +67,28 @@ class CartFragment : Fragment(), CartSelectedEvents {
         cartViewModel.getCart()
     }
 
-    private fun handleAddProductToCart(result: Result<Boolean>) {
-        when (result) {
-            is Result.Error -> TODO()
-            is Result.Success -> TODO()
-            Result.Loading -> TODO()
-        }
-    }
-
     private fun handleEmptyCart(result: Result<Boolean>) {
         when (result) {
-            is Result.Error -> {
-                binding?.cartPb?.visibility = View.GONE
-                println("Error al obtener el carro")
-            }
+            is Result.Error -> getCart()
 
-            is Result.Success -> {
-                binding?.cartPb?.visibility = View.GONE
-                getCart()
-            }
+            is Result.Success -> getCart()
 
-            Result.Loading -> binding?.cartPb?.visibility = View.VISIBLE
+            Result.Loading -> println("Mostrar algún progress")
         }
     }
 
     private fun handleGetCart(result: Result<ArrayList<CartItem>>) {
         when (result) {
-            is Result.Error -> {
-                binding?.cartPb?.visibility = View.GONE
-                println("Error al obtener el carro")
-            }
+            is Result.Error -> println("Error al obtener el carro")
 
-            is Result.Success -> {
-                binding?.cartPb?.visibility = View.GONE
+            is Result.Success -> validateIfShowSale(result.data)
 
-                if (result.data.size > VALUE_ZERO) {
-                    binding?.cartRv?.visibility = View.VISIBLE
-                    binding?.buttonsContainer?.visibility = View.VISIBLE
-                    cartAdapter.submitList(result.data)
-                } else {
-                    binding?.cartRv?.visibility = View.GONE
-                    binding?.buttonsContainer?.visibility = View.GONE
-                    cartAdapter.submitList(arrayListOf())
-                }
-            }
-
-            Result.Loading -> binding?.cartPb?.visibility = View.VISIBLE
+            Result.Loading -> println("Mostrar algun progress")
         }
+    }
+
+    private fun calculateTotalAmount(products: List<CartItem>): Double {
+        return products.sumOf { it.price * it.quantity }
     }
 
     private fun initAdapter() {
@@ -117,7 +104,10 @@ class CartFragment : Fragment(), CartSelectedEvents {
             emptyCart()
         }
 
-        binding?.finishSaleButton?.setOnClickListener { }
+        binding?.finishSaleButton?.setOnClickListener {
+            addSale()
+            emptyCart()
+        }
 
         cartAdapter.initListener(this)
     }
@@ -128,14 +118,17 @@ class CartFragment : Fragment(), CartSelectedEvents {
     }
 
     private fun setUpObservers() {
-        cartViewModel.addProductToCartData.observe(viewLifecycleOwner, ::handleAddProductToCart)
         cartViewModel.emptyCartData.observe(viewLifecycleOwner, ::handleEmptyCart)
+
         cartViewModel.getCartData.observe(viewLifecycleOwner, ::handleGetCart)
+    }
+
+    private fun showToast(message: String) {
+        dialogBuilder.showToast(requireContext(), message)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        cartViewModel.addProductToCartData.removeObservers(viewLifecycleOwner)
         cartViewModel.emptyCartData.removeObservers(viewLifecycleOwner)
         cartViewModel.getCartData.removeObservers(viewLifecycleOwner)
         _binding = null
@@ -145,7 +138,34 @@ class CartFragment : Fragment(), CartSelectedEvents {
         when (this) {
             is CartSelectedType.DecreaseQuantity -> cartViewModel.decreaseQuantity(this.itemCartId)
             is CartSelectedType.IncreaseQuantity -> cartViewModel.increaseQuantity(this.itemCartId)
-            is CartSelectedType.RemoveCartItem -> TODO()
+            is CartSelectedType.RemoveCartItem -> deleteItemInCart(this.position, this.itemCartId)
+        }
+    }
+
+    private fun validateIfShowSale(cartProducts: ArrayList<CartItem>) {
+        val showList = cartProducts.isNotEmpty()
+        binding?.withoutCartIv?.visibility = if (!showList) View.VISIBLE else View.GONE
+        binding?.cartRv?.visibility = if (showList) View.VISIBLE else View.GONE
+        binding?.buttonsContainer?.visibility = if (showList) View.VISIBLE else View.GONE
+        binding?.totalAmountSaleTv?.visibility = if (showList) View.VISIBLE else View.GONE
+
+        if (showList) {
+            binding?.totalAmountSaleTv?.text = String.format(
+                getString(R.string.text_total_amount_sale),
+                "${calculateTotalAmount(cartProducts)}"
+            )
+        }
+        cartAdapter.submitList(cartProducts)
+    }
+
+    private fun deleteItemInCart(position: Int, itemCartId: String) {
+        cartViewModel.deleteItemCart(itemCartId)
+        cartAdapter.deleteItem(position)
+
+        showToast(getString(R.string.text_delete_item_from_sale_success))
+
+        if (cartAdapter.currentList.size <= VALUE_ONE) {
+            getCart()
         }
     }
 }

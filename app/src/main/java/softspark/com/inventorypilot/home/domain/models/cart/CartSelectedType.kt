@@ -5,5 +5,5 @@ sealed class CartSelectedType {
 
     data class IncreaseQuantity(val itemCartId: String) : CartSelectedType()
 
-    data class RemoveCartItem(val itemCartId: String) : CartSelectedType()
+    data class RemoveCartItem(val itemCartId: String, val position: Int) : CartSelectedType()
 }

@@ -29,9 +29,8 @@ class ProductsAdapter @Inject constructor(
             productSelected: (Product) -> Unit
         ) {
             with(itemBinding) {
-
-                if (productSection.stock > VALUE_ZERO) {
-                    addCartButton.visibility = View.VISIBLE
+                if (productSection.stock <= VALUE_ZERO) {
+                    addCartButton.visibility = View.GONE
                 }
 
                 titleProductTv.text = productSection.name

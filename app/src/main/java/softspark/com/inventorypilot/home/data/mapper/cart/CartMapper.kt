@@ -2,6 +2,7 @@ package softspark.com.inventorypilot.home.data.mapper.cart
 
 import softspark.com.inventorypilot.home.data.local.entity.cart.CartItemEntity
 import softspark.com.inventorypilot.home.domain.models.sales.CartItem
+import softspark.com.inventorypilot.home.domain.models.sales.ProductSale
 
 fun CartItem.toCartItemEntity(): CartItemEntity = CartItemEntity(
     cartItemId = cartItemId,
@@ -19,5 +20,11 @@ fun CartItemEntity.toCartItem(): CartItem = CartItem(
     price = price,
     productName = productName,
     totalAmount = totalAmount
+)
+
+fun CartItem.toProductSale(): ProductSale = ProductSale(
+    id = productId,
+    price = price,
+    quantity = quantity
 )
 

@@ -2,6 +2,7 @@ package softspark.com.inventorypilot.common.utils.dialogs
 
 import android.app.DatePickerDialog
 import android.content.Context
+import android.widget.Toast
 import softspark.com.inventorypilot.common.utils.Constants.DD_MMM_DATE_FORMAT
 import softspark.com.inventorypilot.common.utils.Constants.UTC_DATE_FORMAT_WITHOUT_HOURS
 import softspark.com.inventorypilot.common.utils.Constants.UTC_FORMAT_ID
@@ -44,5 +45,9 @@ class DialogBuilderImpl @Inject constructor() : DialogBuilder {
             }, year, month, day
         )
         datePickerDialog.show()
+    }
+
+    override fun showToast(context: Context, message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 }

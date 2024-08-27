@@ -13,6 +13,8 @@ import softspark.com.inventorypilot.home.domain.useCases.cart.AddProductToCartUs
 import softspark.com.inventorypilot.home.domain.useCases.cart.AddProductToCartUseCaseImpl
 import softspark.com.inventorypilot.home.domain.useCases.cart.DecreaseQuantityUseCase
 import softspark.com.inventorypilot.home.domain.useCases.cart.DecreaseQuantityUseCaseImpl
+import softspark.com.inventorypilot.home.domain.useCases.cart.DeleteCartItemUseCase
+import softspark.com.inventorypilot.home.domain.useCases.cart.DeleteCartItemUseCaseImpl
 import softspark.com.inventorypilot.home.domain.useCases.cart.EmptyCartUseCase
 import softspark.com.inventorypilot.home.domain.useCases.cart.EmptyCartUseCaseImpl
 import softspark.com.inventorypilot.home.domain.useCases.cart.GetCartUseCase
@@ -31,6 +33,10 @@ import softspark.com.inventorypilot.home.domain.useCases.sales.GetSalesByDateUse
 import softspark.com.inventorypilot.home.domain.useCases.sales.GetSalesByDateUseCaseImpl
 import softspark.com.inventorypilot.home.domain.useCases.sales.GetSalesUseCase
 import softspark.com.inventorypilot.home.domain.useCases.sales.GetSalesUseCaseImpl
+import softspark.com.inventorypilot.home.domain.useCases.sales.InsertSaleUseCase
+import softspark.com.inventorypilot.home.domain.useCases.sales.InsertSaleUseCaseImpl
+import softspark.com.inventorypilot.home.domain.useCases.sales.SyncSalesUseCase
+import softspark.com.inventorypilot.home.domain.useCases.sales.SyncSalesUseCaseImpl
 
 @Module
 @InstallIn(ViewModelComponent::class)
@@ -76,6 +82,18 @@ object HomeUseCaseModule {
         salesRepository: SalesRepository
     ): GetSalesByDateUseCase = GetSalesByDateUseCaseImpl(salesRepository)
 
+    @ViewModelScoped
+    @Provides
+    fun provideSyncSalesUseCase(
+        salesRepository: SalesRepository
+    ): SyncSalesUseCase = SyncSalesUseCaseImpl(salesRepository)
+
+    @ViewModelScoped
+    @Provides
+    fun provideInsertSaleUseCase(
+        salesRepository: SalesRepository
+    ): InsertSaleUseCase = InsertSaleUseCaseImpl(salesRepository)
+
     //USE CASES FOR CART
     @ViewModelScoped
     @Provides
@@ -106,4 +124,10 @@ object HomeUseCaseModule {
     fun provideIncreaseStockUseCase(
         cartRepository: CartRepository
     ): IncreaseQuantityUseCase = IncreaseQuantityUseCaseImpl(cartRepository)
+
+    @ViewModelScoped
+    @Provides
+    fun provideDeleteCartItemUseCase(
+        cartRepository: CartRepository
+    ): DeleteCartItemUseCase = DeleteCartItemUseCaseImpl(cartRepository)
 }

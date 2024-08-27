@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.qualifiers.ApplicationContext
 import softspark.com.inventorypilot.R
+import softspark.com.inventorypilot.common.data.extension.formatUtcToReadableDate
 import softspark.com.inventorypilot.databinding.ItemLayoutCardSaleBinding
 import softspark.com.inventorypilot.home.domain.models.sales.Sale
 import javax.inject.Inject
@@ -26,12 +27,14 @@ class SalesAdapter @Inject constructor(
         ) {
             with(itemBinding) {
 
-                dateSaleTv.text = saleSection.date
+                dateSaleTv.text = saleSection.date.formatUtcToReadableDate()
                 detailsSaleTv.text = String.format(
                     context.getString(R.string.text_details_sale),
                     "${saleSection.products.size}",
                     "${saleSection.totalAmount}"
                 )
+
+                statusSaleTv.text = saleSection.status
 
                 detailsButton.setOnClickListener {
                     saleSelected(saleSection)

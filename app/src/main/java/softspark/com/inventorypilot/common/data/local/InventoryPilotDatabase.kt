@@ -13,11 +13,12 @@ import softspark.com.inventorypilot.home.data.local.entity.cart.CartItemEntity
 import softspark.com.inventorypilot.home.data.local.entity.products.ProductCategoryEntity
 import softspark.com.inventorypilot.home.data.local.entity.products.ProductEntity
 import softspark.com.inventorypilot.home.data.local.entity.sales.SaleEntity
+import softspark.com.inventorypilot.home.data.local.entity.sales.SaleSyncEntity
 import softspark.com.inventorypilot.home.data.local.typeconverter.SalesTypeConverters
 
 @TypeConverters(value = [SalesTypeConverters::class])
 @Database(
-    entities = [UserProfileEntity::class, ProductCategoryEntity::class, ProductEntity::class, SaleEntity::class, CartItemEntity::class],
+    entities = [UserProfileEntity::class, ProductCategoryEntity::class, ProductEntity::class, SaleEntity::class, CartItemEntity::class, SaleSyncEntity::class],
     version = 1,
     exportSchema = false
 )
