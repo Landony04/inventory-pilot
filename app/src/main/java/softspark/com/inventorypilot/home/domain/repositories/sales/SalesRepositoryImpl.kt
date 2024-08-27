@@ -1,5 +1,13 @@
 package softspark.com.inventorypilot.home.domain.repositories.sales
 
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.work.BackoffPolicy
+import androidx.work.Constraints
+import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -15,16 +23,21 @@ import softspark.com.inventorypilot.home.data.local.dao.sales.SalesDao
 import softspark.com.inventorypilot.home.data.mapper.sales.toSaleDomain
 import softspark.com.inventorypilot.home.data.mapper.sales.toSaleEntity
 import softspark.com.inventorypilot.home.data.mapper.sales.toSaleListDomain
+import softspark.com.inventorypilot.home.data.mapper.sales.toSaleRequestDto
+import softspark.com.inventorypilot.home.data.mapper.sales.toSyncEntity
 import softspark.com.inventorypilot.home.data.repositories.SalesRepository
+import softspark.com.inventorypilot.home.data.sync.SalesSyncWorker
 import softspark.com.inventorypilot.home.domain.models.sales.Sale
 import softspark.com.inventorypilot.home.remote.SalesApi
+import java.time.Duration
 import javax.inject.Inject
 
 class SalesRepositoryImpl @Inject constructor(
     private val dispatchers: DispatcherProvider,
     private val networkUtils: NetworkUtils,
     private val salesApi: SalesApi,
-    private val salesDao: SalesDao
+    private val salesDao: SalesDao,
+    private val workManager: WorkManager
 ) : SalesRepository {
     override suspend fun getSalesForPage(
         page: Int,
@@ -71,5 +84,32 @@ class SalesRepositoryImpl @Inject constructor(
 
     override suspend fun insertSales(sales: List<Sale>) = withContext(dispatchers.io()) {
         salesDao.insertSales(sales.map { sale -> async { sale.toSaleEntity() }.await() })
+    }
+
+    override suspend fun insertSale(sale: Sale): Flow<Result<Sale>> =
+        flow {
+            salesDao.insertSale(sale.toSaleEntity())
+            if (networkUtils.isInternetAvailable()) {
+                salesApi.insertSale(sale.toSaleRequestDto())
+                emit(Result.Success(data = sale))
+            } else {
+                salesDao.insertSaleSync(sale.toSyncEntity())
+                emit(Result.Error(Throwable("No intert conection")))
+            }
+        }.onStart {
+            emit(Result.Loading)
+        }.catch {
+            salesDao.insertSaleSync(sale.toSyncEntity())
+            emit(Result.Error(it))
+        }.flowOn(dispatchers.io())
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override suspend fun syncSales() {
+        val worker = OneTimeWorkRequestBuilder<SalesSyncWorker>().setConstraints(
+            Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+        ).setBackoffCriteria(BackoffPolicy.EXPONENTIAL, Duration.ofMinutes(5))
+            .build()
+
+        workManager.beginUniqueWork("sync_sales_id", ExistingWorkPolicy.REPLACE, worker).enqueue()
     }
 }

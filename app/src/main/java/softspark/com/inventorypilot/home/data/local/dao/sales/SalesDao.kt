@@ -1,11 +1,13 @@
 package softspark.com.inventorypilot.home.data.local.dao.sales
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import softspark.com.inventorypilot.home.data.local.entity.sales.SaleEntity
+import softspark.com.inventorypilot.home.data.local.entity.sales.SaleSyncEntity
 
 @Dao
 interface SalesDao {
@@ -26,4 +28,13 @@ interface SalesDao {
     @Transaction
     @Query("SELECT * FROM SaleEntity WHERE dateWithoutHours = :date")
     fun getSalesByDate(date: String): List<SaleEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertSaleSync(saleSyncEntity: SaleSyncEntity)
+
+    @Query("SELECT * FROM SaleSyncEntity")
+    fun getAllSalesSync(): List<SaleSyncEntity>
+
+    @Delete
+    suspend fun deleteSaleSync(saleSyncEntity: SaleSyncEntity)
 }

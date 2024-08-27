@@ -1,8 +1,11 @@
 package softspark.com.inventorypilot.home.di
 
+import android.content.Context
+import androidx.work.WorkManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import softspark.com.inventorypilot.common.data.util.DispatcherProvider
 import softspark.com.inventorypilot.common.utils.NetworkUtils
@@ -56,8 +59,15 @@ object HomeRepositoryModule {
         dispatcherProvider: DispatcherProvider,
         salesApi: SalesApi,
         salesDao: SalesDao,
-        networkUtils: NetworkUtils
-    ): SalesRepository = SalesRepositoryImpl(dispatcherProvider, networkUtils, salesApi, salesDao)
+        networkUtils: NetworkUtils,
+        workManager: WorkManager
+    ): SalesRepository =
+        SalesRepositoryImpl(dispatcherProvider, networkUtils, salesApi, salesDao, workManager)
+
+    @Singleton
+    @Provides
+    fun provideWorkManager(@ApplicationContext context: Context): WorkManager =
+        WorkManager.getInstance(context)
 
     @Provides
     @Singleton

@@ -4,10 +4,13 @@ import softspark.com.inventorypilot.common.data.extension.formatDateUTCWithoutHo
 import softspark.com.inventorypilot.common.data.extension.formatUtcToReadableDate
 import softspark.com.inventorypilot.home.data.local.entity.products.SaleProductsList
 import softspark.com.inventorypilot.home.data.local.entity.sales.SaleEntity
+import softspark.com.inventorypilot.home.data.local.entity.sales.SaleSyncEntity
 import softspark.com.inventorypilot.home.domain.models.sales.ProductSale
 import softspark.com.inventorypilot.home.domain.models.sales.Sale
 import softspark.com.inventorypilot.home.remote.dto.sales.GetSalesResponse
+import softspark.com.inventorypilot.home.remote.dto.sales.ProductSaleDto
 import softspark.com.inventorypilot.home.remote.dto.sales.ProductsSaleResponse
+import softspark.com.inventorypilot.home.remote.dto.sales.SaleDto
 
 fun GetSalesResponse.toSaleListDomain(): List<Sale> {
     return entries.map {
@@ -59,3 +62,27 @@ fun ProductsSaleResponse.toProductSaleDomain(): List<ProductSale> {
         )
     }
 }
+
+fun Sale.toSyncEntity(): SaleSyncEntity = SaleSyncEntity(id = id.toInt())
+
+fun Sale.toSaleRequestDto(): GetSalesResponse {
+    val dto = SaleDto(
+        date = date,
+        totalAmount = totalAmount,
+        userId = userId,
+        products = toProductMap(ArrayList(products.map { it.toProductSaleDto(it.id) })),
+        status = "completed",
+    )
+
+    return mapOf(id to dto)
+}
+
+fun toProductMap(products: ArrayList<ProductSaleDto>): ProductsSaleResponse {
+    return products.associateBy { it.id.toString() }
+}
+
+fun ProductSale.toProductSaleDto(id: String): ProductSaleDto = ProductSaleDto(
+    id = id,
+    price = price,
+    quantity = quantity
+)

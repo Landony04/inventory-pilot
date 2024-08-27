@@ -75,6 +75,7 @@ dependencies {
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
     ksp(libs.hilt.android.compiler)
+    ksp(libs.androidx.hilt.compiler)
 
     //Retrofit
     implementation(libs.retrofit)
@@ -88,6 +89,10 @@ dependencies {
 
     //Google
     implementation(libs.code.gson)
+
+    //WorkManager
+    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.hilt.work)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

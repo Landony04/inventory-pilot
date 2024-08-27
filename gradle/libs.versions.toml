@@ -25,6 +25,9 @@ retrofit = "2.9.0"
 logginInterceptor = "5.0.0-alpha.2"
 roomVersion = "2.5.0"
 codeGsonVersion = "2.8.6"
+workmanagerVersion = "2.8.0"
+hiltNavigationCompose = "1.0.0"
+hiltCompiler = "1.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -53,6 +56,9 @@ androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref =
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomVersion" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomVersion" }
 code-gson = { module = "com.google.code.gson:gson", version.ref = "codeGsonVersion" }
+androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltCompiler" }
+androidx-hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "hiltNavigationCompose" }
+androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workmanagerVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
