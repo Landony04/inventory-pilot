@@ -19,7 +19,9 @@ import softspark.com.inventorypilot.common.data.util.DispatcherProvider
 import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.common.utils.Constants.VALUE_ZERO
 import softspark.com.inventorypilot.common.utils.NetworkUtils
+import softspark.com.inventorypilot.home.data.local.dao.products.ProductDao
 import softspark.com.inventorypilot.home.data.local.dao.sales.SalesDao
+import softspark.com.inventorypilot.home.data.local.entity.products.ProductEntity
 import softspark.com.inventorypilot.home.data.mapper.sales.toSaleDomain
 import softspark.com.inventorypilot.home.data.mapper.sales.toSaleEntity
 import softspark.com.inventorypilot.home.data.mapper.sales.toSaleListDomain
@@ -27,8 +29,10 @@ import softspark.com.inventorypilot.home.data.mapper.sales.toSaleRequestDto
 import softspark.com.inventorypilot.home.data.mapper.sales.toSyncEntity
 import softspark.com.inventorypilot.home.data.repositories.SalesRepository
 import softspark.com.inventorypilot.home.data.sync.SalesSyncWorker
+import softspark.com.inventorypilot.home.domain.models.sales.ProductSale
 import softspark.com.inventorypilot.home.domain.models.sales.Sale
 import softspark.com.inventorypilot.home.remote.SalesApi
+import softspark.com.inventorypilot.home.remote.dto.products.UpdateProductRequest
 import softspark.com.inventorypilot.home.remote.util.resultOf
 import java.time.Duration
 import javax.inject.Inject
@@ -36,6 +40,7 @@ import javax.inject.Inject
 class SalesRepositoryImpl @Inject constructor(
     private val dispatchers: DispatcherProvider,
     private val networkUtils: NetworkUtils,
+    private val productDao: ProductDao,
     private val salesApi: SalesApi,
     private val salesDao: SalesDao,
     private val workManager: WorkManager
@@ -92,6 +97,7 @@ class SalesRepositoryImpl @Inject constructor(
 
         resultOf {
             salesApi.insertSale(sale.toSaleRequestDto())
+            updateProductsStock(sale.products.toList())
         }.onFailure {
             salesDao.insertSaleSync(sale.toSyncEntity())
         }
@@ -105,5 +111,34 @@ class SalesRepositoryImpl @Inject constructor(
             .build()
 
         workManager.beginUniqueWork("sync_sales_id", ExistingWorkPolicy.REPLACE, worker).enqueue()
+    }
+
+    override suspend fun updateProductsStock(products: List<ProductSale>) =
+        withContext(dispatchers.io()) {
+            for (soldProduct in products) {
+                val product = getCurrentStockFromDataBase(soldProduct.id)
+                product?.let { productValue ->
+                    val newStock = productValue.stock - soldProduct.quantity
+                    if (newStock >= VALUE_ZERO) {
+                        salesApi.updateProductStock(
+                            soldProduct.id,
+                            UpdateProductRequest(
+                                stock = newStock
+                            )
+                        )
+                    } else {
+                        println("Stock insuficiente para el producto ${soldProduct.id}")
+                    }
+                }
+            }
+        }
+
+    override suspend fun getCurrentStockFromDataBase(productId: String): ProductEntity? {
+        return try {
+            productDao.getProductById(productId)
+        } catch (exception: Exception) {
+            println("Error: ${exception.message}")
+            null
+        }
     }
 }
