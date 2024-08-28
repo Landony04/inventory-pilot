@@ -6,7 +6,8 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.supervisorScope
 import softspark.com.inventorypilot.common.utils.Constants.VALUE_ZERO
 import softspark.com.inventorypilot.home.data.local.dao.products.ProductDao
@@ -37,8 +38,8 @@ class SalesSyncWorker @AssistedInject constructor(
 
         return try {
             supervisorScope {
-                val job = salesToSync.map { sale -> launch { sync(sale) } }
-                job.forEach { it.join() }
+                val job = salesToSync.map { sale -> async { sync(sale) } }
+                job.awaitAll()
             }
             Result.success()
         } catch (exception: Exception) {
