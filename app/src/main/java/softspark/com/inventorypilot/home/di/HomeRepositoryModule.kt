@@ -57,12 +57,20 @@ object HomeRepositoryModule {
     @Singleton
     fun provideSalesRepository(
         dispatcherProvider: DispatcherProvider,
+        productDao: ProductDao,
         salesApi: SalesApi,
         salesDao: SalesDao,
         networkUtils: NetworkUtils,
         workManager: WorkManager
     ): SalesRepository =
-        SalesRepositoryImpl(dispatcherProvider, networkUtils, salesApi, salesDao, workManager)
+        SalesRepositoryImpl(
+            dispatcherProvider,
+            networkUtils,
+            productDao,
+            salesApi,
+            salesDao,
+            workManager
+        )
 
     @Singleton
     @Provides

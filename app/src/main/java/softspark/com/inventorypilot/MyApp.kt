@@ -8,6 +8,7 @@ import androidx.work.ListenableWorker
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
 import dagger.hilt.android.HiltAndroidApp
+import softspark.com.inventorypilot.home.data.local.dao.products.ProductDao
 import softspark.com.inventorypilot.home.data.local.dao.sales.SalesDao
 import softspark.com.inventorypilot.home.data.sync.SalesSyncWorker
 import softspark.com.inventorypilot.home.remote.SalesApi
@@ -29,7 +30,8 @@ class MyApp : Application(), Configuration.Provider {
 
 class CustomWorkerFactory @Inject constructor(
     private val salesApi: SalesApi,
-    private val salesDao: SalesDao
+    private val salesDao: SalesDao,
+    private val productDao: ProductDao
 ) : WorkerFactory() {
     override fun createWorker(
         appContext: Context,
@@ -39,6 +41,7 @@ class CustomWorkerFactory @Inject constructor(
         context = appContext,
         workerParameters = workerParameters,
         salesApi = salesApi,
-        salesDao = salesDao
+        salesDao = salesDao,
+        productDao = productDao
     )
 }
