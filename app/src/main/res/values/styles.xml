@@ -93,4 +93,12 @@
         <item name="android:textAlignment">textStart</item>
         <item name="dropDownBackgroundTint">@color/colorBlack</item>
     </style>
+
+    <style name="FloatingActionButton" parent="Widget.MaterialComponents.ExtendedFloatingActionButton">
+        <item name="android:scaleType">center</item>
+        <item name="tint">@color/colorWhite</item>
+        <item name="backgroundTint">@color/colorPrimary</item>
+        <item name="fabCustomSize">50dp</item>
+        <item name="fabSize">normal</item>
+    </style>
 </resources>

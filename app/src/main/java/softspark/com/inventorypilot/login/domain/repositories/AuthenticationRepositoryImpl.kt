@@ -14,6 +14,8 @@ import softspark.com.inventorypilot.common.data.util.DispatcherProvider
 import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.common.utils.NetworkUtils
 import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferences
+import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferencesImpl.Companion.USER_ID_PREFERENCE
+import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferencesImpl.Companion.USER_ROLE_PREFERENCE
 import softspark.com.inventorypilot.login.data.mapper.toDomain
 import softspark.com.inventorypilot.login.data.mapper.toEntity
 import softspark.com.inventorypilot.login.data.mapper.toUserProfile
@@ -31,10 +33,6 @@ class AuthenticationRepositoryImpl @Inject constructor(
     private val inventoryPilotPreferences: InventoryPilotPreferences
 ) : AuthenticationRepository {
 
-    companion object {
-        const val USER_ID_PREFERENCE = "user_id"
-    }
-
     override suspend fun getUserProfile(email: String): Flow<Result<UserProfile>> =
         flow<Result<UserProfile>> {
 
@@ -46,6 +44,7 @@ class AuthenticationRepositoryImpl @Inject constructor(
             val user = userDao.getUserProfileByEmail(email).toUserProfile()
 
             inventoryPilotPreferences.setValuesString(USER_ID_PREFERENCE, user.id)
+            inventoryPilotPreferences.setValuesString(USER_ROLE_PREFERENCE, user.role)
             emit(Result.Success(data = user))
         }.onStart {
             emit(Result.Loading)

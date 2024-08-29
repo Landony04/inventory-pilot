@@ -98,6 +98,8 @@ class SalesFragment : Fragment() {
     }
 
     private fun setUpActionBar() {
+        (requireActivity() as? AppCompatActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(false)
+
         (requireActivity() as AppCompatActivity).supportActionBar?.title =
             getString(R.string.title_action_bar_sales)
     }

@@ -2,6 +2,7 @@ package softspark.com.inventorypilot.home.presentation.ui.home
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,5 +29,10 @@ class HomeActivity : AppCompatActivity() {
 
         // Configurar el BottomNavigationView con NavController
         NavigationUI.setupWithNavController(homeBinding.bottomNavigation, navController)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = findNavController(R.id.nav_host_fragment)
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
 }

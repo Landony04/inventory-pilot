@@ -71,7 +71,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:gravity="start"
-                android:text="@string/text_status_completed"
                 android:textAppearance="@style/DetailsTextStyle"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
