@@ -23,14 +23,18 @@
     <string name="text_price_product">Precio: GTQ %1$s</string>
     <string name="text_quantity_product">Cantidad: %1$s</string>
     <string name="text_add_item_from_sale_success">Producto agregado exitosamente.</string>
+    <string name="text_status_pending">PENDIENTE</string>
+    <string name="text_status_completed">COMPLETADA</string>
 
     <!--CART  -->
     <string name="title_action_bar_cart">Realizar Venta</string>
     <string name="text_button_details">Detalles</string>
-    <string name="text_status_completed">Completada</string>
     <string name="text_pay_for_item">GTQ%1$s</string>
     <string name="text_add_product">Agregar</string>
     <string name="product_image_description">product_image</string>
     <string name="text_total_amount_sale">Total: GTQ%1$s</string>
     <string name="text_delete_item_from_sale_success">Producto eliminado exitosamente.</string>
+
+    <!-- ADD PRODUCTS   -->
+    <string name="title_action_bar_add_product">Agregar producto</string>
 </resources>

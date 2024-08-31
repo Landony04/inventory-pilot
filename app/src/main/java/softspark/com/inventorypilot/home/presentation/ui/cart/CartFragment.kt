@@ -118,6 +118,8 @@ class CartFragment : Fragment(), CartSelectedEvents {
     }
 
     private fun setUpObservers() {
+        (requireActivity() as? AppCompatActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        
         cartViewModel.emptyCartData.observe(viewLifecycleOwner, ::handleEmptyCart)
 
         cartViewModel.getCartData.observe(viewLifecycleOwner, ::handleGetCart)

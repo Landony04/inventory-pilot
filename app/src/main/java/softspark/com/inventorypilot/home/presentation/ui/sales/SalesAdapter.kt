@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.qualifiers.ApplicationContext
 import softspark.com.inventorypilot.R
 import softspark.com.inventorypilot.common.data.extension.formatUtcToReadableDate
+import softspark.com.inventorypilot.common.utils.Constants.PENDING_STATUS
 import softspark.com.inventorypilot.databinding.ItemLayoutCardSaleBinding
 import softspark.com.inventorypilot.home.domain.models.sales.Sale
 import javax.inject.Inject
@@ -34,7 +35,10 @@ class SalesAdapter @Inject constructor(
                     "${saleSection.totalAmount}"
                 )
 
-                statusSaleTv.text = saleSection.status
+                statusSaleTv.text =
+                    if (saleSection.status == PENDING_STATUS) context.getString(R.string.text_status_pending) else context.getString(
+                        R.string.text_status_completed
+                    )
 
                 detailsButton.setOnClickListener {
                     saleSelected(saleSection)

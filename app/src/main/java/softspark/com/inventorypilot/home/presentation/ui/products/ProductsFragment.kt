@@ -12,11 +12,13 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import softspark.com.inventorypilot.R
 import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.common.presentation.products.SpinnerAdapter
+import softspark.com.inventorypilot.common.utils.Constants.OWNER_ROLE
 import softspark.com.inventorypilot.common.utils.Constants.VALUE_ONE
 import softspark.com.inventorypilot.common.utils.Constants.VALUE_ZERO
 import softspark.com.inventorypilot.common.utils.components.ItemSelectedFromSpinnerListener
@@ -24,6 +26,8 @@ import softspark.com.inventorypilot.common.utils.components.ItemSelectedSpinner
 import softspark.com.inventorypilot.common.utils.components.ScrollRecyclerView
 import softspark.com.inventorypilot.common.utils.components.ScrollRecyclerViewListener
 import softspark.com.inventorypilot.common.utils.dialogs.DialogBuilder
+import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferences
+import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferencesImpl.Companion.USER_ROLE_PREFERENCE
 import softspark.com.inventorypilot.databinding.FragmentProductsBinding
 import softspark.com.inventorypilot.home.domain.models.products.Product
 import softspark.com.inventorypilot.home.domain.models.products.ProductCategory
@@ -45,6 +49,9 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ScrollRecy
 
     @Inject
     lateinit var dialogBuilder: DialogBuilder
+
+    @Inject
+    lateinit var preferences: InventoryPilotPreferences
 
     private var userInteraction = false
     private var endClearDrawable: Drawable? = null
@@ -73,6 +80,10 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ScrollRecy
     private fun getInitData() {
         getProducts()
         productCategoryViewModel.getProductCategories()
+
+        if (preferences.getValuesString(USER_ROLE_PREFERENCE) == OWNER_ROLE) {
+            binding?.addProductFab?.visibility = View.VISIBLE
+        }
     }
 
     private fun getProducts() {
@@ -155,9 +166,20 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ScrollRecy
         }
 
         productsAdapter.initListeners(this)
+
+        binding?.addProductFab?.setOnClickListener {
+            navigateToAddProduct()
+        }
+    }
+
+    private fun navigateToAddProduct() {
+        val action = ProductsFragmentDirections.actionFromProductToAddProduct()
+        findNavController().navigate(action)
     }
 
     private fun setUpActionBar() {
+        (requireActivity() as? AppCompatActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(false)
+
         (requireActivity() as AppCompatActivity).supportActionBar?.title =
             getString(R.string.title_action_bar_products)
     }

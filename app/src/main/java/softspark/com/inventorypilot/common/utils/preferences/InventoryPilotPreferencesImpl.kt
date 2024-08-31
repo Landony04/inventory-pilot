@@ -13,6 +13,12 @@ class InventoryPilotPreferencesImpl @Inject constructor(
     private lateinit var sharedPreferences: SharedPreferences
     private val SHARED_PREFERENCES = "INVENTORY_PILOT_PREFERENCES"
 
+    companion object {
+        //Preferences
+        const val USER_ID_PREFERENCE = "user_id"
+        const val USER_ROLE_PREFERENCE = "role"
+    }
+
     init {
         initPreferences()
     }

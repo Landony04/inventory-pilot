@@ -11,4 +11,5 @@ object Constants {
     const val DD_MMM_DATE_FORMAT = "dd MMM"
     const val EMPTY_STRING = ""
     const val PENDING_STATUS = "pending"
+    const val OWNER_ROLE = "owner"
 }

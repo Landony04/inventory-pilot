@@ -13,13 +13,13 @@ import softspark.com.inventorypilot.common.utils.Constants
 import softspark.com.inventorypilot.common.utils.Constants.PENDING_STATUS
 import softspark.com.inventorypilot.common.utils.Constants.UTC_DATE_FORMAT
 import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferences
+import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferencesImpl.Companion.USER_ID_PREFERENCE
 import softspark.com.inventorypilot.home.data.mapper.cart.toProductSale
 import softspark.com.inventorypilot.home.domain.models.sales.CartItem
 import softspark.com.inventorypilot.home.domain.models.sales.Sale
 import softspark.com.inventorypilot.home.domain.useCases.sales.GetSalesByDateUseCase
 import softspark.com.inventorypilot.home.domain.useCases.sales.GetSalesUseCase
 import softspark.com.inventorypilot.home.domain.useCases.sales.InsertSaleUseCase
-import softspark.com.inventorypilot.login.domain.repositories.AuthenticationRepositoryImpl.Companion.USER_ID_PREFERENCE
 import java.text.SimpleDateFormat
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
