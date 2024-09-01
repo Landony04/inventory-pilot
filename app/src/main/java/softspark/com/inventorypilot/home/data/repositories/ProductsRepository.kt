@@ -5,6 +5,11 @@ import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.home.domain.models.products.Product
 
 interface ProductsRepository {
+
+    suspend fun addProduct(
+        product: Product
+    )
+
     suspend fun getProductsForPage(
         page: Int,
         pageSize: Int

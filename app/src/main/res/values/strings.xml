@@ -14,7 +14,7 @@
 
     <!-- PRODUCTS   -->
     <string name="title_action_bar_products">Listado de productos</string>
-    <string name="title_first_option_spinner">Todas las categoríaa</string>
+    <string name="title_first_option_spinner">Todas las categorías</string>
     <string name="hint_search_product">Buscar producto</string>
 
     <!-- SALES   -->

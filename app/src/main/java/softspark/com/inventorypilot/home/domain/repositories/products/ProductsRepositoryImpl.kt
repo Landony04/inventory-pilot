@@ -11,12 +11,15 @@ import softspark.com.inventorypilot.common.data.util.DispatcherProvider
 import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.common.utils.NetworkUtils
 import softspark.com.inventorypilot.home.data.local.dao.products.ProductDao
+import softspark.com.inventorypilot.home.data.mapper.products.toAddProductRequest
 import softspark.com.inventorypilot.home.data.mapper.products.toProductDomain
 import softspark.com.inventorypilot.home.data.mapper.products.toProductEntity
 import softspark.com.inventorypilot.home.data.mapper.products.toProductListDomain
+import softspark.com.inventorypilot.home.data.mapper.products.toProductSyncEntity
 import softspark.com.inventorypilot.home.data.repositories.ProductsRepository
 import softspark.com.inventorypilot.home.domain.models.products.Product
 import softspark.com.inventorypilot.home.remote.ProductsApi
+import softspark.com.inventorypilot.home.remote.util.resultOf
 import javax.inject.Inject
 
 class ProductsRepositoryImpl @Inject constructor(
@@ -28,6 +31,16 @@ class ProductsRepositoryImpl @Inject constructor(
 
     companion object {
         private const val VALUE_ZERO = 0
+    }
+
+    override suspend fun addProduct(product: Product) {
+        productDao.insertProduct(product.toProductEntity())
+
+        resultOf {
+            productsApi.insertProduct(product.toAddProductRequest(product.id))
+        }.onFailure {
+            productDao.insertProductSync(product.toProductSyncEntity())
+        }
     }
 
     override suspend fun getProductsForPage(

@@ -1,11 +1,13 @@
 package softspark.com.inventorypilot.home.data.local.dao.products
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 import softspark.com.inventorypilot.home.data.local.entity.products.ProductEntity
+import softspark.com.inventorypilot.home.data.local.entity.products.ProductSyncEntity
 
 @Dao
 interface ProductDao {
@@ -29,4 +31,13 @@ interface ProductDao {
 
     @Query("SELECT * FROM ProductEntity WHERE name LIKE :query || '%' ORDER BY productId ASC")
     fun getProductsByName(query: String): Flow<List<ProductEntity>>
+
+    @Query("SELECT * FROM ProductSyncEntity")
+    fun getAllProductSync(): List<ProductSyncEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertProductSync(productSyncEntity: ProductSyncEntity)
+
+    @Delete
+    suspend fun deleteProductSync(productSyncEntity: ProductSyncEntity)
 }

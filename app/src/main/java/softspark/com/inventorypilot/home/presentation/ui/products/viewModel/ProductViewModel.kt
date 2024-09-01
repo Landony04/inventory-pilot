@@ -1,4 +1,4 @@
-package softspark.com.inventorypilot.home.presentation.ui.products
+package softspark.com.inventorypilot.home.presentation.ui.products.viewModel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

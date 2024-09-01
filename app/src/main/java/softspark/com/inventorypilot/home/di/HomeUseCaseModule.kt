@@ -1,14 +1,20 @@
 package softspark.com.inventorypilot.home.di
 
+import android.content.Context
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
 import softspark.com.inventorypilot.home.data.repositories.CartRepository
 import softspark.com.inventorypilot.home.data.repositories.ProductCategoriesRepository
 import softspark.com.inventorypilot.home.data.repositories.ProductsRepository
 import softspark.com.inventorypilot.home.data.repositories.SalesRepository
+import softspark.com.inventorypilot.home.domain.useCases.addProduct.AddProductUseCase
+import softspark.com.inventorypilot.home.domain.useCases.addProduct.AddProductUseCaseImpl
+import softspark.com.inventorypilot.home.domain.useCases.addProduct.ValidateDataProductUseCase
+import softspark.com.inventorypilot.home.domain.useCases.addProduct.ValidateDataProductUseCaseImpl
 import softspark.com.inventorypilot.home.domain.useCases.cart.AddProductToCartUseCase
 import softspark.com.inventorypilot.home.domain.useCases.cart.AddProductToCartUseCaseImpl
 import softspark.com.inventorypilot.home.domain.useCases.cart.DecreaseQuantityUseCase
@@ -55,6 +61,18 @@ object HomeUseCaseModule {
     ): GetProductsByCategoryIdUseCase = GetProductsByCategoryIdUseCaseImpl(productsRepository)
 
     //USE CASES FOR PRODUCTS
+
+    @ViewModelScoped
+    @Provides
+    fun provideAddProductUseCase(
+        productsRepository: ProductsRepository
+    ): AddProductUseCase = AddProductUseCaseImpl(productsRepository)
+
+    @ViewModelScoped
+    @Provides
+    fun provideValidateAddProductUseCase(
+        @ApplicationContext context: Context
+    ): ValidateDataProductUseCase = ValidateDataProductUseCaseImpl(context)
 
     @ViewModelScoped
     @Provides
