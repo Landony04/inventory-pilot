@@ -11,6 +11,9 @@ interface UserProfileDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertUsers(userProfileEntity: List<UserProfileEntity>)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertUser(userProfileEntity: UserProfileEntity)
+
     @Query("SELECT * FROM UserProfileEntity WHERE userId = :id")
     fun getUserProfileById(id: String): UserProfileEntity
 
