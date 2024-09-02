@@ -11,6 +11,8 @@ import dagger.hilt.android.HiltAndroidApp
 import softspark.com.inventorypilot.home.data.local.dao.products.ProductDao
 import softspark.com.inventorypilot.home.data.local.dao.sales.SalesDao
 import softspark.com.inventorypilot.home.data.sync.SalesSyncWorker
+import softspark.com.inventorypilot.home.data.sync.product.ProductSyncWorker
+import softspark.com.inventorypilot.home.remote.ProductsApi
 import softspark.com.inventorypilot.home.remote.SalesApi
 import javax.inject.Inject
 
@@ -20,10 +22,14 @@ class MyApp : Application(), Configuration.Provider {
     @Inject
     lateinit var workerFactory: CustomWorkerFactory
 
+    @Inject
+    lateinit var workerFactoryProduct: CustomWorkerFactoryProduct
+
     override fun getWorkManagerConfiguration(): Configuration {
         return Configuration.Builder()
             .setMinimumLoggingLevel(Log.DEBUG)
             .setWorkerFactory(workerFactory)
+            .setWorkerFactory(workerFactoryProduct)
             .build()
     }
 }
@@ -42,6 +48,22 @@ class CustomWorkerFactory @Inject constructor(
         workerParameters = workerParameters,
         salesApi = salesApi,
         salesDao = salesDao,
+        productDao = productDao
+    )
+}
+
+class CustomWorkerFactoryProduct @Inject constructor(
+    private val productsApi: ProductsApi,
+    private val productDao: ProductDao
+) : WorkerFactory() {
+    override fun createWorker(
+        appContext: Context,
+        workerClassName: String,
+        workerParameters: WorkerParameters
+    ): ListenableWorker = ProductSyncWorker(
+        context = appContext,
+        workerParameters = workerParameters,
+        productsApi = productsApi,
         productDao = productDao
     )
 }

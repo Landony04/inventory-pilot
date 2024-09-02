@@ -57,6 +57,7 @@ class CartFragment : Fragment(), CartSelectedEvents {
             cartAdapter.currentList.toList(),
             calculateTotalAmount(cartAdapter.currentList)
         )
+        showToast("Venta realizada exitosamente.")
     }
 
     private fun emptyCart() {

@@ -1,4 +1,4 @@
-package softspark.com.inventorypilot.home.presentation.ui.products
+package softspark.com.inventorypilot.home.presentation.ui.products.viewModel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,6 +11,7 @@ import softspark.com.inventorypilot.common.utils.Constants.QUERY_LENGTH
 import softspark.com.inventorypilot.common.utils.Constants.VALUE_ONE
 import softspark.com.inventorypilot.home.domain.models.products.Product
 import softspark.com.inventorypilot.home.domain.models.products.ProductCategory
+import softspark.com.inventorypilot.home.domain.useCases.addProduct.SyncProductsUseCase
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductCategoriesUseCase
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsByCategoryIdUseCase
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsByNameUseCase
@@ -24,11 +25,13 @@ class ProductViewModel @Inject constructor(
     private val getProductCategoriesUseCase: GetProductCategoriesUseCase,
     private val getProductsByCategoryIdUseCase: GetProductsByCategoryIdUseCase,
     private val getProductsByNameUseCase: GetProductsByNameUseCase,
-    private val syncSalesUseCase: SyncSalesUseCase
+    private val syncSalesUseCase: SyncSalesUseCase,
+    private val syncProductsUseCase: SyncProductsUseCase
 ) : ViewModel() {
 
     init {
         syncSales()
+        syncProducts()
     }
 
     private val _productCategoryData = MutableLiveData<Result<ArrayList<ProductCategory>>>()
@@ -77,6 +80,12 @@ class ProductViewModel @Inject constructor(
     private fun syncSales() {
         viewModelScope.launch {
             syncSalesUseCase()
+        }
+    }
+
+    private fun syncProducts() {
+        viewModelScope.launch {
+            syncProductsUseCase()
         }
     }
 }

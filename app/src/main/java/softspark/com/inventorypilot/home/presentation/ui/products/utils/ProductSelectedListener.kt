@@ -1,4 +1,4 @@
-package softspark.com.inventorypilot.home.presentation.ui.products
+package softspark.com.inventorypilot.home.presentation.ui.products.utils
 
 import softspark.com.inventorypilot.home.domain.models.products.Product
 

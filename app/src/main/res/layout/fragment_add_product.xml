@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="20dp"
-    tools:context=".home.presentation.ui.products.add_products.AddProductFragment">
+    tools:context=".home.presentation.ui.products.ui.add_products.AddProductFragment">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/name_product_til"
@@ -89,6 +89,18 @@
             android:inputType="number" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <ProgressBar
+        android:id="@+id/spinner_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:padding="5dp"
+        app:layout_constraintEnd_toStartOf="@+id/subcategory_spinner"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/stock_product_til" />
+
     <androidx.appcompat.widget.AppCompatSpinner
         android:id="@+id/category_spinner"
         style="@style/SpinnerTheme"
@@ -98,6 +110,7 @@
         android:elevation="2dp"
         android:padding="5dp"
         android:spinnerMode="dropdown"
+        android:visibility="invisible"
         app:layout_constraintEnd_toStartOf="@+id/subcategory_spinner"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent"
@@ -125,6 +138,17 @@
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
         android:text="Guardar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/subcategory_spinner"
+        app:layout_constraintVertical_bias="1" />
+
+    <ProgressBar
+        android:id="@+id/save_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -1,4 +1,4 @@
-package softspark.com.inventorypilot.home.presentation.ui.products
+package softspark.com.inventorypilot.home.presentation.ui.products.ui.products
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -32,6 +32,9 @@ import softspark.com.inventorypilot.databinding.FragmentProductsBinding
 import softspark.com.inventorypilot.home.domain.models.products.Product
 import softspark.com.inventorypilot.home.domain.models.products.ProductCategory
 import softspark.com.inventorypilot.home.presentation.ui.cart.CartViewModel
+import softspark.com.inventorypilot.home.presentation.ui.products.utils.ProductSelectedListener
+import softspark.com.inventorypilot.home.presentation.ui.products.adapters.ProductsAdapter
+import softspark.com.inventorypilot.home.presentation.ui.products.viewModel.ProductViewModel
 import javax.inject.Inject
 
 @AndroidEntryPoint

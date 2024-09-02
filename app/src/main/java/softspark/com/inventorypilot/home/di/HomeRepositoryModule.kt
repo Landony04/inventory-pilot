@@ -49,9 +49,16 @@ object HomeRepositoryModule {
         dispatcherProvider: DispatcherProvider,
         productsApi: ProductsApi,
         productDao: ProductDao,
-        networkUtils: NetworkUtils
+        networkUtils: NetworkUtils,
+        workManager: WorkManager
     ): ProductsRepository =
-        ProductsRepositoryImpl(dispatcherProvider, productsApi, productDao, networkUtils)
+        ProductsRepositoryImpl(
+            dispatcherProvider,
+            productsApi,
+            productDao,
+            networkUtils,
+            workManager
+        )
 
     @Provides
     @Singleton

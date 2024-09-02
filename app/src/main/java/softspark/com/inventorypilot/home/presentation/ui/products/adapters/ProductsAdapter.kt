@@ -1,4 +1,4 @@
-package softspark.com.inventorypilot.home.presentation.ui.products
+package softspark.com.inventorypilot.home.presentation.ui.products.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -12,6 +12,7 @@ import softspark.com.inventorypilot.R
 import softspark.com.inventorypilot.common.utils.Constants.VALUE_ZERO
 import softspark.com.inventorypilot.databinding.ItemLayoutCardProductBinding
 import softspark.com.inventorypilot.home.domain.models.products.Product
+import softspark.com.inventorypilot.home.presentation.ui.products.utils.ProductSelectedListener
 import javax.inject.Inject
 
 class ProductsAdapter @Inject constructor(
