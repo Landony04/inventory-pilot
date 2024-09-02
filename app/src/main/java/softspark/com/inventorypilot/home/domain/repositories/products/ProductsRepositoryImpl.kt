@@ -1,5 +1,13 @@
 package softspark.com.inventorypilot.home.domain.repositories.products
 
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.work.BackoffPolicy
+import androidx.work.Constraints
+import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -17,16 +25,19 @@ import softspark.com.inventorypilot.home.data.mapper.products.toProductEntity
 import softspark.com.inventorypilot.home.data.mapper.products.toProductListDomain
 import softspark.com.inventorypilot.home.data.mapper.products.toProductSyncEntity
 import softspark.com.inventorypilot.home.data.repositories.ProductsRepository
+import softspark.com.inventorypilot.home.data.sync.product.ProductSyncWorker
 import softspark.com.inventorypilot.home.domain.models.products.Product
 import softspark.com.inventorypilot.home.remote.ProductsApi
 import softspark.com.inventorypilot.home.remote.util.resultOf
+import java.time.Duration
 import javax.inject.Inject
 
 class ProductsRepositoryImpl @Inject constructor(
     private val dispatchers: DispatcherProvider,
     private val productsApi: ProductsApi,
     private val productDao: ProductDao,
-    private val networkUtils: NetworkUtils
+    private val networkUtils: NetworkUtils,
+    private val workManager: WorkManager
 ) : ProductsRepository {
 
     companion object {
@@ -106,5 +117,16 @@ class ProductsRepositoryImpl @Inject constructor(
 
     override suspend fun insertProducts(products: List<Product>) = withContext(dispatchers.io()) {
         productDao.insertProducts(products.map { product -> async { product.toProductEntity() }.await() })
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override suspend fun syncProducts() {
+        val worker = OneTimeWorkRequestBuilder<ProductSyncWorker>().setConstraints(
+            Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+        ).setBackoffCriteria(BackoffPolicy.EXPONENTIAL, Duration.ofMinutes(5))
+            .build()
+
+        workManager.beginUniqueWork("sync_products_id", ExistingWorkPolicy.REPLACE, worker)
+            .enqueue()
     }
 }

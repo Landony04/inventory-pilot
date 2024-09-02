@@ -4,6 +4,7 @@ import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import softspark.com.inventorypilot.R
 import softspark.com.inventorypilot.home.domain.entities.AddProductResult
 import javax.inject.Inject
 
@@ -18,34 +19,35 @@ class ValidateDataProductUseCaseImpl @Inject constructor(
         price: String
     ): Flow<AddProductResult> {
         return flow {
-
             if (stock.toIntOrNull() == null) {
-                return@flow emit(AddProductResult.Invalid("El stock ingresado no es un número válido."))
+                return@flow emit(AddProductResult.Invalid(context.getString(R.string.text_error_stock_invalid)))
             }
 
             if (price.toDoubleOrNull() == null) {
-                return@flow emit(AddProductResult.Invalid("El precio ingresado no es un número válido."))
+                return@flow emit(AddProductResult.Invalid(context.getString(R.string.text_error_price_invalid)))
             }
 
             if (name.isEmpty()) {
-                return@flow emit(AddProductResult.Invalid("Colocale nombre a tu producto"))
+                return@flow emit(AddProductResult.Invalid(context.getString(R.string.text_error_without_name)))
             }
 
             if (description.isEmpty()) {
-                return@flow emit(AddProductResult.Invalid("Colocale una descripción a tu producto"))
+                return@flow emit(AddProductResult.Invalid(context.getString(R.string.text_error_without_description)))
             }
 
-            if (stock.toString().isEmpty()) {
-                return@flow emit(AddProductResult.Invalid("Coloca la cantidad ingresada a tu producto"))
+            if (stock.isEmpty()) {
+                return@flow emit(AddProductResult.Invalid(context.getString(R.string.text_error_without_stock)))
             }
 
-            if (price.toString().isEmpty()) {
-                return@flow emit(AddProductResult.Invalid("Colocale precio a tu producto"))
+            if (price.isEmpty()) {
+                return@flow emit(AddProductResult.Invalid(context.getString(R.string.text_error_without_price)))
             }
 
             if (categoryId.isEmpty()) {
-                return@flow emit(AddProductResult.Invalid("Selecciona una categoría para tu producto"))
+                return@flow emit(AddProductResult.Invalid(context.getString(R.string.text_error_without_category)))
             }
+
+            return@flow emit(AddProductResult.Valid)
         }
     }
 }

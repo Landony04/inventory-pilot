@@ -24,4 +24,6 @@ interface ProductsRepository {
     ): Flow<Result<ArrayList<Product>>>
 
     suspend fun insertProducts(products: List<Product>)
+
+    suspend fun syncProducts()
 }

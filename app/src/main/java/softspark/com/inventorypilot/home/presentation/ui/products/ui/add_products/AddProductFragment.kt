@@ -9,6 +9,7 @@ import android.widget.AdapterView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import softspark.com.inventorypilot.R
 import softspark.com.inventorypilot.common.entities.base.Result
@@ -96,7 +97,8 @@ class AddProductFragment : Fragment(), ItemSelectedFromSpinnerListener {
 
             AddProductResult.Valid -> {
                 showAndHideButtonSave(true)
-                showToast("Producto agregado exitosamente.")
+                showToast(getString(R.string.text_add_product_successfully))
+                findNavController().navigateUp()
             }
         }
     }

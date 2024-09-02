@@ -13,6 +13,8 @@ import softspark.com.inventorypilot.home.data.repositories.ProductsRepository
 import softspark.com.inventorypilot.home.data.repositories.SalesRepository
 import softspark.com.inventorypilot.home.domain.useCases.addProduct.AddProductUseCase
 import softspark.com.inventorypilot.home.domain.useCases.addProduct.AddProductUseCaseImpl
+import softspark.com.inventorypilot.home.domain.useCases.addProduct.SyncProductsUseCase
+import softspark.com.inventorypilot.home.domain.useCases.addProduct.SyncProductsUseCaseImpl
 import softspark.com.inventorypilot.home.domain.useCases.addProduct.ValidateDataProductUseCase
 import softspark.com.inventorypilot.home.domain.useCases.addProduct.ValidateDataProductUseCaseImpl
 import softspark.com.inventorypilot.home.domain.useCases.cart.AddProductToCartUseCase
@@ -73,6 +75,12 @@ object HomeUseCaseModule {
     fun provideValidateAddProductUseCase(
         @ApplicationContext context: Context
     ): ValidateDataProductUseCase = ValidateDataProductUseCaseImpl(context)
+
+    @ViewModelScoped
+    @Provides
+    fun provideSyncProductUseCase(
+        productsRepository: ProductsRepository
+    ): SyncProductsUseCase = SyncProductsUseCaseImpl(productsRepository)
 
     @ViewModelScoped
     @Provides

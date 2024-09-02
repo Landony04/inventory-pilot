@@ -58,8 +58,8 @@ class AddProductViewModel @Inject constructor(
                             price = price.toDouble(),
                             stock = stock.toInt()
                         )
-                        _validateProductData.value = productResult
                         addProductUseCase(product)
+                        _validateProductData.value = productResult
                     }
                 }
             }

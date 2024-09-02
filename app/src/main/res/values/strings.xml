@@ -37,4 +37,12 @@
 
     <!-- ADD PRODUCTS   -->
     <string name="title_action_bar_add_product">Agregar producto</string>
+    <string name="text_add_product_successfully">Producto agregado exitosamente.</string>
+    <string name="text_error_stock_invalid">El stock ingresado no es un número válido.</string>
+    <string name="text_error_price_invalid">El precio ingresado no es un número válido.</string>
+    <string name="text_error_without_name">Colocale nombre a tu producto.</string>
+    <string name="text_error_without_description">Colocale una descripción a tu producto.</string>
+    <string name="text_error_without_stock">Coloca la cantidad ingresada a tu producto.</string>
+    <string name="text_error_without_price">Colocale precio a tu producto.</string>
+    <string name="text_error_without_category">Selecciona una categoría para tu producto.</string>
 </resources>

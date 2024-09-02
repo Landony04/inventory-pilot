@@ -23,13 +23,13 @@ interface ProductDao {
     @Query("SELECT * FROM ProductEntity ORDER BY productId ASC")
     fun getAllProducts(): List<ProductEntity>
 
-    @Query("SELECT * FROM ProductEntity ORDER BY productId ASC LIMIT :limit OFFSET :offset")
+    @Query("SELECT * FROM ProductEntity ORDER BY name ASC LIMIT :limit OFFSET :offset")
     suspend fun getProductsForPage(limit: Int, offset: Int): List<ProductEntity>
 
-    @Query("SELECT * FROM ProductEntity WHERE categoryId = :categoryId ORDER BY productId ASC")
+    @Query("SELECT * FROM ProductEntity WHERE categoryId = :categoryId ORDER BY name ASC")
     fun getProductsByCategoryId(categoryId: String): Flow<List<ProductEntity>>
 
-    @Query("SELECT * FROM ProductEntity WHERE name LIKE :query || '%' ORDER BY productId ASC")
+    @Query("SELECT * FROM ProductEntity WHERE name LIKE :query || '%' ORDER BY name ASC")
     fun getProductsByName(query: String): Flow<List<ProductEntity>>
 
     @Query("SELECT * FROM ProductSyncEntity")
