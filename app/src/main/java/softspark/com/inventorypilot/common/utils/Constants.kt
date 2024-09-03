@@ -12,5 +12,6 @@ object Constants {
     const val EMPTY_STRING = ""
     const val PENDING_STATUS = "pending"
     const val OWNER_ROLE = "owner"
+    const val DISPATCHER_ROLE = "dispatcher"
     const val DELAY_TIME = 1000L
 }

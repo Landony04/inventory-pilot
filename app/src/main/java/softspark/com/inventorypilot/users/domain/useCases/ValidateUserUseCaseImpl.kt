@@ -20,23 +20,23 @@ class ValidateUserUseCaseImpl @Inject constructor(
     ): Flow<AddUserResult> = flow {
 
         if (firstName.isEmpty()) {
-            return@flow emit(AddUserResult.Invalid(context.getString(R.string.text_error_without_name)))
+            return@flow emit(AddUserResult.Invalid(context.getString(R.string.text_error_without_first_name)))
         }
 
         if (lastName.isEmpty()) {
-            return@flow emit(AddUserResult.Invalid(context.getString(R.string.text_error_without_description)))
+            return@flow emit(AddUserResult.Invalid(context.getString(R.string.text_error_without_last_name)))
         }
 
         if (role.isEmpty()) {
-            return@flow emit(AddUserResult.Invalid(context.getString(R.string.text_error_without_stock)))
+            return@flow emit(AddUserResult.Invalid(context.getString(R.string.text_error_without_role)))
         }
 
         if (cellPhone.isEmpty()) {
-            return@flow emit(AddUserResult.Invalid(context.getString(R.string.text_error_without_price)))
+            return@flow emit(AddUserResult.Invalid(context.getString(R.string.text_error_without_cellphone)))
         }
 
         if (email.isEmpty()) {
-            return@flow emit(AddUserResult.Invalid(context.getString(R.string.text_error_without_category)))
+            return@flow emit(AddUserResult.Invalid(context.getString(R.string.text_error_without_email)))
         }
 
         return@flow emit(AddUserResult.Valid)
