@@ -47,4 +47,9 @@ object LocalModule {
     @Singleton
     fun provideCartDao(inventoryPilotDatabase: InventoryPilotDatabase) =
         inventoryPilotDatabase.cartDao()
+
+    @Provides
+    @Singleton
+    fun provideUserDao(inventoryPilotDatabase: InventoryPilotDatabase) =
+        inventoryPilotDatabase.userDao()
 }

@@ -45,4 +45,26 @@
     <string name="text_error_without_stock">Coloca la cantidad ingresada a tu producto.</string>
     <string name="text_error_without_price">Colocale precio a tu producto.</string>
     <string name="text_error_without_category">Selecciona una categoría para tu producto.</string>
+    <string name="hint_text_add_name_product">Ingresa el nombre del producto</string>
+    <string name="hint_text_add_description_product">Ingresa la descripción del producto</string>
+    <string name="hint_text_add_price_product">Ingresa el precio del producto</string>
+    <string name="hint_text_add_quantity_product">Ingresa la cantidad del producto</string>
+
+    <!-- ADD DISPATCHERS   -->
+    <string name="text_add_dispatchers">Agregar despachadores</string>
+    <string name="title_action_bar_add_user">Agregar despachador</string>
+    <string name="text_error_without_first_name">Debes agregar el primer nombres.</string>
+    <string name="text_error_without_last_name">Debes agregar apellido.</string>
+    <string name="text_error_without_role">Debes seleccionar un rol para el usuario.</string>
+    <string name="text_error_without_cellphone">Debes agregar un número de teléfono.</string>
+    <string name="text_error_without_email">Debes agregar un correo eléctronico.</string>
+    <string name="text_save">Guardar</string>
+    <string name="hint_text_add_first_name_user">Ingresa los nombres del usuario</string>
+    <string name="hint_text_add_last_name_user">Ingresa los apellidos del usuario</string>
+    <string name="hint_text_add_email_user">Ingresa el correo electronico del usuario</string>
+    <string name="hint_text_add_cellphone_user">Ingresa número de telefono del usuario</string>
+    <string name="text_add_user_successfully">Usuario agregado exitosamente.</string>
+    <string name="text_owner_role">Dueño</string>
+    <string name="text_dispatcher_role">Despachador</string>
+    <string name="text_all_roles">Todos los roles</string>
 </resources>
