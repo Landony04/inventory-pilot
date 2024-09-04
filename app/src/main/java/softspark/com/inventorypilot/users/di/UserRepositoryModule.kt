@@ -1,5 +1,6 @@
 package softspark.com.inventorypilot.users.di
 
+import androidx.work.WorkManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,12 +25,14 @@ object UserRepositoryModule {
         userApi: UserApi,
         userDao: UserDao,
         userProfileDao: UserProfileDao,
-        networkUtils: NetworkUtils
+        networkUtils: NetworkUtils,
+        workerManager: WorkManager
     ): UserRepository = UserRepositoryImpl(
         dispatcherProvider,
         userApi,
         userDao,
         userProfileDao,
-        networkUtils
+        networkUtils,
+        workerManager
     )
 }

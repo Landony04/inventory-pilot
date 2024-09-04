@@ -4,4 +4,6 @@ import softspark.com.inventorypilot.login.domain.models.UserProfile
 
 interface UserRepository {
     suspend fun addUser(userProfile: UserProfile)
+
+    suspend fun syncUsers()
 }

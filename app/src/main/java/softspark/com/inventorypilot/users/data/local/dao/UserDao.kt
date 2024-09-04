@@ -10,7 +10,7 @@ import softspark.com.inventorypilot.users.data.local.entity.user.UserSyncEntity
 @Dao
 interface UserDao {
 
-    @Query("SELECT * FROM ProductSyncEntity")
+    @Query("SELECT * FROM UserSyncEntity")
     fun getAllUserSync(): List<UserSyncEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
