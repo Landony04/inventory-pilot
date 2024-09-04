@@ -32,8 +32,8 @@ import softspark.com.inventorypilot.databinding.FragmentProductsBinding
 import softspark.com.inventorypilot.home.domain.models.products.Product
 import softspark.com.inventorypilot.home.domain.models.products.ProductCategory
 import softspark.com.inventorypilot.home.presentation.ui.cart.CartViewModel
-import softspark.com.inventorypilot.home.presentation.ui.products.utils.ProductSelectedListener
 import softspark.com.inventorypilot.home.presentation.ui.products.adapters.ProductsAdapter
+import softspark.com.inventorypilot.home.presentation.ui.products.utils.ProductSelectedListener
 import softspark.com.inventorypilot.home.presentation.ui.products.viewModel.ProductViewModel
 import javax.inject.Inject
 
@@ -93,21 +93,8 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ScrollRecy
         productCategoryViewModel.getAllProducts()
     }
 
-    private fun handleGetAllProducts(result: Result<ArrayList<Product>>) {
-        when (result) {
-            is Result.Error -> {
-                binding?.progressBarBottom?.visibility = View.GONE
-            }
-
-            is Result.Success -> {
-                binding?.progressBarBottom?.visibility = View.GONE
-                productsAdapter.submitList(result.data)
-            }
-
-            Result.Loading -> {
-                binding?.progressBarBottom?.visibility = View.VISIBLE
-            }
-        }
+    private fun handleGetAllProducts(result: List<Product>) {
+        productsAdapter.submitList(result)
     }
 
     private fun handleGetProductCategory(result: Result<ArrayList<ProductCategory>>) {
@@ -211,10 +198,15 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ScrollRecy
         }
     }
 
+    private fun resetValues() {
+        productCategoryViewModel.resetValues()
+    }
+
     private fun validateIfCleanSearchInput() {
         val endDrawable = binding?.searchIl?.endIconDrawable
         if (endDrawable != null && endDrawable.constantState == endClearDrawable?.constantState) {
             binding?.searchEditText?.text?.clear()
+            resetValues()
             getProducts()
         }
     }
@@ -237,12 +229,15 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ScrollRecy
             val selectedCategory = parent?.getItemAtPosition(position) as ProductCategory
             productCategoryViewModel.getProductsByCategoryId(selectedCategory.id)
         } else {
+            resetValues()
             getProducts()
         }
     }
 
     override fun invoke() {
-        getProducts()
+        if (!productCategoryViewModel.isLoading) {
+            getProducts()
+        }
     }
 
     override fun addToCartProductSelected(product: Product, position: Int) {

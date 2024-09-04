@@ -9,14 +9,8 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.withContext
 import softspark.com.inventorypilot.common.data.util.DispatcherProvider
-import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.common.utils.NetworkUtils
 import softspark.com.inventorypilot.home.data.local.dao.products.ProductDao
 import softspark.com.inventorypilot.home.data.mapper.products.toAddProductRequest
@@ -40,10 +34,6 @@ class ProductsRepositoryImpl @Inject constructor(
     private val workManager: WorkManager
 ) : ProductsRepository {
 
-    companion object {
-        private const val VALUE_ZERO = 0
-    }
-
     override suspend fun addProduct(product: Product) {
         productDao.insertProduct(product.toProductEntity())
 
@@ -55,65 +45,30 @@ class ProductsRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getProductsForPage(
-        page: Int,
-        pageSize: Int
-    ): Flow<Result<ArrayList<Product>>> =
-        flow<Result<ArrayList<Product>>> {
+        limit: Int,
+        offset: Int
+    ): List<Product> = withContext(dispatchers.io()) {
 
-            val offset = (page - 1) * pageSize
+        if (networkUtils.isInternetAvailable()) {
+            val apiResult = productsApi.getAllProducts().toProductListDomain()
+            insertProducts(apiResult)
+        }
 
-            if (page > VALUE_ZERO) {
-                if (networkUtils.isInternetAvailable()) {
-                    val apiResult = productsApi.getAllProducts().toProductListDomain()
-                    insertProducts(apiResult)
-                }
-            }
+        return@withContext productDao.getProductsForPage(limit, offset)
+            .map { productEntity -> productEntity.toProductDomain() }
+    }
 
-            val localResult = productDao.getProductsForPage(pageSize, offset)
+    override suspend fun getProductsByCategoryId(categoryId: String): List<Product> =
+        withContext(dispatchers.io()) {
+            return@withContext productDao.getProductsByCategoryId(categoryId)
                 .map { productEntity -> productEntity.toProductDomain() }
+        }
 
-            val valueResult =
-                if (localResult.size < pageSize) productDao.getProductsForPage(pageSize, VALUE_ZERO)
-                    .map { productEntity -> productEntity.toProductDomain() } else localResult
-
-            emit(Result.Success(data = ArrayList(valueResult)))
-
-        }.onStart {
-            emit(Result.Success(data = arrayListOf()))
-        }.catch {
-            emit(Result.Error(it))
-        }.flowOn(dispatchers.io())
-
-    override suspend fun getProductsByCategoryId(categoryId: String): Flow<Result<ArrayList<Product>>> =
-        flow<Result<ArrayList<Product>>> {
-            productDao.getProductsByCategoryId(categoryId).collect {
-                val result = it.map { productEntity ->
-                    productEntity.toProductDomain()
-                }
-
-                emit(Result.Success(ArrayList(result)))
-            }
-
-        }.onStart {
-            emit(Result.Loading)
-        }.catch {
-            emit(Result.Error(it))
-        }.flowOn(dispatchers.io())
-
-    override suspend fun getProductsByName(query: String): Flow<Result<ArrayList<Product>>> =
-        flow<Result<ArrayList<Product>>> {
-            productDao.getProductsByName(query.lowercase()).collect {
-                val result = it.map { productEntity ->
-                    productEntity.toProductDomain()
-                }
-
-                emit(Result.Success(ArrayList(result)))
-            }
-        }.onStart {
-            emit(Result.Loading)
-        }.catch {
-            emit(Result.Error(it))
-        }.flowOn(dispatchers.io())
+    override suspend fun getProductsByName(query: String): List<Product> =
+        withContext(dispatchers.io()) {
+            return@withContext productDao.getProductsByName(query.lowercase())
+                .map { productEntity -> productEntity.toProductDomain() }
+        }
 
     override suspend fun insertProducts(products: List<Product>) = withContext(dispatchers.io()) {
         productDao.insertProducts(products.map { product -> async { product.toProductEntity() }.await() })

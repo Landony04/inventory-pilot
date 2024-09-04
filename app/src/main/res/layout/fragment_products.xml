@@ -83,16 +83,6 @@
             app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
             tools:listitem="@layout/item_layout_card_product" />
 
-        <ProgressBar
-            android:id="@+id/progressBarBottom"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/add_product_fab"
             style="@style/FloatingActionButton"

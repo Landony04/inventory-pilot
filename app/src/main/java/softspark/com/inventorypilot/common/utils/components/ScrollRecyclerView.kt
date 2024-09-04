@@ -11,11 +11,11 @@ class ScrollRecyclerView(private val listener: ScrollRecyclerViewListener) :
 
         if (dy > Constants.VALUE_ZERO) {
             val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-            val visibleItemCount = layoutManager.childCount
             val totalItemCount = layoutManager.itemCount
-            val pastVisibleItems = layoutManager.findFirstVisibleItemPosition()
+            val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
 
-            if ((visibleItemCount + pastVisibleItems) > totalItemCount) {
+            // Verificamos si hemos llegado al final y no estamos cargando
+            if (lastVisibleItem >= totalItemCount - 1) {
                 listener()
             }
         }
