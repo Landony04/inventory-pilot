@@ -14,6 +14,7 @@ import softspark.com.inventorypilot.home.data.sync.SalesSyncWorker
 import softspark.com.inventorypilot.home.data.sync.product.ProductSyncWorker
 import softspark.com.inventorypilot.home.remote.ProductsApi
 import softspark.com.inventorypilot.home.remote.SalesApi
+import softspark.com.inventorypilot.users.data.sync.CustomWorkerFactoryUser
 import javax.inject.Inject
 
 @HiltAndroidApp
@@ -25,11 +26,15 @@ class MyApp : Application(), Configuration.Provider {
     @Inject
     lateinit var workerFactoryProduct: CustomWorkerFactoryProduct
 
+    @Inject
+    lateinit var workerFactoryUser: CustomWorkerFactoryUser
+
     override fun getWorkManagerConfiguration(): Configuration {
         return Configuration.Builder()
             .setMinimumLoggingLevel(Log.DEBUG)
             .setWorkerFactory(workerFactory)
             .setWorkerFactory(workerFactoryProduct)
+            .setWorkerFactory(workerFactoryUser)
             .build()
     }
 }
