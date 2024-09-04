@@ -8,7 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.common.utils.Constants.QUERY_LENGTH
-import softspark.com.inventorypilot.common.utils.Constants.VALUE_ONE
+import softspark.com.inventorypilot.common.utils.Constants.VALUE_ZERO
 import softspark.com.inventorypilot.home.domain.models.products.Product
 import softspark.com.inventorypilot.home.domain.models.products.ProductCategory
 import softspark.com.inventorypilot.home.domain.useCases.addProduct.SyncProductsUseCase
@@ -40,17 +40,31 @@ class ProductViewModel @Inject constructor(
     private val _productCategoryData = MutableLiveData<Result<ArrayList<ProductCategory>>>()
     val productCategoryData: LiveData<Result<ArrayList<ProductCategory>>> get() = _productCategoryData
 
-    private val _productsData = MutableLiveData<Result<ArrayList<Product>>>()
-    val productsData: LiveData<Result<ArrayList<Product>>> get() = _productsData
+    private val _productsData = MutableLiveData<List<Product>>()
+    val productsData: LiveData<List<Product>> get() = _productsData
 
-    private var currentPage: Int = VALUE_ONE
+    private var offset = VALUE_ZERO
+    private var limit = 20
+    var isLoading = false
+        private set
+
+    fun resetValues() {
+        _productsData.value = emptyList()
+        offset = VALUE_ZERO
+        limit = 20
+    }
 
     fun getAllProducts() {
-        currentPage++
+        if (isLoading) return
+
+        isLoading = true
         viewModelScope.launch {
-            getProductsUseCase(currentPage).collect { result ->
-                _productsData.value = result
+            val products = getProductsUseCase(limit, offset)
+            if (products.isNotEmpty()) {
+                _productsData.value = _productsData.value.orEmpty() + products
+                offset += limit
             }
+            isLoading = false
         }
     }
 
@@ -64,18 +78,16 @@ class ProductViewModel @Inject constructor(
 
     fun getProductsByCategoryId(categoryId: String) {
         viewModelScope.launch {
-            getProductsByCategoryIdUseCase(categoryId).collect { result ->
-                _productsData.value = result
-            }
+            val products = getProductsByCategoryIdUseCase(categoryId)
+            _productsData.value = products
         }
     }
 
     fun getProductsByName(query: String) {
         viewModelScope.launch {
             if (query.length >= QUERY_LENGTH) {
-                getProductsByNameUseCase(query).collect { result ->
-                    _productsData.value = result
-                }
+                val products = getProductsByNameUseCase(query)
+                _productsData.value = products
             }
         }
     }

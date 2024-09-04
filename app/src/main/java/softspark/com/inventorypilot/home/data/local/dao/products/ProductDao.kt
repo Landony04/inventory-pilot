@@ -5,7 +5,6 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import kotlinx.coroutines.flow.Flow
 import softspark.com.inventorypilot.home.data.local.entity.products.ProductEntity
 import softspark.com.inventorypilot.home.data.local.entity.products.ProductSyncEntity
 
@@ -27,10 +26,10 @@ interface ProductDao {
     suspend fun getProductsForPage(limit: Int, offset: Int): List<ProductEntity>
 
     @Query("SELECT * FROM ProductEntity WHERE categoryId = :categoryId ORDER BY name ASC")
-    fun getProductsByCategoryId(categoryId: String): Flow<List<ProductEntity>>
+    fun getProductsByCategoryId(categoryId: String): List<ProductEntity>
 
     @Query("SELECT * FROM ProductEntity WHERE name LIKE :query || '%' ORDER BY name ASC")
-    fun getProductsByName(query: String): Flow<List<ProductEntity>>
+    fun getProductsByName(query: String): List<ProductEntity>
 
     @Query("SELECT * FROM ProductSyncEntity")
     fun getAllProductSync(): List<ProductSyncEntity>
