@@ -52,18 +52,22 @@ class SalesFragment : Fragment() {
     }
 
     private fun getInitialData() {
-        salesViewModel.getSalesForPage()
+        salesViewModel.getSalesByDate(
+            salesViewModel.getCurrentUtcDate()
+        )
     }
 
     private fun handleGetAllSales(result: Result<ArrayList<Sale>>) {
         when (result) {
             is Result.Error -> {
                 binding?.salesPb?.visibility = View.GONE
+                showAndHideSalesList(false)
             }
 
             is Result.Success -> {
                 binding?.salesPb?.visibility = View.GONE
                 salesAdapter.submitList(result.data)
+                showAndHideSalesList(result.data.isNotEmpty())
             }
 
             Result.Loading -> {
@@ -81,7 +85,7 @@ class SalesFragment : Fragment() {
     }
 
     private fun initListeners() {
-        binding?.dateFilterContainer?.setOnClickListener {
+        binding?.filterContainer?.setOnClickListener {
             showDatePicker()
         }
     }
@@ -106,6 +110,11 @@ class SalesFragment : Fragment() {
 
     private fun setUpObservers() {
         salesViewModel.saleData.observe(viewLifecycleOwner, ::handleGetAllSales)
+    }
+
+    private fun showAndHideSalesList(show: Boolean) {
+        binding?.salesRv?.visibility = if (show) View.VISIBLE else View.INVISIBLE
+        binding?.withoutSalesIv?.visibility = if (show) View.INVISIBLE else View.VISIBLE
     }
 
     override fun onDestroyView() {

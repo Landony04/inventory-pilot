@@ -26,7 +26,7 @@ interface SalesDao {
     fun getSalesForPage(limit: Int, offset: Int): List<SaleEntity>
 
     @Transaction
-    @Query("SELECT * FROM SaleEntity WHERE dateWithoutHours = :date")
+    @Query("SELECT * FROM SaleEntity WHERE dateWithoutHours = :date ORDER BY date")
     fun getSalesByDate(date: String): List<SaleEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

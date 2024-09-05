@@ -45,38 +45,15 @@ class SalesRepositoryImpl @Inject constructor(
     private val salesDao: SalesDao,
     private val workManager: WorkManager
 ) : SalesRepository {
-    override suspend fun getSalesForPage(
-        page: Int,
-        pageSize: Int
-    ): Flow<Result<ArrayList<Sale>>> =
-        flow<Result<ArrayList<Sale>>> {
-
-            val offset = (page - 1) * pageSize
-
-            if (page > VALUE_ZERO) {
-                if (networkUtils.isInternetAvailable()) {
-                    val apiResult = salesApi.getAllSales().toSaleListDomain()
-
-                    insertSales(apiResult)
-                }
-            }
-
-            val localResult = salesDao.getSalesForPage(pageSize, offset)
-                .map { saleEntity -> saleEntity.toSaleDomain() }
-
-            val valueResult =
-                if (localResult.size < pageSize) salesDao.getSalesForPage(pageSize, VALUE_ZERO)
-                    .map { saleEntity -> saleEntity.toSaleDomain() } else localResult
-
-            emit(Result.Success(data = ArrayList(valueResult)))
-        }.onStart {
-            emit(Result.Loading)
-        }.catch {
-            emit(Result.Error(it))
-        }.flowOn(dispatchers.io())
 
     override suspend fun getSalesByDate(date: String): Flow<Result<ArrayList<Sale>>> =
         flow<Result<ArrayList<Sale>>> {
+
+            if (networkUtils.isInternetAvailable()) {
+                val apiResult = salesApi.getSalesForDate(date).toSaleListDomain()
+
+                insertSales(apiResult)
+            }
 
             val localResult =
                 salesDao.getSalesByDate(date).map { saleEntity -> saleEntity.toSaleDomain() }
