@@ -7,10 +7,6 @@ import softspark.com.inventorypilot.home.domain.models.sales.ProductSale
 import softspark.com.inventorypilot.home.domain.models.sales.Sale
 
 interface SalesRepository {
-    suspend fun getSalesForPage(
-        page: Int,
-        pageSize: Int
-    ): Flow<Result<ArrayList<Sale>>>
 
     suspend fun getSalesByDate(
         date: String

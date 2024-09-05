@@ -67,4 +67,5 @@
     <string name="text_owner_role">Dueño</string>
     <string name="text_dispatcher_role">Despachador</string>
     <string name="text_all_roles">Todos los roles</string>
+    <string name="text_title_add_filter">Aplicar filtro</string>
 </resources>

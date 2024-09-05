@@ -9,7 +9,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import softspark.com.inventorypilot.common.entities.base.Result
-import softspark.com.inventorypilot.common.utils.Constants
 import softspark.com.inventorypilot.common.utils.Constants.PENDING_STATUS
 import softspark.com.inventorypilot.common.utils.Constants.UTC_DATE_FORMAT
 import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferences
@@ -18,7 +17,6 @@ import softspark.com.inventorypilot.home.data.mapper.cart.toProductSale
 import softspark.com.inventorypilot.home.domain.models.sales.CartItem
 import softspark.com.inventorypilot.home.domain.models.sales.Sale
 import softspark.com.inventorypilot.home.domain.useCases.sales.GetSalesByDateUseCase
-import softspark.com.inventorypilot.home.domain.useCases.sales.GetSalesUseCase
 import softspark.com.inventorypilot.home.domain.useCases.sales.InsertSaleUseCase
 import java.text.SimpleDateFormat
 import java.time.ZoneOffset
@@ -31,7 +29,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SalesViewModel @Inject constructor(
-    private val getSalesUseCase: GetSalesUseCase,
     private val getSalesByDateUseCase: GetSalesByDateUseCase,
     private val insertSaleUseCase: InsertSaleUseCase,
     private val inventoryPilotPreferences: InventoryPilotPreferences
@@ -39,17 +36,6 @@ class SalesViewModel @Inject constructor(
 
     private val _salesData = MutableLiveData<Result<ArrayList<Sale>>>()
     val saleData: LiveData<Result<ArrayList<Sale>>> get() = _salesData
-
-    private var currentPage: Int = Constants.VALUE_ONE
-
-    fun getSalesForPage() {
-        currentPage++
-        viewModelScope.launch {
-            getSalesUseCase(currentPage).collect { result ->
-                _salesData.value = result
-            }
-        }
-    }
 
     fun getSalesByDate(date: String) {
         viewModelScope.launch {
