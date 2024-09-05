@@ -14,6 +14,7 @@ import softspark.com.inventorypilot.home.domain.models.products.Product
 import softspark.com.inventorypilot.home.domain.models.products.ProductCategory
 import softspark.com.inventorypilot.home.domain.useCases.addProduct.AddProductUseCase
 import softspark.com.inventorypilot.home.domain.useCases.addProduct.ValidateDataProductUseCase
+import softspark.com.inventorypilot.home.domain.useCases.products.GetProductByIdUseCase
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductCategoriesUseCase
 import java.util.UUID
 import javax.inject.Inject
@@ -22,7 +23,8 @@ import javax.inject.Inject
 class AddProductViewModel @Inject constructor(
     private val addProductUseCase: AddProductUseCase,
     private val getProductCategoriesUseCase: GetProductCategoriesUseCase,
-    private val validateDataProductUseCase: ValidateDataProductUseCase
+    private val validateDataProductUseCase: ValidateDataProductUseCase,
+    private val getProductByIdUseCase: GetProductByIdUseCase
 ) : ViewModel() {
 
     private val _productCategoryData = MutableLiveData<Result<ArrayList<ProductCategory>>>()
@@ -30,6 +32,9 @@ class AddProductViewModel @Inject constructor(
 
     private val _validateProductData = MutableLiveData<AddProductResult>()
     val validateProductData: LiveData<AddProductResult> get() = _validateProductData
+
+    private val _productData = MutableLiveData<Result<Product>>()
+    val productData: LiveData<Result<Product>> get() = _productData
 
     fun addProduct(
         categoryId: String,
@@ -70,6 +75,14 @@ class AddProductViewModel @Inject constructor(
         viewModelScope.launch {
             getProductCategoriesUseCase().collect { result ->
                 _productCategoryData.value = result
+            }
+        }
+    }
+
+    fun getProductById(productId: String) {
+        viewModelScope.launch {
+            getProductByIdUseCase(productId = productId).collect { productResult ->
+                _productData.value = productResult
             }
         }
     }

@@ -30,7 +30,12 @@
         android:id="@+id/navigation_add_product"
         android:name="softspark.com.inventorypilot.home.presentation.ui.products.ui.add_products.AddProductFragment"
         android:label="@string/title_action_bar_add_product"
-        tools:layout="@layout/fragment_add_product" />
+        tools:layout="@layout/fragment_add_product">
+        <argument
+            android:name="productId"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_add_user"

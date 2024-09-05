@@ -162,8 +162,8 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ScrollRecy
         }
     }
 
-    private fun navigateToAddProduct() {
-        val action = ProductsFragmentDirections.actionFromProductToAddProduct()
+    private fun navigateToAddProduct(productId: String? = null) {
+        val action = ProductsFragmentDirections.actionFromProductToAddProduct(productId = productId)
         findNavController().navigate(action)
     }
 
@@ -243,5 +243,9 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ScrollRecy
     override fun addToCartProductSelected(product: Product, position: Int) {
         showToast(getString(R.string.text_add_item_from_sale_success))
         cartViewModel.addProductToCart(product, VALUE_ONE)
+    }
+
+    override fun editProductSelected(productId: String, position: Int) {
+        navigateToAddProduct(productId = productId)
     }
 }

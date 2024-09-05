@@ -9,8 +9,14 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.withContext
 import softspark.com.inventorypilot.common.data.util.DispatcherProvider
+import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.common.utils.NetworkUtils
 import softspark.com.inventorypilot.home.data.local.dao.products.ProductDao
 import softspark.com.inventorypilot.home.data.mapper.products.toAddProductRequest
@@ -69,6 +75,18 @@ class ProductsRepositoryImpl @Inject constructor(
             return@withContext productDao.getProductsByName(query.lowercase())
                 .map { productEntity -> productEntity.toProductDomain() }
         }
+
+    override suspend fun getProductsById(productId: String): Flow<Result<Product>> =
+        flow<Result<Product>> {
+
+            val product = productDao.getProductById(productId).toProductDomain()
+
+            emit(Result.Success(data = product))
+        }.onStart {
+            emit(Result.Loading)
+        }.catch {
+            emit(Result.Error(it))
+        }.flowOn(dispatchers.io())
 
     override suspend fun insertProducts(products: List<Product>) = withContext(dispatchers.io()) {
         productDao.insertProducts(products.map { product -> async { product.toProductEntity() }.await() })

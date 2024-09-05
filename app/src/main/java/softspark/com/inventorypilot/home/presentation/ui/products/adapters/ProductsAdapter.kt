@@ -9,14 +9,18 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.qualifiers.ApplicationContext
 import softspark.com.inventorypilot.R
+import softspark.com.inventorypilot.common.utils.Constants.OWNER_ROLE
 import softspark.com.inventorypilot.common.utils.Constants.VALUE_ZERO
+import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferences
+import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferencesImpl.Companion.USER_ROLE_PREFERENCE
 import softspark.com.inventorypilot.databinding.ItemLayoutCardProductBinding
 import softspark.com.inventorypilot.home.domain.models.products.Product
 import softspark.com.inventorypilot.home.presentation.ui.products.utils.ProductSelectedListener
 import javax.inject.Inject
 
 class ProductsAdapter @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val inventoryPilotPreferences: InventoryPilotPreferences
 ) : ListAdapter<Product, ProductsAdapter.ProductViewHolder>(ProductsDiffCallback()) {
 
     private lateinit var productSelectedListener: ProductSelectedListener
@@ -27,11 +31,16 @@ class ProductsAdapter @Inject constructor(
         fun bind(
             context: Context,
             productSection: Product,
-            productSelected: (Product) -> Unit
+            inventoryPilotPreferences: InventoryPilotPreferences,
+            productSelected: (Product, Boolean) -> Unit
         ) {
             with(itemBinding) {
                 if (productSection.stock <= VALUE_ZERO) {
                     addCartButton.visibility = View.GONE
+                }
+
+                if (inventoryPilotPreferences.getValuesString(USER_ROLE_PREFERENCE) == OWNER_ROLE) {
+                    editProductIv.visibility = View.VISIBLE
                 }
 
                 titleProductTv.text = productSection.name
@@ -49,7 +58,11 @@ class ProductsAdapter @Inject constructor(
                 )
 
                 addCartButton.setOnClickListener {
-                    productSelected(productSection)
+                    productSelected(productSection, false)
+                }
+
+                editProductIv.setOnClickListener {
+                    productSelected(productSection, true)
                 }
             }
         }
@@ -70,8 +83,19 @@ class ProductsAdapter @Inject constructor(
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         val product = getItem(position)
-        holder.bind(context = context, productSection = product) { productSelected ->
-            productSelectedListener.addToCartProductSelected(productSelected, position)
+        holder.bind(
+            context = context,
+            productSection = product,
+            inventoryPilotPreferences = inventoryPilotPreferences
+        ) { productSelected, isEditOption ->
+            if (!isEditOption) {
+                productSelectedListener.addToCartProductSelected(productSelected, position)
+            } else {
+                productSelectedListener.editProductSelected(
+                    productId = productSelected.id,
+                    position
+                )
+            }
         }
     }
 
