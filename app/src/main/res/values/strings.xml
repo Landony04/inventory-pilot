@@ -72,4 +72,9 @@
     <!-- UPDATE PRODUCTS   -->
     <string name="text_modified_product_successfully">Producto modificado exitosamente.</string>
     <string name="text_error_get_product">Error al obtener el producto</string>
+
+    <!-- USERS   -->
+    <string name="text_two_values">%1$s %2$s</string>
+    <string name="title_action_bar_users">Listado de usuarios</string>
+    <string name="text_error_get_users">Hubo un problema al obtener los usuarios.</string>
 </resources>

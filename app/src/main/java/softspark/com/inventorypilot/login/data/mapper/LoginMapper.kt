@@ -14,7 +14,8 @@ fun UserProfileResponse.toDomain(): List<UserProfile> {
             email = dto.email,
             firstName = dto.firstName,
             lastName = dto.lastName,
-            role = dto.role
+            role = dto.role,
+            cellPhone = dto.cellPhone
         )
     }
 }
@@ -24,7 +25,8 @@ fun UserProfileEntity.toUserProfile(): UserProfile = UserProfile(
     email = email,
     firstName = firstName,
     lastName = lastName,
-    role = role
+    role = role,
+    cellPhone = cellPhone
 )
 
 fun UserProfile.toEntity(): UserProfileEntity {
@@ -33,7 +35,8 @@ fun UserProfile.toEntity(): UserProfileEntity {
         email = email,
         firstName = firstName,
         lastName = lastName,
-        role = role
+        role = role,
+        cellPhone = cellPhone
     )
 }
 
@@ -47,7 +50,8 @@ fun UserProfileResponse.toUserProfile(): UserProfile {
             email = dto.email,
             firstName = dto.firstName,
             lastName = dto.lastName,
-            role = dto.role
+            role = dto.role,
+            cellPhone = dto.cellPhone
         )
     }.first()
 }

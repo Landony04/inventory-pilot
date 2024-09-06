@@ -1,8 +1,11 @@
 package softspark.com.inventorypilot.common.data.local
 
+import androidx.annotation.NonNull
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import softspark.com.inventorypilot.common.data.local.dao.UserProfileDao
 import softspark.com.inventorypilot.common.data.local.entity.UserProfileEntity
 import softspark.com.inventorypilot.home.data.local.dao.cart.CartDao
@@ -19,10 +22,11 @@ import softspark.com.inventorypilot.home.data.local.typeconverter.SalesTypeConve
 import softspark.com.inventorypilot.users.data.local.dao.UserDao
 import softspark.com.inventorypilot.users.data.local.entity.user.UserSyncEntity
 
+
 @TypeConverters(value = [SalesTypeConverters::class])
 @Database(
     entities = [UserProfileEntity::class, ProductCategoryEntity::class, ProductEntity::class, SaleEntity::class, CartItemEntity::class, SaleSyncEntity::class, ProductSyncEntity::class, UserSyncEntity::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class InventoryPilotDatabase : RoomDatabase() {
@@ -37,4 +41,12 @@ abstract class InventoryPilotDatabase : RoomDatabase() {
     abstract fun cartDao(): CartDao
 
     abstract fun userDao(): UserDao
+}
+
+val MIGRATION_1_2: Migration = object : Migration(1, 2) {
+    override fun migrate(@NonNull database: SupportSQLiteDatabase) {
+        // Aquí defines los cambios que se hicieron entre la versión 1 y 2.
+        // Por ejemplo, si en la versión 2 agregaste una nueva columna:
+        database.execSQL("ALTER TABLE UserProfileEntity ADD COLUMN cellPhone TEXT")
+    }
 }

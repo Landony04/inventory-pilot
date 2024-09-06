@@ -5,4 +5,10 @@
         android:icon="@drawable/ic_add_user_30"
         android:showAsAction="always"
         android:title="@string/text_add_dispatchers" />
+
+    <item
+        android:id="@+id/action_users"
+        android:icon="@drawable/ic_people_outline_30"
+        android:showAsAction="always"
+        android:title="@string/title_action_bar_users" />
 </menu>

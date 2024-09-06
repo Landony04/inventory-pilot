@@ -78,6 +78,11 @@ class HomeActivity : AppCompatActivity() {
                 true
             }
 
+            R.id.action_users -> {
+                navController.navigate(R.id.navigation_users)
+                true
+            }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
