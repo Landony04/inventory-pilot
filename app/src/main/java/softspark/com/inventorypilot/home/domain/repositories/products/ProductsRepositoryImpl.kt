@@ -44,7 +44,7 @@ class ProductsRepositoryImpl @Inject constructor(
         productDao.insertProduct(product.toProductEntity())
 
         resultOf {
-            productsApi.insertProduct(product.toAddProductRequest(product.id))
+            productsApi.insertOrUpdateProduct(product.toAddProductRequest(product.id))
         }.onFailure {
             productDao.insertProductSync(product.toProductSyncEntity())
         }
@@ -101,5 +101,15 @@ class ProductsRepositoryImpl @Inject constructor(
 
         workManager.beginUniqueWork("sync_products_id", ExistingWorkPolicy.REPLACE, worker)
             .enqueue()
+    }
+
+    override suspend fun updateProduct(product: Product) {
+        productDao.updateProduct(product.toProductEntity())
+
+        resultOf {
+            productsApi.insertOrUpdateProduct(product.toAddProductRequest(product.id))
+        }.onFailure {
+            productDao.insertProductSync(product.toProductSyncEntity())
+        }
     }
 }

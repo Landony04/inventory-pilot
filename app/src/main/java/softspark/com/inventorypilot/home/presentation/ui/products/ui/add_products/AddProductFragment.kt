@@ -17,6 +17,8 @@ import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.common.presentation.products.SpinnerAdapter
 import softspark.com.inventorypilot.common.utils.Constants
 import softspark.com.inventorypilot.common.utils.Constants.EMPTY_STRING
+import softspark.com.inventorypilot.common.utils.Constants.PRODUCT_PARCELABLE_REQUEST_KEY
+import softspark.com.inventorypilot.common.utils.Constants.PRODUCT_PARCELABLE_RESULT_KEY
 import softspark.com.inventorypilot.common.utils.Constants.VALUE_ZERO
 import softspark.com.inventorypilot.common.utils.components.ItemSelectedFromSpinnerListener
 import softspark.com.inventorypilot.common.utils.components.ItemSelectedSpinner
@@ -71,12 +73,14 @@ class AddProductFragment : Fragment(), ItemSelectedFromSpinnerListener {
 
     private fun addProduct() {
         showAndHideButtonSave(false)
-        addProductViewModel.addProduct(
+        addProductViewModel.addOrUpdateProduct(
             productCategoryIdCurrent,
             binding?.nameProductTie?.text?.toString() ?: EMPTY_STRING,
             binding?.descriptionProductTie?.text?.toString() ?: EMPTY_STRING,
             binding?.stockProductTie?.text?.toString() ?: EMPTY_STRING,
             binding?.priceProductTie?.text?.toString() ?: EMPTY_STRING,
+            args.productId,
+            args.productId != null
         )
     }
 
@@ -113,16 +117,39 @@ class AddProductFragment : Fragment(), ItemSelectedFromSpinnerListener {
 
             AddProductResult.Valid -> {
                 showAndHideButtonSave(true)
-                showToast(getString(R.string.text_add_product_successfully))
+                showToast(
+                    if (args.productId != null) getString(R.string.text_modified_product_successfully) else getString(
+                        R.string.text_add_product_successfully
+                    )
+                )
+                args.productId?.let {
+                    sendResultBack(it)
+                }
+
                 findNavController().navigateUp()
             }
         }
     }
 
+    private fun sendResultBack(productId: String) {
+        val bundle = Bundle()
+        val product = Product(
+            args.productId ?: EMPTY_STRING,
+            productCategoryIdCurrent,
+            binding?.nameProductTie?.text?.toString() ?: EMPTY_STRING,
+            binding?.descriptionProductTie?.text?.toString() ?: EMPTY_STRING,
+            binding?.priceProductTie?.text?.toString()?.toDouble() ?: 0.0,
+            binding?.stockProductTie?.text?.toString()?.toInt() ?: VALUE_ZERO
+        )
+
+        bundle.putParcelable(PRODUCT_PARCELABLE_RESULT_KEY, product)
+        parentFragmentManager.setFragmentResult(PRODUCT_PARCELABLE_REQUEST_KEY, bundle)
+    }
+
     private fun handleGetProductById(result: Result<Product>) {
         when (result) {
             is Result.Error -> {
-                showToast("Error al obtener el producto")
+                showToast(getString(R.string.text_error_get_product))
                 findNavController().navigateUp()
             }
 

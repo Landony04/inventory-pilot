@@ -14,4 +14,6 @@ object Constants {
     const val OWNER_ROLE = "owner"
     const val DISPATCHER_ROLE = "dispatcher"
     const val DELAY_TIME = 1000L
+    const val PRODUCT_PARCELABLE_RESULT_KEY = "result_product_key"
+    const val PRODUCT_PARCELABLE_REQUEST_KEY = "request_product_key"
 }

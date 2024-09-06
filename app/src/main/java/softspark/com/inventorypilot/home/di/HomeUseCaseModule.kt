@@ -39,6 +39,8 @@ import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsByN
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsByNameUseCaseImpl
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsUseCase
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsUseCaseImpl
+import softspark.com.inventorypilot.home.domain.useCases.products.UpdateProductUseCase
+import softspark.com.inventorypilot.home.domain.useCases.products.UpdateProductUseCaseImpl
 import softspark.com.inventorypilot.home.domain.useCases.sales.GetSalesByDateUseCase
 import softspark.com.inventorypilot.home.domain.useCases.sales.GetSalesByDateUseCaseImpl
 import softspark.com.inventorypilot.home.domain.useCases.sales.InsertSaleUseCase
@@ -99,6 +101,12 @@ object HomeUseCaseModule {
     fun provideGetProductsById(
         productsRepository: ProductsRepository
     ): GetProductByIdUseCase = GetProductByIdUseCaseImpl(productsRepository)
+
+    @ViewModelScoped
+    @Provides
+    fun provideUpdateProduct(
+        productsRepository: ProductsRepository
+    ): UpdateProductUseCase = UpdateProductUseCaseImpl(productsRepository)
 
     //USE CASES FOR SALES
     @ViewModelScoped

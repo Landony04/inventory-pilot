@@ -43,19 +43,10 @@ class ProductsAdapter @Inject constructor(
                     editProductIv.visibility = View.VISIBLE
                 }
 
-                titleProductTv.text = productSection.name
-
-                descriptionProductTv.text = productSection.description
-
-                priceProductTv.text = String.format(
-                    context.getString(R.string.text_price_product),
-                    productSection.price.toString()
-                )
-
-                stockProductTv.text = String.format(
-                    context.getString(R.string.text_quantity_product),
-                    productSection.stock.toString()
-                )
+                bindNameProduct(productSection.name)
+                bindDescriptionProduct(productSection.description)
+                bindPriceProduct(productSection.price, context)
+                bindStockProduct(productSection.stock, context)
 
                 addCartButton.setOnClickListener {
                     productSelected(productSection, false)
@@ -65,6 +56,28 @@ class ProductsAdapter @Inject constructor(
                     productSelected(productSection, true)
                 }
             }
+        }
+
+        fun bindNameProduct(name: String) {
+            itemBinding.titleProductTv.text = name
+        }
+
+        fun bindDescriptionProduct(description: String) {
+            itemBinding.descriptionProductTv.text = description
+        }
+
+        fun bindPriceProduct(price: Double, context: Context) {
+            itemBinding.priceProductTv.text = String.format(
+                context.getString(R.string.text_price_product),
+                price.toString()
+            )
+        }
+
+        fun bindStockProduct(stock: Int, context: Context) {
+            itemBinding.stockProductTv.text = String.format(
+                context.getString(R.string.text_quantity_product),
+                stock.toString()
+            )
         }
     }
 
@@ -99,9 +112,55 @@ class ProductsAdapter @Inject constructor(
         }
     }
 
+    override fun onBindViewHolder(
+        holder: ProductViewHolder,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
+        when (val latestPayload = payloads.lastOrNull()) {
+            is ArticleChangePayload.Name -> holder.bindNameProduct(latestPayload.newName)
+            is ArticleChangePayload.Description -> holder.bindDescriptionProduct(latestPayload.newDescription)
+            is ArticleChangePayload.Price -> holder.bindPriceProduct(
+                latestPayload.newPrice,
+                context
+            )
+
+            is ArticleChangePayload.Stock -> holder.bindStockProduct(
+                latestPayload.newStock,
+                context
+            )
+
+            else -> onBindViewHolder(holder, position)
+        }
+    }
+
     fun initListeners(listener: ProductSelectedListener) {
         productSelectedListener = listener
     }
+
+    fun updateItem(position: Int, newProduct: Product) {
+        currentList.toMutableList()[position].apply {
+            name = newProduct.name
+            description = newProduct.description
+            stock = newProduct.stock
+            price = newProduct.price
+            categoryId = newProduct.categoryId
+        }
+
+        notifyItemChanged(position)
+    }
+}
+
+
+private sealed interface ArticleChangePayload {
+
+    data class Name(val newName: String) : ArticleChangePayload
+
+    data class Description(val newDescription: String) : ArticleChangePayload
+
+    data class Stock(val newStock: Int) : ArticleChangePayload
+
+    data class Price(val newPrice: Double) : ArticleChangePayload
 }
 
 class ProductsDiffCallback : DiffUtil.ItemCallback<Product>() {
@@ -117,5 +176,27 @@ class ProductsDiffCallback : DiffUtil.ItemCallback<Product>() {
         newItem: Product
     ): Boolean {
         return oldItem == newItem
+    }
+
+    override fun getChangePayload(oldItem: Product, newItem: Product): Any? {
+        return when {
+            oldItem.name != newItem.name -> {
+                ArticleChangePayload.Name(newItem.name)
+            }
+
+            oldItem.description != newItem.description -> {
+                ArticleChangePayload.Description(newItem.description)
+            }
+
+            oldItem.stock != newItem.stock -> {
+                ArticleChangePayload.Stock(newItem.stock)
+            }
+
+            oldItem.price != newItem.price -> {
+                ArticleChangePayload.Price(newItem.price)
+            }
+
+            else -> super.getChangePayload(oldItem, newItem)
+        }
     }
 }

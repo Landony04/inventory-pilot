@@ -48,7 +48,7 @@ class ProductSyncWorker @AssistedInject constructor(
             productDao.getProductById(productSyncEntity.id)
         val productDomain = product.toProductDomain()
         resultOf {
-            productsApi.insertProduct(productDomain.toAddProductRequest(productDomain.id))
+            productsApi.insertOrUpdateProduct(productDomain.toAddProductRequest(productDomain.id))
         }.onSuccess {
             productDao.deleteProductSync(product.toProductSyncEntity())
         }.onFailure {

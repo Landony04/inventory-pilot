@@ -28,4 +28,6 @@ interface ProductsRepository {
     suspend fun insertProducts(products: List<Product>)
 
     suspend fun syncProducts()
+
+    suspend fun updateProduct(product: Product)
 }
