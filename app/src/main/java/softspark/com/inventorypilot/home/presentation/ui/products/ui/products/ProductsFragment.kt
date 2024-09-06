@@ -18,6 +18,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import softspark.com.inventorypilot.R
 import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.common.presentation.products.SpinnerAdapter
+import softspark.com.inventorypilot.common.utils.Constants
+import softspark.com.inventorypilot.common.utils.Constants.EMPTY_STRING
 import softspark.com.inventorypilot.common.utils.Constants.OWNER_ROLE
 import softspark.com.inventorypilot.common.utils.Constants.VALUE_ONE
 import softspark.com.inventorypilot.common.utils.Constants.VALUE_ZERO
@@ -94,6 +96,7 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ScrollRecy
     }
 
     private fun handleGetAllProducts(result: List<Product>) {
+        println("Productos: $result")
         productsAdapter.submitList(result)
     }
 
@@ -160,11 +163,42 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ScrollRecy
         binding?.addProductFab?.setOnClickListener {
             navigateToAddProduct()
         }
+
+        parentFragmentManager.setFragmentResultListener(
+            Constants.PRODUCT_PARCELABLE_REQUEST_KEY,
+            this
+        ) { requestKey, bundle ->
+
+            when (requestKey) {
+                Constants.PRODUCT_PARCELABLE_REQUEST_KEY -> getDataFromUpdate(bundle)
+            }
+        }
     }
 
-    private fun navigateToAddProduct() {
-        val action = ProductsFragmentDirections.actionFromProductToAddProduct()
-        findNavController().navigate(action)
+    private fun getDataFromUpdate(bundle: Bundle) {
+        try {
+            // Actualizar la UI con el resultado
+            val product: Product? =
+                bundle.getParcelable(Constants.PRODUCT_PARCELABLE_RESULT_KEY, Product::class.java)
+
+            product?.let { productValue ->
+                val position = productsAdapter.currentList.indexOfFirst { it.id == productValue.id }
+
+                productsAdapter.updateItem(position, productValue)
+            }
+        } catch (exception: Exception) {
+            showToast(exception.message ?: EMPTY_STRING)
+        }
+    }
+
+    private fun navigateToAddProduct(productId: String? = null) {
+        try {
+            val action =
+                ProductsFragmentDirections.actionFromProductToAddProduct(productId = productId)
+            findNavController().navigate(action)
+        } catch (exception: Exception) {
+            showToast(exception.message ?: EMPTY_STRING)
+        }
     }
 
     private fun setUpActionBar() {
@@ -243,5 +277,9 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ScrollRecy
     override fun addToCartProductSelected(product: Product, position: Int) {
         showToast(getString(R.string.text_add_item_from_sale_success))
         cartViewModel.addProductToCart(product, VALUE_ONE)
+    }
+
+    override fun editProductSelected(productId: String, position: Int) {
+        navigateToAddProduct(productId = productId)
     }
 }

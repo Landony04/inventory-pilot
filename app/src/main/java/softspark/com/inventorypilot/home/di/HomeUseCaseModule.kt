@@ -29,6 +29,8 @@ import softspark.com.inventorypilot.home.domain.useCases.cart.GetCartUseCase
 import softspark.com.inventorypilot.home.domain.useCases.cart.GetCartUseCaseImpl
 import softspark.com.inventorypilot.home.domain.useCases.cart.IncreaseQuantityUseCase
 import softspark.com.inventorypilot.home.domain.useCases.cart.IncreaseQuantityUseCaseImpl
+import softspark.com.inventorypilot.home.domain.useCases.products.GetProductByIdUseCase
+import softspark.com.inventorypilot.home.domain.useCases.products.GetProductByIdUseCaseImpl
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductCategoriesUseCase
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductCategoriesUseCaseImpl
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsByCategoryIdUseCase
@@ -37,6 +39,8 @@ import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsByN
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsByNameUseCaseImpl
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsUseCase
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsUseCaseImpl
+import softspark.com.inventorypilot.home.domain.useCases.products.UpdateProductUseCase
+import softspark.com.inventorypilot.home.domain.useCases.products.UpdateProductUseCaseImpl
 import softspark.com.inventorypilot.home.domain.useCases.sales.GetSalesByDateUseCase
 import softspark.com.inventorypilot.home.domain.useCases.sales.GetSalesByDateUseCaseImpl
 import softspark.com.inventorypilot.home.domain.useCases.sales.InsertSaleUseCase
@@ -91,6 +95,18 @@ object HomeUseCaseModule {
     fun provideGetProductsByName(
         productsRepository: ProductsRepository
     ): GetProductsByNameUseCase = GetProductsByNameUseCaseImpl(productsRepository)
+
+    @ViewModelScoped
+    @Provides
+    fun provideGetProductsById(
+        productsRepository: ProductsRepository
+    ): GetProductByIdUseCase = GetProductByIdUseCaseImpl(productsRepository)
+
+    @ViewModelScoped
+    @Provides
+    fun provideUpdateProduct(
+        productsRepository: ProductsRepository
+    ): UpdateProductUseCase = UpdateProductUseCaseImpl(productsRepository)
 
     //USE CASES FOR SALES
     @ViewModelScoped

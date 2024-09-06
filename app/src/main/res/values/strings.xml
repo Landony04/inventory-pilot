@@ -68,4 +68,8 @@
     <string name="text_dispatcher_role">Despachador</string>
     <string name="text_all_roles">Todos los roles</string>
     <string name="text_title_add_filter">Aplicar filtro</string>
+
+    <!-- UPDATE PRODUCTS   -->
+    <string name="text_modified_product_successfully">Producto modificado exitosamente.</string>
+    <string name="text_error_get_product">Error al obtener el producto</string>
 </resources>

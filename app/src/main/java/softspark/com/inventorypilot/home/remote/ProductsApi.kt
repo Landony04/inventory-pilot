@@ -7,7 +7,6 @@ import softspark.com.inventorypilot.home.remote.dto.products.AddProductRequest
 import softspark.com.inventorypilot.home.remote.dto.products.GetProductsResponse
 import softspark.com.inventorypilot.home.remote.dto.products.ProductCategoryDto
 import softspark.com.inventorypilot.home.remote.dto.products.ProductCategoryResponse
-import softspark.com.inventorypilot.home.remote.dto.products.UpdateProductDto
 
 interface ProductsApi {
 
@@ -21,5 +20,5 @@ interface ProductsApi {
     suspend fun getAllProducts(): GetProductsResponse
 
     @PATCH("businesses/business_info_id_1/products.json")
-    suspend fun insertProduct(@Body addProductRequest: AddProductRequest)
+    suspend fun insertOrUpdateProduct(@Body addProductRequest: AddProductRequest)
 }

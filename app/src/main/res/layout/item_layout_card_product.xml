@@ -29,6 +29,21 @@
             android:orientation="vertical">
 
             <ImageView
+                android:id="@+id/edit_product_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:contentDescription="edit_product"
+                android:src="@drawable/ic_edit_outline_24"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@id/title_product_tv"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.95"
+                app:layout_constraintStart_toEndOf="@+id/product_iv"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.3" />
+
+            <ImageView
                 android:id="@+id/product_iv"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
