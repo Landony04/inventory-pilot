@@ -26,7 +26,7 @@ import softspark.com.inventorypilot.users.data.local.entity.user.UserSyncEntity
 @TypeConverters(value = [SalesTypeConverters::class])
 @Database(
     entities = [UserProfileEntity::class, ProductCategoryEntity::class, ProductEntity::class, SaleEntity::class, CartItemEntity::class, SaleSyncEntity::class, ProductSyncEntity::class, UserSyncEntity::class],
-    version = 2,
+    version = 1,
     exportSchema = false
 )
 abstract class InventoryPilotDatabase : RoomDatabase() {
@@ -44,9 +44,7 @@ abstract class InventoryPilotDatabase : RoomDatabase() {
 }
 
 val MIGRATION_1_2: Migration = object : Migration(1, 2) {
-    override fun migrate(@NonNull database: SupportSQLiteDatabase) {
-        // Aquí defines los cambios que se hicieron entre la versión 1 y 2.
-        // Por ejemplo, si en la versión 2 agregaste una nueva columna:
+    override fun migrate(database: SupportSQLiteDatabase) {
         database.execSQL("ALTER TABLE UserProfileEntity ADD COLUMN cellPhone TEXT")
     }
 }
