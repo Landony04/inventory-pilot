@@ -10,6 +10,8 @@ import dagger.hilt.android.scopes.ViewModelScoped
 import softspark.com.inventorypilot.users.data.repositories.UserRepository
 import softspark.com.inventorypilot.users.domain.useCases.AddUserUseCase
 import softspark.com.inventorypilot.users.domain.useCases.AddUserUseCaseImpl
+import softspark.com.inventorypilot.users.domain.useCases.GetAllUsersUseCase
+import softspark.com.inventorypilot.users.domain.useCases.GetAllUsersUseCaseImpl
 import softspark.com.inventorypilot.users.domain.useCases.SyncUserUseCase
 import softspark.com.inventorypilot.users.domain.useCases.SyncUserUseCaseImpl
 import softspark.com.inventorypilot.users.domain.useCases.ValidateUserUseCase
@@ -37,4 +39,11 @@ object UserUseCaseModule {
     fun provideSyncUsersUseCase(
         userRepository: UserRepository
     ): SyncUserUseCase = SyncUserUseCaseImpl(userRepository)
+
+    //USE CASES FOR GET USERS
+    @ViewModelScoped
+    @Provides
+    fun provideGetUsersUseCase(
+        userRepository: UserRepository
+    ): GetAllUsersUseCase = GetAllUsersUseCaseImpl(userRepository)
 }

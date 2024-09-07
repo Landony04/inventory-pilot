@@ -23,6 +23,12 @@ class InventoryPilotPreferencesImpl @Inject constructor(
         initPreferences()
     }
 
+    override fun clearPreferences() {
+        val editor = sharedPreferences.edit()
+        editor.clear()
+        editor.apply()
+    }
+
     override fun initPreferences() {
         sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE)
     }

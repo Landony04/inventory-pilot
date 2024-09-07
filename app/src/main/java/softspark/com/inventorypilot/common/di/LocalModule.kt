@@ -8,6 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import softspark.com.inventorypilot.common.data.local.InventoryPilotDatabase
+import softspark.com.inventorypilot.common.data.local.MIGRATION_1_2
 import javax.inject.Singleton
 
 @Module
@@ -20,7 +21,7 @@ object LocalModule {
         context,
         InventoryPilotDatabase::class.java,
         "inventory_pilot_db"
-    ).build()
+    ).addMigrations(MIGRATION_1_2).build()
 
 
     @Provides

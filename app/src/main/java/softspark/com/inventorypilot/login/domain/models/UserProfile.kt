@@ -6,5 +6,5 @@ data class UserProfile(
     val firstName: String,
     val lastName: String,
     val role: String,
-    val cellPhone: String? = null
+    val cellPhone: String
 )

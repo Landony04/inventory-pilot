@@ -42,4 +42,10 @@
         android:name="softspark.com.inventorypilot.users.presentation.ui.addUsers.AddUsersFragment"
         android:label="Agregar usuario"
         tools:layout="@layout/fragment_add_users" />
+
+    <fragment
+        android:id="@+id/navigation_users"
+        android:name="softspark.com.inventorypilot.users.presentation.ui.users.UsersFragment"
+        android:label="@string/title_action_bar_users"
+        tools:layout="@layout/fragment_users" />
 </navigation>

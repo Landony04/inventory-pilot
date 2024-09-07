@@ -12,15 +12,13 @@ import softspark.com.inventorypilot.login.domain.entities.PasswordResult
 import softspark.com.inventorypilot.login.domain.models.UserProfile
 import softspark.com.inventorypilot.login.presentation.viewModel.LoginViewModel
 import softspark.com.inventorypilot.navigation.Navigator
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: LoginActivityBinding
 
-    @Inject
-    lateinit var navigator: Navigator
+    private lateinit var navigator: Navigator
 
     private val loginViewModel: LoginViewModel by viewModels()
 
@@ -29,6 +27,8 @@ class LoginActivity : AppCompatActivity() {
 
         binding = LoginActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        navigator = Navigator()
 
         initListeners()
         setUpObservers()
@@ -69,7 +69,7 @@ class LoginActivity : AppCompatActivity() {
 
             is Result.Success -> {
                 binding.loginProgressBar.visibility = View.GONE
-                navigator.navigateToHome()
+                navigator.navigateToHome(this)
             }
 
             Result.Loading -> println("Mostrar progress")

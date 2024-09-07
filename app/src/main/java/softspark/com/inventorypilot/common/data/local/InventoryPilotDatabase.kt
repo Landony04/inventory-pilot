@@ -1,8 +1,11 @@
 package softspark.com.inventorypilot.common.data.local
 
+import androidx.annotation.NonNull
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import softspark.com.inventorypilot.common.data.local.dao.UserProfileDao
 import softspark.com.inventorypilot.common.data.local.entity.UserProfileEntity
 import softspark.com.inventorypilot.home.data.local.dao.cart.CartDao
@@ -18,6 +21,7 @@ import softspark.com.inventorypilot.home.data.local.entity.sales.SaleSyncEntity
 import softspark.com.inventorypilot.home.data.local.typeconverter.SalesTypeConverters
 import softspark.com.inventorypilot.users.data.local.dao.UserDao
 import softspark.com.inventorypilot.users.data.local.entity.user.UserSyncEntity
+
 
 @TypeConverters(value = [SalesTypeConverters::class])
 @Database(
@@ -37,4 +41,10 @@ abstract class InventoryPilotDatabase : RoomDatabase() {
     abstract fun cartDao(): CartDao
 
     abstract fun userDao(): UserDao
+}
+
+val MIGRATION_1_2: Migration = object : Migration(1, 2) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        database.execSQL("ALTER TABLE UserProfileEntity ADD COLUMN cellPhone TEXT")
+    }
 }
