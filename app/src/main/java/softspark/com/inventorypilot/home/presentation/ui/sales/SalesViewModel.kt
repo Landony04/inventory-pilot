@@ -8,9 +8,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import softspark.com.inventorypilot.common.domain.useCases.GenerateCurrentDateUTCUseCase
+import softspark.com.inventorypilot.common.domain.useCases.GenerateIdUseCase
 import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.common.utils.Constants.PENDING_STATUS
-import softspark.com.inventorypilot.common.utils.Constants.UTC_DATE_FORMAT
 import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferences
 import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferencesImpl.Companion.USER_ID_PREFERENCE
 import softspark.com.inventorypilot.home.data.mapper.cart.toProductSale
@@ -19,18 +20,16 @@ import softspark.com.inventorypilot.home.domain.models.sales.Sale
 import softspark.com.inventorypilot.home.domain.useCases.sales.GetSalesByDateUseCase
 import softspark.com.inventorypilot.home.domain.useCases.sales.InsertSaleUseCase
 import java.text.SimpleDateFormat
-import java.time.ZoneOffset
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
-import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
 class SalesViewModel @Inject constructor(
     private val getSalesByDateUseCase: GetSalesByDateUseCase,
     private val insertSaleUseCase: InsertSaleUseCase,
+    private val getDateUTCUseCase: GenerateCurrentDateUTCUseCase,
+    private val generateIdUseCase: GenerateIdUseCase,
     private val inventoryPilotPreferences: InventoryPilotPreferences
 ) : ViewModel() {
 
@@ -51,18 +50,11 @@ class SalesViewModel @Inject constructor(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getCurrentUtcDate(): String {
-        val currentDateTime = ZonedDateTime.now(ZoneOffset.UTC)
-        val formatter = DateTimeFormatter.ofPattern(UTC_DATE_FORMAT)
-        return currentDateTime.format(formatter)
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
     fun insertSale(cartItems: List<CartItem>, totalAmount: Double) {
         viewModelScope.launch {
             val sale = Sale(
-                id = UUID.randomUUID().toString(),
-                date = getCurrentUtcDate(),
+                id = generateIdUseCase(),
+                date = getDateUTCUseCase(),
                 totalAmount = totalAmount,
                 userId = inventoryPilotPreferences.getValuesString(USER_ID_PREFERENCE),
                 products = ArrayList(cartItems.map { it.toProductSale() }),
@@ -70,5 +62,9 @@ class SalesViewModel @Inject constructor(
             )
             insertSaleUseCase(sale = sale)
         }
+    }
+
+    fun getCurrentDateUtc(): String {
+        return getDateUTCUseCase()
     }
 }

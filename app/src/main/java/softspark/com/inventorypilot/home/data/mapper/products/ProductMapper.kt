@@ -44,7 +44,9 @@ fun GetProductsResponse.toProductListDomain(): List<Product> {
             name = dto.name,
             description = dto.description,
             price = dto.price,
-            stock = dto.stock
+            stock = dto.stock,
+            addDate = dto.addDate,
+            createBy = dto.createBy
         )
     }
 }
@@ -55,7 +57,9 @@ fun Product.toProductEntity(): ProductEntity = ProductEntity(
     name = name,
     description = description,
     price = price,
-    stock = stock
+    stock = stock,
+    addDate = addDate,
+    createBy = createBy
 )
 
 fun ProductEntity.toProductDomain(): Product = Product(
@@ -64,7 +68,9 @@ fun ProductEntity.toProductDomain(): Product = Product(
     name = name,
     description = description,
     price = price,
-    stock = stock
+    stock = stock,
+    addDate = addDate,
+    createBy = createBy
 )
 
 fun Product.toCartItem(quantity: Int): CartItem = CartItem(
@@ -81,7 +87,9 @@ fun Product.toProductToDto(): UpdateProductDto = UpdateProductDto(
     name = name,
     description = description,
     price = price,
-    stock = stock
+    stock = stock,
+    addDate = addDate,
+    createBy = createBy
 )
 
 fun Product.toAddProductRequest(id: String): AddProductRequest {

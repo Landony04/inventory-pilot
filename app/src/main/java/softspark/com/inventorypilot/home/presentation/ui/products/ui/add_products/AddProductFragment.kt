@@ -42,6 +42,8 @@ class AddProductFragment : Fragment(), ItemSelectedFromSpinnerListener {
 
     private var userInteraction = false
     private var productCategoryIdCurrent = EMPTY_STRING
+    private var addDateProduct = EMPTY_STRING
+    private var createByProduct = EMPTY_STRING
 
     @Inject
     lateinit var dialogBuilder: DialogBuilder
@@ -123,7 +125,7 @@ class AddProductFragment : Fragment(), ItemSelectedFromSpinnerListener {
                     )
                 )
                 args.productId?.let {
-                    sendResultBack(it)
+                    sendResultBack()
                 }
 
                 findNavController().navigateUp()
@@ -131,7 +133,7 @@ class AddProductFragment : Fragment(), ItemSelectedFromSpinnerListener {
         }
     }
 
-    private fun sendResultBack(productId: String) {
+    private fun sendResultBack() {
         val bundle = Bundle()
         val product = Product(
             args.productId ?: EMPTY_STRING,
@@ -139,7 +141,9 @@ class AddProductFragment : Fragment(), ItemSelectedFromSpinnerListener {
             binding?.nameProductTie?.text?.toString() ?: EMPTY_STRING,
             binding?.descriptionProductTie?.text?.toString() ?: EMPTY_STRING,
             binding?.priceProductTie?.text?.toString()?.toDouble() ?: 0.0,
-            binding?.stockProductTie?.text?.toString()?.toInt() ?: VALUE_ZERO
+            binding?.stockProductTie?.text?.toString()?.toInt() ?: VALUE_ZERO,
+            if (args.productId != null) addDateProduct else addProductViewModel.getCurrentDateUtc(),
+            if (args.productId != null) createByProduct else addProductViewModel.getUserId()
         )
 
         bundle.putParcelable(PRODUCT_PARCELABLE_RESULT_KEY, product)
@@ -160,6 +164,8 @@ class AddProductFragment : Fragment(), ItemSelectedFromSpinnerListener {
                     binding?.stockProductTie?.setText("${this.stock}")
                     binding?.priceProductTie?.setText("${this.price}")
                     productCategoryIdCurrent = this.categoryId
+                    addDateProduct = this.addDate
+                    createByProduct = this.createBy
                 }
             }
 

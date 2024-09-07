@@ -7,6 +7,9 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import softspark.com.inventorypilot.common.domain.useCases.GenerateCurrentDateUTCUseCase
+import softspark.com.inventorypilot.common.domain.useCases.GenerateIdUseCase
+import softspark.com.inventorypilot.common.domain.useCases.GetUserIdUseCase
 import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.common.utils.Constants.DELAY_TIME
 import softspark.com.inventorypilot.common.utils.Constants.EMPTY_STRING
@@ -18,7 +21,6 @@ import softspark.com.inventorypilot.home.domain.useCases.addProduct.ValidateData
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductByIdUseCase
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductCategoriesUseCase
 import softspark.com.inventorypilot.home.domain.useCases.products.UpdateProductUseCase
-import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,7 +29,10 @@ class AddProductViewModel @Inject constructor(
     private val getProductCategoriesUseCase: GetProductCategoriesUseCase,
     private val validateDataProductUseCase: ValidateDataProductUseCase,
     private val getProductByIdUseCase: GetProductByIdUseCase,
-    private val updateProductUseCase: UpdateProductUseCase
+    private val getUserIdUseCase: GetUserIdUseCase,
+    private val getDateUTCUseCase: GenerateCurrentDateUTCUseCase,
+    private val updateProductUseCase: UpdateProductUseCase,
+    private val generateIdUseCase: GenerateIdUseCase
 ) : ViewModel() {
 
     private val _productCategoryData = MutableLiveData<Result<ArrayList<ProductCategory>>>()
@@ -61,13 +66,14 @@ class AddProductViewModel @Inject constructor(
                     is AddProductResult.Invalid -> _validateProductData.value = productResult
                     AddProductResult.Valid -> {
                         val product = Product(
-                            id = if (isUpdate) productId ?: EMPTY_STRING else UUID.randomUUID()
-                                .toString(),
+                            id = if (isUpdate) productId ?: EMPTY_STRING else generateIdUseCase(),
                             categoryId = categoryId,
                             name = name,
                             description = description,
                             price = price.toDouble(),
-                            stock = stock.toInt()
+                            stock = stock.toInt(),
+                            getCurrentDateUtc(),
+                            getUserIdUseCase()
                         )
                         if (!isUpdate) {
                             addProductUseCase(product)
@@ -96,4 +102,10 @@ class AddProductViewModel @Inject constructor(
             }
         }
     }
+
+    fun getCurrentDateUtc(): String {
+        return getDateUTCUseCase()
+    }
+
+    fun getUserId(): String = getUserIdUseCase()
 }

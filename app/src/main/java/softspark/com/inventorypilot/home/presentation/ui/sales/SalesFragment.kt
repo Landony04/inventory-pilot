@@ -53,7 +53,7 @@ class SalesFragment : Fragment() {
 
     private fun getInitialData() {
         salesViewModel.getSalesByDate(
-            salesViewModel.getCurrentUtcDate()
+            salesViewModel.getCurrentDateUtc()
         )
     }
 

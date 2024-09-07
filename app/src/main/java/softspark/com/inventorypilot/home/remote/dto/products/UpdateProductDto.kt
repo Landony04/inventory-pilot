@@ -5,5 +5,7 @@ data class UpdateProductDto(
     val name: String? = null,
     val description: String? = null,
     val price: Double? = null,
-    val stock: Int? = null
+    val stock: Int? = null,
+    val addDate: String? = null,
+    val createBy: String? = null
 )
