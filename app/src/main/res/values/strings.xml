@@ -77,4 +77,9 @@
     <string name="text_two_values">%1$s %2$s</string>
     <string name="title_action_bar_users">Listado de usuarios</string>
     <string name="text_error_get_users">Hubo un problema al obtener los usuarios.</string>
+
+    <!-- LOGOUT   -->
+    <string name="text_logout">Cerrar sesión</string>
+    <string name="text_failure_logout">No se pudo cerrar sesión.</string>
+    <string name="text_success_logout">Sesión cerrada con exito.</string>
 </resources>

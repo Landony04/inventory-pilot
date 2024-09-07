@@ -11,6 +11,7 @@ import softspark.com.inventorypilot.home.data.repositories.CartRepository
 import softspark.com.inventorypilot.home.data.repositories.ProductCategoriesRepository
 import softspark.com.inventorypilot.home.data.repositories.ProductsRepository
 import softspark.com.inventorypilot.home.data.repositories.SalesRepository
+import softspark.com.inventorypilot.home.data.repositories.SessionRepository
 import softspark.com.inventorypilot.home.domain.useCases.addProduct.AddProductUseCase
 import softspark.com.inventorypilot.home.domain.useCases.addProduct.AddProductUseCaseImpl
 import softspark.com.inventorypilot.home.domain.useCases.addProduct.SyncProductsUseCase
@@ -47,6 +48,8 @@ import softspark.com.inventorypilot.home.domain.useCases.sales.InsertSaleUseCase
 import softspark.com.inventorypilot.home.domain.useCases.sales.InsertSaleUseCaseImpl
 import softspark.com.inventorypilot.home.domain.useCases.sales.SyncSalesUseCase
 import softspark.com.inventorypilot.home.domain.useCases.sales.SyncSalesUseCaseImpl
+import softspark.com.inventorypilot.home.domain.useCases.session.LogoutUseCase
+import softspark.com.inventorypilot.home.domain.useCases.session.LogoutUseCaseImpl
 
 @Module
 @InstallIn(ViewModelComponent::class)
@@ -163,4 +166,11 @@ object HomeUseCaseModule {
     fun provideDeleteCartItemUseCase(
         cartRepository: CartRepository
     ): DeleteCartItemUseCase = DeleteCartItemUseCaseImpl(cartRepository)
+
+    //USE CASES FOR SESSION
+    @ViewModelScoped
+    @Provides
+    fun provideLogoutUseCase(
+        sessionRepository: SessionRepository
+    ): LogoutUseCase = LogoutUseCaseImpl(sessionRepository)
 }

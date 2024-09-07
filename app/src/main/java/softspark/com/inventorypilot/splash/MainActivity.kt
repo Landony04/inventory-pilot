@@ -8,15 +8,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import softspark.com.inventorypilot.databinding.MainActivityBinding
 import softspark.com.inventorypilot.navigation.Navigator
 import softspark.com.inventorypilot.splash.presentation.viewModel.MainViewModel
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: MainActivityBinding
 
-    @Inject
-    lateinit var navigator: Navigator
+    private lateinit var navigator: Navigator
 
     private val mainViewModel: MainViewModel by viewModels()
 
@@ -26,6 +24,8 @@ class MainActivity : AppCompatActivity() {
 
         binding = MainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        navigator = Navigator()
 
         setUpObservers()
 
@@ -43,10 +43,10 @@ class MainActivity : AppCompatActivity() {
     private fun navigateToLoginOrHome(userId: String?) {
         if (userId != null) {
             // Navigate to home
-            navigator.navigateToHome()
+            navigator.navigateToHome(this)
         } else {
             // Navigate to login
-            navigator.navigateToLogin()
+            navigator.navigateToLogin(this)
         }
         finish()
     }
