@@ -44,6 +44,7 @@ class DialogBuilderImpl @Inject constructor() : DialogBuilder {
 
             }, year, month, day
         )
+        datePickerDialog.datePicker.maxDate = System.currentTimeMillis()
         datePickerDialog.show()
     }
 
