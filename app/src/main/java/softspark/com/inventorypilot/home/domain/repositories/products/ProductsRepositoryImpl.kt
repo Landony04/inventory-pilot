@@ -56,8 +56,12 @@ class ProductsRepositoryImpl @Inject constructor(
     ): List<Product> = withContext(dispatchers.io()) {
 
         if (networkUtils.isInternetAvailable()) {
-            val apiResult = productsApi.getAllProducts().toProductListDomain()
-            insertProducts(apiResult)
+            try {
+                val apiResult = productsApi.getAllProducts().toProductListDomain()
+                insertProducts(apiResult)
+            } catch (exception: Exception) {
+                return@withContext emptyList()
+            }
         }
 
         return@withContext productDao.getProductsForPage(limit, offset)

@@ -13,5 +13,7 @@ data class ProductEntity(
     val name: String,
     val description: String,
     val price: Double,
-    val stock: Int
+    val stock: Int,
+    var addDate: String,
+    var createBy: String
 )

@@ -51,9 +51,13 @@ class SalesFragment : Fragment() {
         setInitDate()
     }
 
+    private fun calculateTotalAmount(products: List<Sale>): Double {
+        return products.sumOf { it.totalAmount }
+    }
+
     private fun getInitialData() {
         salesViewModel.getSalesByDate(
-            salesViewModel.getCurrentUtcDate()
+            salesViewModel.getCurrentDateUtc()
         )
     }
 
@@ -61,13 +65,13 @@ class SalesFragment : Fragment() {
         when (result) {
             is Result.Error -> {
                 binding?.salesPb?.visibility = View.GONE
-                showAndHideSalesList(false)
+                showAndHideSalesList(arrayListOf())
             }
 
             is Result.Success -> {
                 binding?.salesPb?.visibility = View.GONE
                 salesAdapter.submitList(result.data)
-                showAndHideSalesList(result.data.isNotEmpty())
+                showAndHideSalesList(result.data)
             }
 
             Result.Loading -> {
@@ -112,7 +116,16 @@ class SalesFragment : Fragment() {
         salesViewModel.saleData.observe(viewLifecycleOwner, ::handleGetAllSales)
     }
 
-    private fun showAndHideSalesList(show: Boolean) {
+    private fun showAndHideSalesList(sales: ArrayList<Sale>) {
+        val show = sales.isNotEmpty()
+
+        if (show) {
+            binding?.totalAmountSaleTv?.text = String.format(
+                getString(R.string.text_total_amount_sale),
+                "${calculateTotalAmount(sales)}"
+            )
+        }
+        binding?.totalAmountSaleTv?.visibility = if (show) View.VISIBLE else View.INVISIBLE
         binding?.salesRv?.visibility = if (show) View.VISIBLE else View.INVISIBLE
         binding?.withoutSalesIv?.visibility = if (show) View.INVISIBLE else View.VISIBLE
     }

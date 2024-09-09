@@ -9,15 +9,19 @@ data class Product(
     var name: String,
     var description: String,
     var price: Double,
-    var stock: Int
-): Parcelable {
+    var stock: Int,
+    var addDate: String,
+    var createBy: String
+) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readDouble(),
-        parcel.readInt()
+        parcel.readInt(),
+        parcel.readString() ?: "",
+        parcel.readString() ?: ""
     ) {
     }
 
