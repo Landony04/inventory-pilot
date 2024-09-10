@@ -38,13 +38,15 @@ object HomeRepositoryModule {
         dispatcherProvider: DispatcherProvider,
         productsApi: ProductsApi,
         productCategoryDao: ProductCategoryDao,
-        networkUtils: NetworkUtils
+        networkUtils: NetworkUtils,
+        workManager: WorkManager
     ): ProductCategoriesRepository =
         ProductCategoriesRepositoryImpl(
             dispatcherProvider,
             productsApi,
             productCategoryDao,
-            networkUtils
+            networkUtils,
+            workManager
         )
 
     @Provides

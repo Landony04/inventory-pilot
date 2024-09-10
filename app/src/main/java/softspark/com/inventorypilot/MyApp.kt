@@ -11,6 +11,7 @@ import dagger.hilt.android.HiltAndroidApp
 import softspark.com.inventorypilot.home.data.local.dao.products.ProductDao
 import softspark.com.inventorypilot.home.data.local.dao.sales.SalesDao
 import softspark.com.inventorypilot.home.data.sync.SalesSyncWorker
+import softspark.com.inventorypilot.home.data.sync.factories.CustomWorkerFactoryCategoryProduct
 import softspark.com.inventorypilot.home.data.sync.product.ProductSyncWorker
 import softspark.com.inventorypilot.home.remote.ProductsApi
 import softspark.com.inventorypilot.home.remote.SalesApi
@@ -29,12 +30,16 @@ class MyApp : Application(), Configuration.Provider {
     @Inject
     lateinit var workerFactoryUser: CustomWorkerFactoryUser
 
+    @Inject
+    lateinit var workerFactoryCategoryProduct: CustomWorkerFactoryCategoryProduct
+
     override fun getWorkManagerConfiguration(): Configuration {
         return Configuration.Builder()
             .setMinimumLoggingLevel(Log.DEBUG)
             .setWorkerFactory(workerFactory)
             .setWorkerFactory(workerFactoryProduct)
             .setWorkerFactory(workerFactoryUser)
+            .setWorkerFactory(workerFactoryCategoryProduct)
             .build()
     }
 }

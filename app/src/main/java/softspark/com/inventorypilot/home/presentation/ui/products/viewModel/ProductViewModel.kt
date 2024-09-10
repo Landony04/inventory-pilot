@@ -11,6 +11,7 @@ import softspark.com.inventorypilot.common.utils.Constants.QUERY_LENGTH
 import softspark.com.inventorypilot.common.utils.Constants.VALUE_ZERO
 import softspark.com.inventorypilot.home.domain.models.products.Product
 import softspark.com.inventorypilot.home.domain.models.products.ProductCategory
+import softspark.com.inventorypilot.home.domain.useCases.addCategoryProduct.SyncCategoryProductUseCase
 import softspark.com.inventorypilot.home.domain.useCases.addProduct.SyncProductsUseCase
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductCategoriesUseCase
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsByCategoryIdUseCase
@@ -28,11 +29,13 @@ class ProductViewModel @Inject constructor(
     private val getProductsByNameUseCase: GetProductsByNameUseCase,
     private val syncSalesUseCase: SyncSalesUseCase,
     private val syncProductsUseCase: SyncProductsUseCase,
-    private val syncUserUseCase: SyncUserUseCase
+    private val syncUserUseCase: SyncUserUseCase,
+    private val syncCategoryProductUseCase: SyncCategoryProductUseCase
 ) : ViewModel() {
 
     init {
         syncSales()
+        syncCategoryProduct()
         syncProducts()
         syncUsers()
     }
@@ -107,6 +110,12 @@ class ProductViewModel @Inject constructor(
     private fun syncUsers() {
         viewModelScope.launch {
             syncUserUseCase()
+        }
+    }
+
+    private fun syncCategoryProduct() {
+        viewModelScope.launch {
+            syncCategoryProductUseCase()
         }
     }
 }

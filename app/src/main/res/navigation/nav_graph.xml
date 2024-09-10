@@ -40,7 +40,7 @@
     <fragment
         android:id="@+id/navigation_add_user"
         android:name="softspark.com.inventorypilot.users.presentation.ui.addUsers.AddUsersFragment"
-        android:label="Agregar usuario"
+        android:label="@string/title_action_bar_add_user"
         tools:layout="@layout/fragment_add_users" />
 
     <fragment
@@ -48,4 +48,10 @@
         android:name="softspark.com.inventorypilot.users.presentation.ui.users.UsersFragment"
         android:label="@string/title_action_bar_users"
         tools:layout="@layout/fragment_users" />
+
+    <fragment
+        android:id="@+id/navigation_add_categories"
+        android:name="softspark.com.inventorypilot.home.presentation.ui.products.ui.add_categories.AddCategoryProductFragment"
+        android:label="@string/text_title_add_categories"
+        tools:layout="@layout/fragment_add_category_product" />
 </navigation>

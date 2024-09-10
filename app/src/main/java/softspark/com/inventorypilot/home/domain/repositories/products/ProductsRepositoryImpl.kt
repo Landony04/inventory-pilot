@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.withContext
 import softspark.com.inventorypilot.common.data.util.DispatcherProvider
 import softspark.com.inventorypilot.common.entities.base.Result
+import softspark.com.inventorypilot.common.utils.Constants.FIVE_MINUTES
 import softspark.com.inventorypilot.common.utils.NetworkUtils
 import softspark.com.inventorypilot.home.data.local.dao.products.ProductDao
 import softspark.com.inventorypilot.home.data.mapper.products.toAddProductRequest
@@ -98,12 +99,15 @@ class ProductsRepositoryImpl @Inject constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun syncProducts() {
-        val worker = OneTimeWorkRequestBuilder<ProductSyncWorker>().setConstraints(
-            Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
-        ).setBackoffCriteria(BackoffPolicy.EXPONENTIAL, Duration.ofMinutes(5))
+        val worker = OneTimeWorkRequestBuilder<ProductSyncWorker>()
+            .setConstraints(
+                Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+            )
+            .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, Duration.ofMinutes(FIVE_MINUTES))
             .build()
 
-        workManager.beginUniqueWork("sync_products_id", ExistingWorkPolicy.REPLACE, worker)
+        workManager
+            .beginUniqueWork("sync_products_id", ExistingWorkPolicy.REPLACE, worker)
             .enqueue()
     }
 

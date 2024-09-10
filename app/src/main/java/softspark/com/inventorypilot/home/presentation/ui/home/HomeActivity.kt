@@ -97,9 +97,11 @@ class HomeActivity : AppCompatActivity() {
         val userRole = inventoryPilotPreferences.getValuesString(USER_ROLE_PREFERENCE)
         val addUsersItem = menu?.findItem(R.id.action_add_users)
         val usersItem = menu?.findItem(R.id.action_users)
+        val addCategoryItem = menu?.findItem(R.id.action_add_categories)
 
         addUsersItem?.isVisible = userRole == OWNER_ROLE
         usersItem?.isVisible = userRole == OWNER_ROLE
+        addCategoryItem?.isVisible = userRole == OWNER_ROLE
 
         return true
     }
@@ -113,6 +115,11 @@ class HomeActivity : AppCompatActivity() {
 
             R.id.action_users -> {
                 navController.navigate(R.id.navigation_users)
+                true
+            }
+
+            R.id.action_add_categories -> {
+                navController.navigate(R.id.navigation_add_categories)
                 true
             }
 

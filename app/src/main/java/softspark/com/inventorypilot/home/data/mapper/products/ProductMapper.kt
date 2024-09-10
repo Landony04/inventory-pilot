@@ -1,13 +1,16 @@
 package softspark.com.inventorypilot.home.data.mapper.products
 
+import softspark.com.inventorypilot.home.data.local.entity.products.CategoryProductSyncEntity
 import softspark.com.inventorypilot.home.data.local.entity.products.ProductCategoryEntity
 import softspark.com.inventorypilot.home.data.local.entity.products.ProductEntity
 import softspark.com.inventorypilot.home.data.local.entity.products.ProductSyncEntity
 import softspark.com.inventorypilot.home.domain.models.products.Product
 import softspark.com.inventorypilot.home.domain.models.products.ProductCategory
 import softspark.com.inventorypilot.home.domain.models.sales.CartItem
+import softspark.com.inventorypilot.home.remote.dto.categoryProduct.AddCategoryRequest
 import softspark.com.inventorypilot.home.remote.dto.products.AddProductRequest
 import softspark.com.inventorypilot.home.remote.dto.products.GetProductsResponse
+import softspark.com.inventorypilot.home.remote.dto.products.ProductCategoryDto
 import softspark.com.inventorypilot.home.remote.dto.products.ProductCategoryResponse
 import softspark.com.inventorypilot.home.remote.dto.products.UpdateProductDto
 
@@ -32,6 +35,18 @@ fun ProductCategory.toCategoryEntity(): ProductCategoryEntity = ProductCategoryE
     categoryId = id,
     name = name
 )
+
+fun ProductCategory.toCategorySyncEntity(): CategoryProductSyncEntity = CategoryProductSyncEntity(
+    id = id
+)
+
+fun ProductCategory.toCategoryProductToDto(): ProductCategoryDto = ProductCategoryDto(
+    name = name
+)
+
+fun ProductCategory.toAddCategoryProductRequest(id: String): AddCategoryRequest {
+    return mapOf(id to this.toCategoryProductToDto())
+}
 
 fun GetProductsResponse.toProductListDomain(): List<Product> {
     return entries.map {
