@@ -1,6 +1,5 @@
 package softspark.com.inventorypilot.common.data.local
 
-import androidx.annotation.NonNull
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
