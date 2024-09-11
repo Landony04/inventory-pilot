@@ -121,5 +121,12 @@ class UsersFragment : Fragment(), UserSelectedListener {
 
     override fun disableOrEnabledUser(user: UserProfile) {
         usersViewModel.updateUserStatus(user)
+        updateUserInList(user)
+    }
+
+    private fun updateUserInList(user: UserProfile) {
+        val position = usersAdapter.currentList.indexOfFirst { it.id == user.id }
+        usersAdapter.updateItem(position, user)
+        showToast("Usuario modificado exitosamente.")
     }
 }

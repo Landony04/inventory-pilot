@@ -8,8 +8,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.qualifiers.ApplicationContext
 import softspark.com.inventorypilot.R
+import softspark.com.inventorypilot.common.utils.Constants
 import softspark.com.inventorypilot.databinding.ItemUserBinding
 import softspark.com.inventorypilot.login.domain.models.UserProfile
+import softspark.com.inventorypilot.users.entities.UserChangePayload
 import softspark.com.inventorypilot.users.presentation.ui.utils.UserSelectedListener
 import softspark.com.inventorypilot.users.utils.UserConstants.USER_STATUS_DISABLED
 import softspark.com.inventorypilot.users.utils.UserConstants.USER_STATUS_ENABLED
@@ -30,19 +32,11 @@ class UsersAdapter @Inject constructor(
             userSelected: (UserProfile) -> Unit
         ) {
             with(itemBinding) {
-                nameUserTv.text = String.format(
-                    context.getString(R.string.text_two_values),
-                    userSection.firstName,
-                    userSection.lastName
-                )
-                roleUserTv.text = userSection.role
-                cellphoneTv.text = userSection.cellPhone
 
-                val textButton =
-                    if (userSection.status == USER_STATUS_ENABLED) context.getString(R.string.text_button_disabled) else context.getString(
-                        R.string.text_button_enabled
-                    )
-                disableUserButton.text = textButton
+                bindUserName(userSection.firstName, userSection.lastName, context)
+                bindUserRole(userSection.role, context)
+                bindCellphone(userSection.cellPhone)
+                bindStatusButton(userSection.status, context)
 
                 disableUserButton.setOnClickListener {
                     val newStatus =
@@ -51,6 +45,34 @@ class UsersAdapter @Inject constructor(
                     userSelected(userSection)
                 }
             }
+        }
+
+        private fun bindUserName(firstName: String, lastName: String, context: Context) {
+            itemBinding.nameUserTv.text = String.format(
+                context.getString(R.string.text_two_values),
+                firstName,
+                lastName
+            )
+        }
+
+        private fun bindUserRole(role: String, context: Context) {
+            val roleForUser =
+                if (role == Constants.DISPATCHER_ROLE) context.getString(R.string.text_dispatcher_role) else context.getString(
+                    R.string.text_owner_role
+                )
+            itemBinding.roleUserTv.text = roleForUser
+        }
+
+        fun bindCellphone(cellphone: String) {
+            itemBinding.cellphoneTv.text = cellphone
+        }
+
+        fun bindStatusButton(status: String, context: Context) {
+            val textButton =
+                if (status == USER_STATUS_ENABLED) context.getString(R.string.text_button_disabled) else context.getString(
+                    R.string.text_button_enabled
+                )
+            itemBinding.disableUserButton.text = textButton
         }
     }
 
@@ -71,8 +93,36 @@ class UsersAdapter @Inject constructor(
         }
     }
 
+    override fun onBindViewHolder(
+        holder: UsersViewHolder,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
+        when (val latestPayload = payloads.lastOrNull()) {
+            is UserChangePayload.Cellphone -> holder.bindCellphone(
+                latestPayload.newCellphone
+            )
+
+            is UserChangePayload.Status -> holder.bindStatusButton(
+                latestPayload.newStatus,
+                context
+            )
+
+            else -> onBindViewHolder(holder, position)
+        }
+    }
+
     fun initListeners(listener: UserSelectedListener) {
         userSelectedListener = listener
+    }
+
+    fun updateItem(position: Int, newUser: UserProfile) {
+        currentList.toMutableList()[position].apply {
+            cellPhone = newUser.cellPhone
+            status = newUser.status
+        }
+
+        notifyItemChanged(position)
     }
 }
 
@@ -89,5 +139,19 @@ class UsersDiffCallback : DiffUtil.ItemCallback<UserProfile>() {
         newItem: UserProfile
     ): Boolean {
         return oldItem == newItem
+    }
+
+    override fun getChangePayload(oldItem: UserProfile, newItem: UserProfile): Any? {
+        return when {
+            oldItem.cellPhone != newItem.cellPhone -> {
+                UserChangePayload.Cellphone(newItem.cellPhone)
+            }
+
+            oldItem.status != newItem.status -> {
+                UserChangePayload.Status(newItem.status)
+            }
+
+            else -> super.getChangePayload(oldItem, newItem)
+        }
     }
 }

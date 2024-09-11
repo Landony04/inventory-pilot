@@ -17,4 +17,5 @@ object Constants {
     const val PRODUCT_PARCELABLE_RESULT_KEY = "result_product_key"
     const val PRODUCT_PARCELABLE_REQUEST_KEY = "request_product_key"
     const val FIVE_MINUTES = 5L
+    const val RETRY_SEND_DATA_FROM_WORK = 3
 }

@@ -20,12 +20,13 @@ import softspark.com.inventorypilot.home.data.local.entity.sales.SaleEntity
 import softspark.com.inventorypilot.home.data.local.entity.sales.SaleSyncEntity
 import softspark.com.inventorypilot.home.data.local.typeconverter.SalesTypeConverters
 import softspark.com.inventorypilot.users.data.local.dao.UserDao
+import softspark.com.inventorypilot.users.data.local.entity.user.UpdateUserSyncEntity
 import softspark.com.inventorypilot.users.data.local.entity.user.UserSyncEntity
 
 
 @TypeConverters(value = [SalesTypeConverters::class])
 @Database(
-    entities = [UserProfileEntity::class, ProductCategoryEntity::class, ProductEntity::class, SaleEntity::class, CartItemEntity::class, SaleSyncEntity::class, ProductSyncEntity::class, UserSyncEntity::class, CategoryProductSyncEntity::class],
+    entities = [UserProfileEntity::class, ProductCategoryEntity::class, ProductEntity::class, SaleEntity::class, CartItemEntity::class, SaleSyncEntity::class, ProductSyncEntity::class, UserSyncEntity::class, CategoryProductSyncEntity::class, UpdateUserSyncEntity::class],
     version = 1,
     exportSchema = false
 )

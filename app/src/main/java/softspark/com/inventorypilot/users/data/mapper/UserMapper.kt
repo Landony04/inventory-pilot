@@ -1,6 +1,7 @@
 package softspark.com.inventorypilot.users.data.mapper
 
 import softspark.com.inventorypilot.login.domain.models.UserProfile
+import softspark.com.inventorypilot.users.data.local.entity.user.UpdateUserSyncEntity
 import softspark.com.inventorypilot.users.data.local.entity.user.UserSyncEntity
 import softspark.com.inventorypilot.users.remote.dto.user.AddUserRequest
 import softspark.com.inventorypilot.users.remote.dto.user.UserDto
@@ -23,3 +24,5 @@ fun UserProfile.toUserDto(): UserDto = UserDto(
 )
 
 fun UserProfile.toUserSync(): UserSyncEntity = UserSyncEntity(id = id)
+
+fun UserProfile.toUpdateUserSyncEntity(): UpdateUserSyncEntity = UpdateUserSyncEntity(id = id)
