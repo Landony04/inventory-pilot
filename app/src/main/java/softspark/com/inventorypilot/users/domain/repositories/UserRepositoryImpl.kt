@@ -30,6 +30,7 @@ import softspark.com.inventorypilot.users.data.mapper.toAddUserRequest
 import softspark.com.inventorypilot.users.data.mapper.toUserSync
 import softspark.com.inventorypilot.users.data.repositories.UserRepository
 import softspark.com.inventorypilot.users.remote.UserApi
+import softspark.com.inventorypilot.users.remote.dto.user.ModifiedUserRequest
 import java.time.Duration
 import javax.inject.Inject
 
@@ -48,6 +49,16 @@ class UserRepositoryImpl @Inject constructor(
             userApi.addUser(userProfile.toAddUserRequest(userProfile.id))
         }.onFailure {
             userDao.insertUserSync(userProfile.toUserSync())
+        }
+    }
+
+    override suspend fun enabledOrDisabledUser(user: UserProfile) {
+        userProfileDao.updateUserStatus(user.id, user.status)
+
+        resultOf {
+            userApi.changeUserStatus(userId = user.id, ModifiedUserRequest(status = user.status))
+        }.onFailure {
+            userDao.insertUserSync(user.toUserSync())
         }
     }
 

@@ -15,6 +15,7 @@ import softspark.com.inventorypilot.login.domain.useCases.authentication.Validat
 import softspark.com.inventorypilot.users.domain.entities.AddUserResult
 import softspark.com.inventorypilot.users.domain.useCases.AddUserUseCase
 import softspark.com.inventorypilot.users.domain.useCases.ValidateUserUseCase
+import softspark.com.inventorypilot.users.utils.UserConstants
 import javax.inject.Inject
 
 @HiltViewModel
@@ -53,7 +54,8 @@ class AddUserViewModel @Inject constructor(
                                         firstName = firstName,
                                         lastName = lastName,
                                         role = role,
-                                        cellPhone = cellPhone
+                                        cellPhone = cellPhone,
+                                        status = UserConstants.USER_STATUS_ENABLED
                                     )
                                 )
                                 _validateUserData.value = validateResult

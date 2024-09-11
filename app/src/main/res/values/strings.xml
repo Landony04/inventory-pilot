@@ -88,4 +88,6 @@
     <string name="hint_text_add_name_category">Ingresa el nombre de la categoría</string>
     <string name="text_add_category_successfully">Categoría agregada exitosamente.</string>
     <string name="text_name_empty_error">El campo no puede estar vacío.</string>
+    <string name="text_button_disabled">Deshabilitar</string>
+    <string name="text_button_enabled">Habilitar</string>
 </resources>

@@ -9,12 +9,17 @@ fun UserProfile.toAddUserRequest(id: String): AddUserRequest {
     return mapOf(id to this.toUserDto())
 }
 
+fun UserProfile.toModifiedUserRequest(id: String): AddUserRequest {
+    return mapOf(id to this.toUserDto())
+}
+
 fun UserProfile.toUserDto(): UserDto = UserDto(
     email = email,
     firstName = firstName,
     lastName = lastName,
     role = role,
-    cellPhone = cellPhone
+    cellPhone = cellPhone,
+    status = status
 )
 
 fun UserProfile.toUserSync(): UserSyncEntity = UserSyncEntity(id = id)
