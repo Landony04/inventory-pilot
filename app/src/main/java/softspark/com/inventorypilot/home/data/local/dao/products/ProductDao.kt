@@ -6,7 +6,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import kotlinx.coroutines.flow.Flow
 import softspark.com.inventorypilot.home.data.local.entity.products.ProductEntity
 import softspark.com.inventorypilot.home.data.local.entity.products.ProductSyncEntity
 

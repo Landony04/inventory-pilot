@@ -1,9 +1,11 @@
 package softspark.com.inventorypilot.home.data.local.dao.products
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import softspark.com.inventorypilot.home.data.local.entity.products.CategoryProductSyncEntity
 import softspark.com.inventorypilot.home.data.local.entity.products.ProductCategoryEntity
 
 @Dao
@@ -19,4 +21,13 @@ interface ProductCategoryDao {
 
     @Query("SELECT * FROM ProductCategoryEntity")
     fun getProductCategories(): List<ProductCategoryEntity>
+
+    @Query("SELECT * FROM CategoryProductSyncEntity")
+    fun getAllCategoriesProductSync(): List<CategoryProductSyncEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCategoryProductSync(categoryProductSyncEntity: CategoryProductSyncEntity)
+
+    @Delete
+    suspend fun deleteCategoryProductSync(categoryProductSyncEntity: CategoryProductSyncEntity)
 }

@@ -82,4 +82,10 @@
     <string name="text_logout">Cerrar sesión</string>
     <string name="text_failure_logout">No se pudo cerrar sesión.</string>
     <string name="text_success_logout">Sesión cerrada con exito.</string>
+
+    <!-- ADD CATEGORIES PRODUCTS   -->
+    <string name="text_title_add_categories">Agregar categoría para productos</string>
+    <string name="hint_text_add_name_category">Ingresa el nombre de la categoría</string>
+    <string name="text_add_category_successfully">Categoría agregada exitosamente.</string>
+    <string name="text_name_empty_error">El campo no puede estar vacío.</string>
 </resources>

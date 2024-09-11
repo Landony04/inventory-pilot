@@ -1,6 +1,5 @@
 package softspark.com.inventorypilot.common.data.local
 
-import androidx.annotation.NonNull
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
@@ -13,6 +12,7 @@ import softspark.com.inventorypilot.home.data.local.dao.products.ProductCategory
 import softspark.com.inventorypilot.home.data.local.dao.products.ProductDao
 import softspark.com.inventorypilot.home.data.local.dao.sales.SalesDao
 import softspark.com.inventorypilot.home.data.local.entity.cart.CartItemEntity
+import softspark.com.inventorypilot.home.data.local.entity.products.CategoryProductSyncEntity
 import softspark.com.inventorypilot.home.data.local.entity.products.ProductCategoryEntity
 import softspark.com.inventorypilot.home.data.local.entity.products.ProductEntity
 import softspark.com.inventorypilot.home.data.local.entity.products.ProductSyncEntity
@@ -25,7 +25,7 @@ import softspark.com.inventorypilot.users.data.local.entity.user.UserSyncEntity
 
 @TypeConverters(value = [SalesTypeConverters::class])
 @Database(
-    entities = [UserProfileEntity::class, ProductCategoryEntity::class, ProductEntity::class, SaleEntity::class, CartItemEntity::class, SaleSyncEntity::class, ProductSyncEntity::class, UserSyncEntity::class],
+    entities = [UserProfileEntity::class, ProductCategoryEntity::class, ProductEntity::class, SaleEntity::class, CartItemEntity::class, SaleSyncEntity::class, ProductSyncEntity::class, UserSyncEntity::class, CategoryProductSyncEntity::class],
     version = 1,
     exportSchema = false
 )

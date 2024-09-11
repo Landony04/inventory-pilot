@@ -16,4 +16,5 @@ object Constants {
     const val DELAY_TIME = 1000L
     const val PRODUCT_PARCELABLE_RESULT_KEY = "result_product_key"
     const val PRODUCT_PARCELABLE_REQUEST_KEY = "request_product_key"
+    const val FIVE_MINUTES = 5L
 }

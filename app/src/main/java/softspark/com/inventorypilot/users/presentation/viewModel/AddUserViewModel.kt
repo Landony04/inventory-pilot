@@ -9,18 +9,19 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import softspark.com.inventorypilot.R
+import softspark.com.inventorypilot.common.domain.useCases.GenerateIdUseCase
 import softspark.com.inventorypilot.login.domain.models.UserProfile
 import softspark.com.inventorypilot.login.domain.useCases.authentication.ValidateEmailUseCase
 import softspark.com.inventorypilot.users.domain.entities.AddUserResult
 import softspark.com.inventorypilot.users.domain.useCases.AddUserUseCase
 import softspark.com.inventorypilot.users.domain.useCases.ValidateUserUseCase
-import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
 class AddUserViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val addUserUseCase: AddUserUseCase,
+    private val generateIdUseCase: GenerateIdUseCase,
     private val validateUserProfileUseCase: ValidateUserUseCase,
     private val validateEmailUseCase: ValidateEmailUseCase
 ) : ViewModel() {
@@ -43,11 +44,11 @@ class AddUserViewModel @Inject constructor(
                     ).collect { validateResult ->
                         when (validateResult) {
                             is AddUserResult.Invalid -> _validateUserData.value = validateResult
-                            
+
                             AddUserResult.Valid -> {
                                 addUserUseCase(
                                     UserProfile(
-                                        id = UUID.randomUUID().toString(),
+                                        id = generateIdUseCase(),
                                         email = email,
                                         firstName = firstName,
                                         lastName = lastName,

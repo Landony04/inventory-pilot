@@ -12,6 +12,10 @@ import softspark.com.inventorypilot.home.data.repositories.ProductCategoriesRepo
 import softspark.com.inventorypilot.home.data.repositories.ProductsRepository
 import softspark.com.inventorypilot.home.data.repositories.SalesRepository
 import softspark.com.inventorypilot.home.data.repositories.SessionRepository
+import softspark.com.inventorypilot.home.domain.useCases.addCategoryProduct.AddCategoryProductUseCase
+import softspark.com.inventorypilot.home.domain.useCases.addCategoryProduct.AddCategoryProductUseCaseImpl
+import softspark.com.inventorypilot.home.domain.useCases.addCategoryProduct.SyncCategoryProductUseCase
+import softspark.com.inventorypilot.home.domain.useCases.addCategoryProduct.SyncCategoryProductUseCaseImpl
 import softspark.com.inventorypilot.home.domain.useCases.addProduct.AddProductUseCase
 import softspark.com.inventorypilot.home.domain.useCases.addProduct.AddProductUseCaseImpl
 import softspark.com.inventorypilot.home.domain.useCases.addProduct.SyncProductsUseCase
@@ -55,6 +59,7 @@ import softspark.com.inventorypilot.home.domain.useCases.session.LogoutUseCaseIm
 @InstallIn(ViewModelComponent::class)
 object HomeUseCaseModule {
 
+    //USE CASES FOR CATEGORIES PRODUCTS
     @ViewModelScoped
     @Provides
     fun provideGetProductCategoriesUseCase(
@@ -67,8 +72,19 @@ object HomeUseCaseModule {
         productsRepository: ProductsRepository
     ): GetProductsByCategoryIdUseCase = GetProductsByCategoryIdUseCaseImpl(productsRepository)
 
-    //USE CASES FOR PRODUCTS
+    @ViewModelScoped
+    @Provides
+    fun provideAddCategoryProduct(
+        productCategoriesRepository: ProductCategoriesRepository
+    ): AddCategoryProductUseCase = AddCategoryProductUseCaseImpl(productCategoriesRepository)
 
+    @ViewModelScoped
+    @Provides
+    fun provideSyncCategoryProduct(
+        productCategoriesRepository: ProductCategoriesRepository
+    ): SyncCategoryProductUseCase = SyncCategoryProductUseCaseImpl(productCategoriesRepository)
+
+    //USE CASES FOR PRODUCTS
     @ViewModelScoped
     @Provides
     fun provideAddProductUseCase(

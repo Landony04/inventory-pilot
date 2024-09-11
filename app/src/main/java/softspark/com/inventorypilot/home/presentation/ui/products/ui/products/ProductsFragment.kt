@@ -96,7 +96,6 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ScrollRecy
     }
 
     private fun handleGetAllProducts(result: List<Product>) {
-        println("Productos: $result")
         productsAdapter.submitList(result)
     }
 
