@@ -77,18 +77,15 @@ class UserRepositoryImpl @Inject constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun syncUsers() {
-        val constraints = Constraints.Builder()
-            .setRequiresCharging(false)
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .setRequiresBatteryNotLow(true)
-            .build()
-
         val worker = OneTimeWorkRequestBuilder<UserSyncWorker>()
-            .setConstraints(constraints)
+            .setConstraints(
+                Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+            )
             .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, Duration.ofMinutes(FIVE_MINUTES))
             .build()
 
-        workManager.beginUniqueWork("sync_users_id", ExistingWorkPolicy.REPLACE, worker)
+        workManager
+            .beginUniqueWork("sync_users_id", ExistingWorkPolicy.REPLACE, worker)
             .enqueue()
     }
 }

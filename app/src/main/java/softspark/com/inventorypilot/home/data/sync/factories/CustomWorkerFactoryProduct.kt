@@ -4,14 +4,14 @@ import android.content.Context
 import androidx.work.ListenableWorker
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
-import softspark.com.inventorypilot.home.data.local.dao.products.ProductCategoryDao
-import softspark.com.inventorypilot.home.data.sync.categoryProduct.CategoryProductSyncWorker
+import softspark.com.inventorypilot.home.data.local.dao.products.ProductDao
+import softspark.com.inventorypilot.home.data.sync.product.ProductSyncWorker
 import softspark.com.inventorypilot.home.remote.ProductsApi
 import javax.inject.Inject
 
-class CustomWorkerFactoryCategoryProduct @Inject constructor(
+class CustomWorkerFactoryProduct @Inject constructor(
     private val productsApi: ProductsApi,
-    private val productCategoryDao: ProductCategoryDao
+    private val productDao: ProductDao
 ) : WorkerFactory() {
 
     override fun createWorker(
@@ -20,11 +20,11 @@ class CustomWorkerFactoryCategoryProduct @Inject constructor(
         workerParameters: WorkerParameters
     ): ListenableWorker? {
         return when (workerClassName) {
-            CategoryProductSyncWorker::class.java.name -> CategoryProductSyncWorker(
+            ProductSyncWorker::class.java.name -> ProductSyncWorker(
                 appContext,
                 workerParameters,
                 productsApi,
-                productCategoryDao
+                productDao
             )
 
             else -> null
