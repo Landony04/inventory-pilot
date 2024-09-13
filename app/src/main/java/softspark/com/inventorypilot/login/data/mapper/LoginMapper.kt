@@ -15,7 +15,8 @@ fun UserProfileResponse.toDomain(): List<UserProfile> {
             firstName = dto.firstName,
             lastName = dto.lastName,
             role = dto.role,
-            cellPhone = dto.cellPhone
+            cellPhone = dto.cellPhone,
+            status = dto.status
         )
     }
 }
@@ -26,7 +27,8 @@ fun UserProfileEntity.toUserProfile(): UserProfile = UserProfile(
     firstName = firstName,
     lastName = lastName,
     role = role,
-    cellPhone = cellPhone
+    cellPhone = cellPhone,
+    status = status
 )
 
 fun UserProfile.toEntity(): UserProfileEntity {
@@ -36,7 +38,8 @@ fun UserProfile.toEntity(): UserProfileEntity {
         firstName = firstName,
         lastName = lastName,
         role = role,
-        cellPhone = cellPhone
+        cellPhone = cellPhone,
+        status = status
     )
 }
 
@@ -51,7 +54,8 @@ fun UserProfileResponse.toUserProfile(): UserProfile {
             firstName = dto.firstName,
             lastName = dto.lastName,
             role = dto.role,
-            cellPhone = dto.cellPhone
+            cellPhone = dto.cellPhone,
+            status = dto.status
         )
     }.first()
 }

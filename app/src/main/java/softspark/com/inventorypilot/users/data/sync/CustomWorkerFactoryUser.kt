@@ -14,15 +14,22 @@ class CustomWorkerFactoryUser @Inject constructor(
     private val userDao: UserDao,
     private val userProfileDao: UserProfileDao
 ) : WorkerFactory() {
+
     override fun createWorker(
         appContext: Context,
         workerClassName: String,
         workerParameters: WorkerParameters
-    ): ListenableWorker = UserSyncWorker(
-        context = appContext,
-        workerParameters = workerParameters,
-        userApi = userApi,
-        userDao = userDao,
-        userProfileDao = userProfileDao
-    )
+    ): ListenableWorker? {
+        return when (workerClassName) {
+            UserSyncWorker::class.java.name -> UserSyncWorker(
+                appContext,
+                workerParameters,
+                userApi,
+                userDao,
+                userProfileDao
+            )
+
+            else -> null
+        }
+    }
 }

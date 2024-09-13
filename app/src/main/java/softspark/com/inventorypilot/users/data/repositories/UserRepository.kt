@@ -5,7 +5,10 @@ import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.login.domain.models.UserProfile
 
 interface UserRepository {
+
     suspend fun addUser(userProfile: UserProfile)
+
+    suspend fun enabledOrDisabledUser(user: UserProfile)
 
     suspend fun getAllUsers(): Flow<Result<List<UserProfile>>>
 

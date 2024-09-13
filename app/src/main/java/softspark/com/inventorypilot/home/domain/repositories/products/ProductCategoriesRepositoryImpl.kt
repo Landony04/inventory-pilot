@@ -96,7 +96,8 @@ class ProductCategoriesRepositoryImpl @Inject constructor(
         val worker = OneTimeWorkRequestBuilder<CategoryProductSyncWorker>()
             .setConstraints(
                 Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
-            ).setBackoffCriteria(BackoffPolicy.EXPONENTIAL, Duration.ofMinutes(FIVE_MINUTES))
+            )
+            .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, Duration.ofMinutes(FIVE_MINUTES))
             .build()
 
         workManager

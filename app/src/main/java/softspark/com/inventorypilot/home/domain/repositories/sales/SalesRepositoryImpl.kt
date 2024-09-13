@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.withContext
+import softspark.com.inventorypilot.common.data.extension.formatDateUTCWithoutHours
 import softspark.com.inventorypilot.common.data.util.DispatcherProvider
 import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.common.utils.Constants.VALUE_ZERO
@@ -56,7 +57,8 @@ class SalesRepositoryImpl @Inject constructor(
             }
 
             val localResult =
-                salesDao.getSalesByDate(date).map { saleEntity -> saleEntity.toSaleDomain() }
+                salesDao.getSalesByDate(date.formatDateUTCWithoutHours())
+                    .map { saleEntity -> saleEntity.toSaleDomain() }
 
             emit(Result.Success(data = ArrayList(localResult)))
         }.onStart {
@@ -82,9 +84,11 @@ class SalesRepositoryImpl @Inject constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun syncSales() {
-        val worker = OneTimeWorkRequestBuilder<SalesSyncWorker>().setConstraints(
-            Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
-        ).setBackoffCriteria(BackoffPolicy.EXPONENTIAL, Duration.ofMinutes(5))
+        val worker = OneTimeWorkRequestBuilder<SalesSyncWorker>()
+            .setConstraints(
+                Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+            )
+            .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, Duration.ofMinutes(5))
             .build()
 
         workManager.beginUniqueWork("sync_sales_id", ExistingWorkPolicy.REPLACE, worker).enqueue()

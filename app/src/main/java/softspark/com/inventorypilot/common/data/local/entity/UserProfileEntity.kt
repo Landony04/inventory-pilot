@@ -13,5 +13,6 @@ data class UserProfileEntity(
     val firstName: String,
     val lastName: String,
     val role: String,
-    val cellPhone: String
+    val cellPhone: String,
+    val status: String
 )

@@ -85,8 +85,8 @@ object HomeRepositoryModule {
             workManager
         )
 
-    @Singleton
     @Provides
+    @Singleton
     fun provideWorkManager(@ApplicationContext context: Context): WorkManager =
         WorkManager.getInstance(context)
 

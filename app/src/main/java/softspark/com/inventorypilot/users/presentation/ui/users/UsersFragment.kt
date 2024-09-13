@@ -18,11 +18,12 @@ import softspark.com.inventorypilot.common.utils.dialogs.DialogBuilder
 import softspark.com.inventorypilot.databinding.FragmentUsersBinding
 import softspark.com.inventorypilot.login.domain.models.UserProfile
 import softspark.com.inventorypilot.users.presentation.adapters.UsersAdapter
+import softspark.com.inventorypilot.users.presentation.ui.utils.UserSelectedListener
 import softspark.com.inventorypilot.users.presentation.viewModel.UsersViewModel
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class UsersFragment : Fragment() {
+class UsersFragment : Fragment(), UserSelectedListener {
 
 
     private var _binding: FragmentUsersBinding? = null
@@ -48,6 +49,7 @@ class UsersFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initAdapter()
+        initListeners()
         getInitialData()
         hideActionBarOptions()
         setUpActionBar()
@@ -87,6 +89,10 @@ class UsersFragment : Fragment() {
         }
     }
 
+    private fun initListeners() {
+        usersAdapter.initListeners(this)
+    }
+
     private fun setUpActionBar() {
         (requireActivity() as? AppCompatActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -111,5 +117,16 @@ class UsersFragment : Fragment() {
         super.onDestroyView()
         usersViewModel.getUsersData.removeObservers(viewLifecycleOwner)
         _binding = null
+    }
+
+    override fun disableOrEnabledUser(user: UserProfile) {
+        usersViewModel.updateUserStatus(user)
+        updateUserInList(user)
+    }
+
+    private fun updateUserInList(user: UserProfile) {
+        val position = usersAdapter.currentList.indexOfFirst { it.id == user.id }
+        usersAdapter.updateItem(position, user)
+        showToast("Usuario modificado exitosamente.")
     }
 }
