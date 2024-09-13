@@ -18,15 +18,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import softspark.com.inventorypilot.R
 import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.common.presentation.products.SpinnerAdapter
-import softspark.com.inventorypilot.common.utils.Constants
 import softspark.com.inventorypilot.common.utils.Constants.EMPTY_STRING
 import softspark.com.inventorypilot.common.utils.Constants.OWNER_ROLE
 import softspark.com.inventorypilot.common.utils.Constants.VALUE_ONE
 import softspark.com.inventorypilot.common.utils.Constants.VALUE_ZERO
 import softspark.com.inventorypilot.common.utils.components.ItemSelectedFromSpinnerListener
 import softspark.com.inventorypilot.common.utils.components.ItemSelectedSpinner
-import softspark.com.inventorypilot.common.utils.components.ScrollRecyclerView
-import softspark.com.inventorypilot.common.utils.components.ScrollRecyclerViewListener
 import softspark.com.inventorypilot.common.utils.dialogs.DialogBuilder
 import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferences
 import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferencesImpl.Companion.USER_ROLE_PREFERENCE
@@ -40,8 +37,7 @@ import softspark.com.inventorypilot.home.presentation.ui.products.viewModel.Prod
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ScrollRecyclerViewListener,
-    ProductSelectedListener {
+class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ProductSelectedListener {
 
     private val productCategoryViewModel: ProductViewModel by viewModels()
     private val cartViewModel: CartViewModel by viewModels()
@@ -92,7 +88,9 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ScrollRecy
     }
 
     private fun getProducts() {
-        productCategoryViewModel.getAllProducts()
+        if (!productCategoryViewModel.isLoading) {
+            productCategoryViewModel.getAllProducts()
+        }
     }
 
     private fun handleGetAllProducts(result: List<Product>) {
@@ -147,8 +145,6 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ScrollRecy
 
         binding?.filterSpinner?.onItemSelectedListener = ItemSelectedSpinner(this)
 
-        binding?.productsRv?.addOnScrollListener(ScrollRecyclerView(this))
-
         binding?.searchEditText?.doOnTextChanged { text, _, _, _ ->
             updateSearchEditText(text)
         }
@@ -161,32 +157,6 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ScrollRecy
 
         binding?.addProductFab?.setOnClickListener {
             navigateToAddProduct()
-        }
-
-        parentFragmentManager.setFragmentResultListener(
-            Constants.PRODUCT_PARCELABLE_REQUEST_KEY,
-            this
-        ) { requestKey, bundle ->
-
-            when (requestKey) {
-                Constants.PRODUCT_PARCELABLE_REQUEST_KEY -> getDataFromUpdate(bundle)
-            }
-        }
-    }
-
-    private fun getDataFromUpdate(bundle: Bundle) {
-        try {
-            // Actualizar la UI con el resultado
-            val product: Product? =
-                bundle.getParcelable(Constants.PRODUCT_PARCELABLE_RESULT_KEY, Product::class.java)
-
-            product?.let { productValue ->
-                val position = productsAdapter.currentList.indexOfFirst { it.id == productValue.id }
-
-                productsAdapter.updateItem(position, productValue)
-            }
-        } catch (exception: Exception) {
-            showToast(exception.message ?: EMPTY_STRING)
         }
     }
 
@@ -263,12 +233,6 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ScrollRecy
             productCategoryViewModel.getProductsByCategoryId(selectedCategory.id)
         } else {
             resetValues()
-            getProducts()
-        }
-    }
-
-    override fun invoke() {
-        if (!productCategoryViewModel.isLoading) {
             getProducts()
         }
     }

@@ -8,7 +8,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.common.utils.Constants.QUERY_LENGTH
-import softspark.com.inventorypilot.common.utils.Constants.VALUE_ZERO
 import softspark.com.inventorypilot.home.domain.models.products.Product
 import softspark.com.inventorypilot.home.domain.models.products.ProductCategory
 import softspark.com.inventorypilot.home.domain.useCases.addCategoryProduct.SyncCategoryProductUseCase
@@ -46,15 +45,11 @@ class ProductViewModel @Inject constructor(
     private val _productsData = MutableLiveData<List<Product>>()
     val productsData: LiveData<List<Product>> get() = _productsData
 
-    private var offset = VALUE_ZERO
-    private var limit = 20
     var isLoading = false
         private set
 
     fun resetValues() {
         _productsData.value = emptyList()
-        offset = VALUE_ZERO
-        limit = 20
     }
 
     fun getAllProducts() {
@@ -62,12 +57,12 @@ class ProductViewModel @Inject constructor(
 
         isLoading = true
         viewModelScope.launch {
-            val products = getProductsUseCase(limit, offset)
-            if (products.isNotEmpty()) {
-                _productsData.value = _productsData.value.orEmpty() + products
-                offset += limit
+            getProductsUseCase().collect {
+                if (it != _productsData.value) {
+                    _productsData.value = it
+                }
+                isLoading = false
             }
-            isLoading = false
         }
     }
 

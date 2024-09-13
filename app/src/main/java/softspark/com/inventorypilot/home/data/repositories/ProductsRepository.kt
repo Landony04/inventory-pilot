@@ -10,10 +10,7 @@ interface ProductsRepository {
         product: Product
     )
 
-    suspend fun getProductsForPage(
-        limit: Int,
-        offset: Int
-    ): List<Product>
+    suspend fun getProductsForPage(): Flow<List<Product>>
 
     suspend fun getProductsByCategoryId(
         categoryId: String

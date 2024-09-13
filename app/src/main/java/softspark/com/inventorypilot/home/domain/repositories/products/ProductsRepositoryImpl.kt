@@ -51,23 +51,20 @@ class ProductsRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getProductsForPage(
-        limit: Int,
-        offset: Int
-    ): List<Product> = withContext(dispatchers.io()) {
-
+    override suspend fun getProductsForPage(): Flow<List<Product>> = flow {
         if (networkUtils.isInternetAvailable()) {
             try {
                 val apiResult = productsApi.getAllProducts().toProductListDomain()
                 insertProducts(apiResult)
             } catch (exception: Exception) {
-                return@withContext emptyList()
+                println("exception: ${exception.message}")
             }
         }
 
-        return@withContext productDao.getProductsForPage(limit, offset)
-            .map { productEntity -> productEntity.toProductDomain() }
-    }
+        productDao.getProductsForPage().collect {
+            emit(it.map { productEntity -> productEntity.toProductDomain() })
+        }
+    }.flowOn(dispatchers.io())
 
     override suspend fun getProductsByCategoryId(categoryId: String): List<Product> =
         withContext(dispatchers.io()) {

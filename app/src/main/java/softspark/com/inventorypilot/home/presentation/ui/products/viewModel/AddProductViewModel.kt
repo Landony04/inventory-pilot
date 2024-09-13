@@ -103,9 +103,7 @@ class AddProductViewModel @Inject constructor(
         }
     }
 
-    fun getCurrentDateUtc(): String {
+    private fun getCurrentDateUtc(): String {
         return getDateUTCUseCase()
     }
-
-    fun getUserId(): String = getUserIdUseCase()
 }

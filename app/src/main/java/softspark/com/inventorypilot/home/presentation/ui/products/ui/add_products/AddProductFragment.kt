@@ -15,10 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import softspark.com.inventorypilot.R
 import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.common.presentation.products.SpinnerAdapter
-import softspark.com.inventorypilot.common.utils.Constants
 import softspark.com.inventorypilot.common.utils.Constants.EMPTY_STRING
-import softspark.com.inventorypilot.common.utils.Constants.PRODUCT_PARCELABLE_REQUEST_KEY
-import softspark.com.inventorypilot.common.utils.Constants.PRODUCT_PARCELABLE_RESULT_KEY
 import softspark.com.inventorypilot.common.utils.Constants.VALUE_ZERO
 import softspark.com.inventorypilot.common.utils.components.ItemSelectedFromSpinnerListener
 import softspark.com.inventorypilot.common.utils.components.ItemSelectedSpinner
@@ -94,6 +91,10 @@ class AddProductFragment : Fragment(), ItemSelectedFromSpinnerListener {
         addProductViewModel.getProductCategories()
     }
 
+    private fun handleAddProduct() {
+        findNavController().navigateUp()
+    }
+
     private fun handleGetProductCategory(result: Result<ArrayList<ProductCategory>>) {
         when (result) {
             is Result.Error -> {
@@ -124,30 +125,9 @@ class AddProductFragment : Fragment(), ItemSelectedFromSpinnerListener {
                         R.string.text_add_product_successfully
                     )
                 )
-                args.productId?.let {
-                    sendResultBack()
-                }
-
                 findNavController().navigateUp()
             }
         }
-    }
-
-    private fun sendResultBack() {
-        val bundle = Bundle()
-        val product = Product(
-            args.productId ?: EMPTY_STRING,
-            productCategoryIdCurrent,
-            binding?.nameProductTie?.text?.toString() ?: EMPTY_STRING,
-            binding?.descriptionProductTie?.text?.toString() ?: EMPTY_STRING,
-            binding?.priceProductTie?.text?.toString()?.toDouble() ?: 0.0,
-            binding?.stockProductTie?.text?.toString()?.toInt() ?: VALUE_ZERO,
-            if (args.productId != null) addDateProduct else addProductViewModel.getCurrentDateUtc(),
-            if (args.productId != null) createByProduct else addProductViewModel.getUserId()
-        )
-
-        bundle.putParcelable(PRODUCT_PARCELABLE_RESULT_KEY, product)
-        parentFragmentManager.setFragmentResult(PRODUCT_PARCELABLE_REQUEST_KEY, bundle)
     }
 
     private fun handleGetProductById(result: Result<Product>) {
@@ -177,7 +157,7 @@ class AddProductFragment : Fragment(), ItemSelectedFromSpinnerListener {
         val allCategories =
             listOf(
                 ProductCategory(
-                    Constants.VALUE_ZERO.toString(),
+                    VALUE_ZERO.toString(),
                     getString(R.string.title_first_option_spinner)
                 )
             ) + categories
@@ -241,6 +221,7 @@ class AddProductFragment : Fragment(), ItemSelectedFromSpinnerListener {
         super.onDestroyView()
         addProductViewModel.productCategoryData.removeObservers(viewLifecycleOwner)
         addProductViewModel.productData.removeObservers(viewLifecycleOwner)
+        addProductViewModel.validateProductData.removeObservers(viewLifecycleOwner)
         _binding = null
     }
 
@@ -251,7 +232,7 @@ class AddProductFragment : Fragment(), ItemSelectedFromSpinnerListener {
 
         userInteraction = false
 
-        if (position > Constants.VALUE_ZERO) {
+        if (position > VALUE_ZERO) {
             val selectedCategory = parent?.getItemAtPosition(position) as ProductCategory
             productCategoryIdCurrent = selectedCategory.id
         }
