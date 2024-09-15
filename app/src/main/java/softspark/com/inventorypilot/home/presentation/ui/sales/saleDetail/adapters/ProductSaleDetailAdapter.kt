@@ -13,31 +13,35 @@ import javax.inject.Inject
 
 class ProductSaleDetailAdapter @Inject constructor(
     @ApplicationContext private val context: Context
-) : ListAdapter<ProductSale, ProductSaleDetailAdapter.ProductViewHolder>(ProductSalesDiffCallback()) {
+) : ListAdapter<ProductSale, ProductSaleDetailAdapter.ProductSaleViewHolder>(
+    ProductSalesDiffCallback()
+) {
 
-    class ProductViewHolder(
-        private val itemBinding: ItemLayoutProductSaleBinding,
+    class ProductSaleViewHolder(
+        private val itemBinding: ItemLayoutProductSaleBinding
     ) : RecyclerView.ViewHolder(itemBinding.root) {
         fun bind(
             context: Context,
             productSaleSection: ProductSale
         ) {
             with(itemBinding) {
+                productQuantityTv.text = productSaleSection.quantity.toString()
+                productNameTv.text = productSaleSection.name
             }
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
-        val saleCardBinding = ItemLayoutProductSaleBinding.inflate(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductSaleViewHolder {
+        val productSaleBinding = ItemLayoutProductSaleBinding.inflate(
             LayoutInflater.from(context),
             parent,
             false
         )
 
-        return ProductViewHolder(saleCardBinding)
+        return ProductSaleViewHolder(productSaleBinding)
     }
 
-    override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ProductSaleViewHolder, position: Int) {
         val productSale = getItem(position)
         holder.bind(context = context, productSaleSection = productSale)
     }

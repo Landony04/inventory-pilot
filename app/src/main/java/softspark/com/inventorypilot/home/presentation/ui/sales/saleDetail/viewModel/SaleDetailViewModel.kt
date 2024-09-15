@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import softspark.com.inventorypilot.common.entities.base.Result
-import softspark.com.inventorypilot.home.domain.models.sales.Sale
+import softspark.com.inventorypilot.home.domain.models.sales.SaleDetail
 import softspark.com.inventorypilot.home.domain.useCases.sales.GetSaleByIdUseCase
 import javax.inject.Inject
 
@@ -16,8 +16,8 @@ class SaleDetailViewModel @Inject constructor(
     private val getSaleByIdUseCase: GetSaleByIdUseCase
 ) : ViewModel() {
 
-    private val _saleData = MutableLiveData<Result<Sale>>()
-    val saleData: LiveData<Result<Sale>> get() = _saleData
+    private val _saleData = MutableLiveData<Result<SaleDetail>>()
+    val saleData: LiveData<Result<SaleDetail>> get() = _saleData
 
     fun getSaleById(saleId: String) {
         viewModelScope.launch {

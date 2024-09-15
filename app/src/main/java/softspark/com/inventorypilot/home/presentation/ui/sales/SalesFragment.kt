@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import softspark.com.inventorypilot.R
+import softspark.com.inventorypilot.common.data.extension.formatDateUTCWithoutHours
 import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.common.utils.Constants
 import softspark.com.inventorypilot.common.utils.Constants.EMPTY_STRING
@@ -60,7 +61,7 @@ class SalesFragment : Fragment(), SaleSelectedListener {
 
     private fun getInitialData() {
         salesViewModel.getSalesByDate(
-            salesViewModel.getCurrentDateUtc()
+            salesViewModel.getCurrentDateUtc().formatDateUTCWithoutHours()
         )
     }
 

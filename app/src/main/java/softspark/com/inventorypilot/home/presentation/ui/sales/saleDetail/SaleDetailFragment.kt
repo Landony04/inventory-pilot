@@ -18,7 +18,7 @@ import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.common.utils.components.MenuProviderUtils
 import softspark.com.inventorypilot.common.utils.dialogs.DialogBuilder
 import softspark.com.inventorypilot.databinding.FragmentSaleDetailBinding
-import softspark.com.inventorypilot.home.domain.models.sales.Sale
+import softspark.com.inventorypilot.home.domain.models.sales.SaleDetail
 import softspark.com.inventorypilot.home.presentation.ui.sales.saleDetail.adapters.ProductSaleDetailAdapter
 import softspark.com.inventorypilot.home.presentation.ui.sales.saleDetail.viewModel.SaleDetailViewModel
 import javax.inject.Inject
@@ -62,15 +62,15 @@ class SaleDetailFragment : Fragment() {
         saleDetailViewModel.getSaleById(args.saleId)
     }
 
-    private fun handleGetSaleDetail(result: Result<Sale>) {
+    private fun handleGetSaleDetail(result: Result<SaleDetail>) {
         when (result) {
             is Result.Error -> {
-                showToast("Ocurrió un error al obtener la venta")
+                showToast("Ocurrió un error al obtener la venta - ${result.exception.message}")
+                println("Error: ${result.exception.message}")
                 findNavController().navigateUp()
             }
 
             is Result.Success -> {
-                println("Venta encontrada: ${result.data}")
                 setData(result.data)
             }
 
@@ -88,17 +88,19 @@ class SaleDetailFragment : Fragment() {
 
     private fun initAdapter() {
         binding?.productsSaleRv?.apply {
-            setHasFixedSize(true)
+//            isNestedScrollingEnabled = false
+            setHasFixedSize(false)
             layoutManager = LinearLayoutManager(requireContext())
             adapter = productSaleDetailAdapter
         }
     }
 
-    private fun setData(sale: Sale) {
-        binding?.statusSaleTv?.text = sale.status
-        binding?.dateSaleTv?.text = sale.date
-        binding?.totalPriceTv?.text = "${sale.totalAmount}"
-        binding?.saleByTv?.text = "${sale.userId}"
+    private fun setData(sale: SaleDetail) {
+        binding?.statusSaleTv?.text = sale.statusWithFormat
+        binding?.dateSaleTv?.text = sale.dateWithFormat
+        binding?.totalPriceTv?.text =
+            String.format(getString(R.string.text_total_amount_sale), sale.totalAmount)
+        binding?.saleByTv?.text = sale.userNameWithFormat
         productSaleDetailAdapter.submitList(sale.products)
     }
 

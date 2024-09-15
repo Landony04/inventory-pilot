@@ -15,6 +15,8 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.withContext
+import softspark.com.inventorypilot.common.data.extension.formatUtcToReadableDate
+import softspark.com.inventorypilot.common.data.local.dao.UserProfileDao
 import softspark.com.inventorypilot.common.data.util.DispatcherProvider
 import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.common.utils.Constants.VALUE_ZERO
@@ -31,9 +33,11 @@ import softspark.com.inventorypilot.home.data.repositories.SalesRepository
 import softspark.com.inventorypilot.home.data.sync.SalesSyncWorker
 import softspark.com.inventorypilot.home.domain.models.sales.ProductSale
 import softspark.com.inventorypilot.home.domain.models.sales.Sale
+import softspark.com.inventorypilot.home.domain.models.sales.SaleDetail
 import softspark.com.inventorypilot.home.remote.SalesApi
 import softspark.com.inventorypilot.home.remote.dto.products.UpdateProductRequest
 import softspark.com.inventorypilot.home.remote.util.resultOf
+import softspark.com.inventorypilot.login.data.mapper.toUserProfile
 import java.time.Duration
 import javax.inject.Inject
 
@@ -43,6 +47,7 @@ class SalesRepositoryImpl @Inject constructor(
     private val productDao: ProductDao,
     private val salesApi: SalesApi,
     private val salesDao: SalesDao,
+    private val userProfileDao: UserProfileDao,
     private val workManager: WorkManager
 ) : SalesRepository {
 
@@ -66,13 +71,42 @@ class SalesRepositoryImpl @Inject constructor(
             emit(Result.Error(it))
         }.flowOn(dispatchers.io())
 
-    override suspend fun getSaleById(saleId: String): Flow<Result<Sale>> = flow<Result<Sale>> {
-        emit(Result.Success(data = salesDao.getSaleById(saleId).toSaleDomain()))
-    }.onStart {
-        emit(Result.Loading)
-    }.catch {
-        emit(Result.Error(it))
-    }.flowOn(dispatchers.io())
+    override suspend fun getSaleById(saleId: String): Flow<Result<SaleDetail>> =
+        flow<Result<SaleDetail>> {
+            val data = salesDao.getSaleById(saleId)
+            val user = userProfileDao.getUserProfileById(data.userOwnerId).toUserProfile()
+            val products = mutableListOf<ProductSale>()
+
+            //Crear mapper para SaleDetail
+            //Agregar el valor status y validar en el adapter para mostrar verde si es completed o amarillo si es pending.
+
+            data.products.products.forEach { product ->
+                val productEntity = getProductById(product.id)
+                products.add(
+                    ProductSale(
+                        id = product.id,
+                        name = productEntity.name,
+                        price = productEntity.price,
+                        quantity = product.quantity
+                    )
+                )
+            }
+
+            val saleDetail = SaleDetail(
+                statusWithFormat = if (data.status == "completed") "Completada" else "Pendiente",
+                dateWithFormat = data.date.formatUtcToReadableDate(),
+                userNameWithFormat = "${user.firstName} ${user.lastName}",
+                totalAmount = data.totalAmount.toString(),
+                products = products
+            )
+
+
+            emit(Result.Success(data = saleDetail))
+        }.onStart {
+            emit(Result.Loading)
+        }.catch {
+            emit(Result.Error(it))
+        }.flowOn(dispatchers.io())
 
     override suspend fun insertSales(sales: List<Sale>) = withContext(dispatchers.io()) {
         salesDao.insertSales(sales.map { sale -> async { sale.toSaleEntity() }.await() })
@@ -128,5 +162,9 @@ class SalesRepositoryImpl @Inject constructor(
             println("Error: ${exception.message}")
             null
         }
+    }
+
+    override suspend fun getProductById(productId: String): ProductEntity {
+        return  productDao.getProductById(productId)
     }
 }
