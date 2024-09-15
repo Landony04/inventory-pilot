@@ -137,18 +137,6 @@ class ProductsAdapter @Inject constructor(
     fun initListeners(listener: ProductSelectedListener) {
         productSelectedListener = listener
     }
-
-    fun updateItem(position: Int, newProduct: Product) {
-        currentList.toMutableList()[position].apply {
-            name = newProduct.name
-            description = newProduct.description
-            stock = newProduct.stock
-            price = newProduct.price
-            categoryId = newProduct.categoryId
-        }
-
-        notifyItemChanged(position)
-    }
 }
 
 

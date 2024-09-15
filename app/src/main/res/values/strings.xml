@@ -51,8 +51,8 @@
     <string name="hint_text_add_quantity_product">Ingresa la cantidad del producto</string>
 
     <!-- ADD DISPATCHERS   -->
-    <string name="text_add_dispatchers">Agregar despachadores</string>
-    <string name="title_action_bar_add_user">Agregar despachador</string>
+    <string name="text_add_dispatchers">Agregar usuario</string>
+    <string name="title_action_bar_add_user">Agregar usuario</string>
     <string name="text_error_without_first_name">Debes agregar el primer nombres.</string>
     <string name="text_error_without_last_name">Debes agregar apellido.</string>
     <string name="text_error_without_role">Debes seleccionar un rol para el usuario.</string>
