@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="15dp"
+    tools:context=".home.presentation.ui.sales.saleDetail.SaleDetailFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="10dp">
+
+        <TextView
+            android:id="@+id/you_sale_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@string/text_title_sale"
+            android:textAppearance="@style/TitleTextStyle"
+            app:layout_constraintBottom_toTopOf="@+id/status_sale_ll"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/text_title_sale" />
+
+        <LinearLayout
+            android:id="@+id/status_sale_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@+id/products_sale_rv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/you_sale_tv">
+
+            <TextView
+                android:id="@+id/status_sale_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:gravity="start"
+                android:textAppearance="@style/DescriptionWithoutColorTextStyle"
+                android:textColor="@color/colorPrimary"
+                tools:text="Pedido completado" />
+
+            <TextView
+                android:id="@+id/date_sale_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:textAppearance="@style/DescriptionTextStyle"
+                tools:text="23 mayo, 8:44 p.m." />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/products_sale_rv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            app:layout_constraintBottom_toTopOf="@+id/total_price_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/status_sale_ll"
+            tools:listitem="@layout/item_layout_product_sale" />
+
+        <TextView
+            android:id="@+id/total_price_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="15dp"
+            android:drawablePadding="10dp"
+            android:gravity="start|center_vertical"
+            android:padding="10dp"
+            app:drawableStartCompat="@drawable/ic_receipt_30"
+            app:layout_constraintBottom_toTopOf="@+id/total_price_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/products_sale_rv"
+            tools:text="Total: GTQ 1000" />
+
+        <View
+            android:id="@+id/total_price_view"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="@color/color_gray"
+            app:layout_constraintBottom_toTopOf="@id/sale_by_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.9"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/total_price_tv" />
+
+        <TextView
+            android:id="@+id/sale_by_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="15dp"
+            android:drawablePadding="10dp"
+            android:gravity="start|center_vertical"
+            android:padding="10dp"
+            app:drawableStartCompat="@drawable/ic_person_30"
+            app:layout_constraintBottom_toTopOf="@+id/sale_by_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/total_price_view"
+            tools:text="Venta realizada por Juan Perez" />
+
+        <View
+            android:id="@+id/sale_by_view"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="@color/color_gray"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.9"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/sale_by_tv" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

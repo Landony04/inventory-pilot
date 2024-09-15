@@ -90,4 +90,8 @@
     <string name="text_name_empty_error">El campo no puede estar vacío.</string>
     <string name="text_button_disabled">Deshabilitar</string>
     <string name="text_button_enabled">Habilitar</string>
+
+    <!-- SALE DETAIL   -->
+    <string name="text_title_sale_detail">Detalles de la venta</string>
+    <string name="text_title_sale">Venta</string>
 </resources>

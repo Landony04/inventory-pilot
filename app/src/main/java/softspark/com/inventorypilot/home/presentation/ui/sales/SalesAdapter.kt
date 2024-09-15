@@ -12,11 +12,14 @@ import softspark.com.inventorypilot.common.data.extension.formatUtcToReadableDat
 import softspark.com.inventorypilot.common.utils.Constants.PENDING_STATUS
 import softspark.com.inventorypilot.databinding.ItemLayoutCardSaleBinding
 import softspark.com.inventorypilot.home.domain.models.sales.Sale
+import softspark.com.inventorypilot.home.presentation.ui.utils.SaleSelectedListener
 import javax.inject.Inject
 
 class SalesAdapter @Inject constructor(
     @ApplicationContext private val context: Context
 ) : ListAdapter<Sale, SalesAdapter.SaleViewHolder>(SalesDiffCallback()) {
+
+    private lateinit var saleSelectedListener: SaleSelectedListener
 
     class SaleViewHolder(
         private val itemBinding: ItemLayoutCardSaleBinding,
@@ -60,7 +63,12 @@ class SalesAdapter @Inject constructor(
     override fun onBindViewHolder(holder: SaleViewHolder, position: Int) {
         val sale = getItem(position)
         holder.bind(context = context, saleSection = sale) { saleSelected ->
+            saleSelectedListener.showSaleDetails(saleSelected.id)
         }
+    }
+
+    fun initListeners(listener: SaleSelectedListener) {
+        saleSelectedListener = listener
     }
 }
 

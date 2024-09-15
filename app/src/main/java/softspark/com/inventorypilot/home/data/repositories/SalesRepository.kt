@@ -12,6 +12,8 @@ interface SalesRepository {
         date: String
     ): Flow<Result<ArrayList<Sale>>>
 
+    suspend fun getSaleById(saleId: String): Flow<Result<Sale>>
+
     suspend fun insertSales(sales: List<Sale>)
 
     suspend fun insertSale(sale: Sale)

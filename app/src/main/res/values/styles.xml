@@ -75,6 +75,17 @@
         <item name="maxLines">1</item>
     </style>
 
+    <style name="DescriptionWithoutColorTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionMode.Subtitle">
+        <item name="android:textSize">16sp</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMinTextSize">10sp</item>
+        <item name="autoSizeMaxTextSize">22sp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="layout_constraintHeight_default">wrap</item>
+        <item name="autoSizeStepGranularity">2dp</item>
+        <item name="maxLines">1</item>
+    </style>
+
     <style name="DetailsTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionMode.Subtitle">
         <item name="android:textColor">@color/color_gray</item>
         <item name="autoSizeTextType">uniform</item>

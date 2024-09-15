@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.withContext
-import softspark.com.inventorypilot.common.data.extension.formatDateUTCWithoutHours
 import softspark.com.inventorypilot.common.data.util.DispatcherProvider
 import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.common.utils.Constants.VALUE_ZERO
@@ -57,7 +56,7 @@ class SalesRepositoryImpl @Inject constructor(
             }
 
             val localResult =
-                salesDao.getSalesByDate(date.formatDateUTCWithoutHours())
+                salesDao.getSalesByDate(date)
                     .map { saleEntity -> saleEntity.toSaleDomain() }
 
             emit(Result.Success(data = ArrayList(localResult)))
@@ -66,6 +65,14 @@ class SalesRepositoryImpl @Inject constructor(
         }.catch {
             emit(Result.Error(it))
         }.flowOn(dispatchers.io())
+
+    override suspend fun getSaleById(saleId: String): Flow<Result<Sale>> = flow<Result<Sale>> {
+        emit(Result.Success(data = salesDao.getSaleById(saleId).toSaleDomain()))
+    }.onStart {
+        emit(Result.Loading)
+    }.catch {
+        emit(Result.Error(it))
+    }.flowOn(dispatchers.io())
 
     override suspend fun insertSales(sales: List<Sale>) = withContext(dispatchers.io()) {
         salesDao.insertSales(sales.map { sale -> async { sale.toSaleEntity() }.await() })
