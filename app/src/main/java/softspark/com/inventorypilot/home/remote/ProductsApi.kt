@@ -3,6 +3,7 @@ package softspark.com.inventorypilot.home.remote
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.PATCH
+import retrofit2.http.Path
 import softspark.com.inventorypilot.home.remote.dto.categoryProduct.AddCategoryRequest
 import softspark.com.inventorypilot.home.remote.dto.products.AddProductRequest
 import softspark.com.inventorypilot.home.remote.dto.products.GetProductsResponse
@@ -10,15 +11,21 @@ import softspark.com.inventorypilot.home.remote.dto.products.ProductCategoryResp
 
 interface ProductsApi {
 
-    @GET("businesses/business_info_id_1/categories.json")
-    suspend fun getProductCategories(): ProductCategoryResponse
+    @GET("businesses/{branchId}/categories.json")
+    suspend fun getProductCategories(@Path("branchId") branchId: String): ProductCategoryResponse
 
-    @PATCH("businesses/business_info_id_1/categories.json")
-    suspend fun insertCategory(@Body addCategoryRequest: AddCategoryRequest)
+    @PATCH("businesses/{branchId}/categories.json")
+    suspend fun insertCategory(
+        @Path("branchId") branchId: String,
+        @Body addCategoryRequest: AddCategoryRequest
+    )
 
-    @GET("businesses/business_info_id_1/products.json")
-    suspend fun getAllProducts(): GetProductsResponse
+    @GET("businesses/{branchId}/products.json")
+    suspend fun getAllProducts(@Path("branchId") branchId: String): GetProductsResponse
 
-    @PATCH("businesses/business_info_id_1/products.json")
-    suspend fun insertOrUpdateProduct(@Body addProductRequest: AddProductRequest)
+    @PATCH("businesses/{branchId}/products.json")
+    suspend fun insertOrUpdateProduct(
+        @Path("branchId") branchId: String,
+        @Body addProductRequest: AddProductRequest
+    )
 }

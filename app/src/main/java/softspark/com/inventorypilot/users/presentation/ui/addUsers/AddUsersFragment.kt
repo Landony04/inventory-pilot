@@ -130,7 +130,8 @@ class AddUsersFragment : Fragment(), ItemSelectedFromSpinnerListener {
                 binding?.firstNameUserTie?.text?.toString() ?: EMPTY_STRING,
                 binding?.lastNameUserTie?.text?.toString() ?: EMPTY_STRING,
                 roleSelectCurrent,
-                binding?.cellphoneUserTie?.text?.toString() ?: EMPTY_STRING
+                binding?.cellphoneUserTie?.text?.toString() ?: EMPTY_STRING,
+                ""
             )
         }
     }

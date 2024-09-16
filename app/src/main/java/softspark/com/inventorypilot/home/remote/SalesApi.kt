@@ -9,17 +9,22 @@ import softspark.com.inventorypilot.home.remote.dto.products.UpdateProductReques
 import softspark.com.inventorypilot.home.remote.dto.sales.GetSalesResponse
 
 interface SalesApi {
-    @GET("businesses/business_info_id_1/sales.json")
-    suspend fun getAllSales(): GetSalesResponse
 
-    @GET("businesses/business_info_id_1/sales.json")
-    suspend fun getSalesForDate(@Query("date") date: String): GetSalesResponse
+    @GET("businesses/{branchId}/sales.json")
+    suspend fun getSalesForDate(
+        @Path("branchId") branchId: String,
+        @Query("date") date: String
+    ): GetSalesResponse
 
-    @PATCH("businesses/business_info_id_1/sales.json")
-    suspend fun insertSale(@Body getSalesResponse: GetSalesResponse)
+    @PATCH("businesses/{branchId}/sales.json")
+    suspend fun insertSale(
+        @Path("branchId") branchId: String,
+        @Body getSalesResponse: GetSalesResponse
+    )
 
-    @PATCH("businesses/business_info_id_1/products/{id}.json")
+    @PATCH("businesses/{branchId}/products/{id}.json")
     suspend fun updateProductStock(
+        @Path("branchId") branchId: String,
         @Path("id") productId: String,
         @Body product: UpdateProductRequest
     )

@@ -16,7 +16,8 @@ fun UserProfileResponse.toDomain(): List<UserProfile> {
             lastName = dto.lastName,
             role = dto.role,
             cellPhone = dto.cellPhone,
-            status = dto.status
+            status = dto.status,
+            branchId = dto.branchId
         )
     }
 }
@@ -28,7 +29,8 @@ fun UserProfileEntity.toUserProfile(): UserProfile = UserProfile(
     lastName = lastName,
     role = role,
     cellPhone = cellPhone,
-    status = status
+    status = status,
+    branchId = branchId
 )
 
 fun UserProfile.toEntity(): UserProfileEntity {
@@ -39,23 +41,7 @@ fun UserProfile.toEntity(): UserProfileEntity {
         lastName = lastName,
         role = role,
         cellPhone = cellPhone,
-        status = status
+        status = status,
+        branchId = branchId
     )
-}
-
-fun UserProfileResponse.toUserProfile(): UserProfile {
-    return this.entries.map {
-
-        val dto = it.value
-
-        UserProfile(
-            id = it.key,
-            email = dto.email,
-            firstName = dto.firstName,
-            lastName = dto.lastName,
-            role = dto.role,
-            cellPhone = dto.cellPhone,
-            status = dto.status
-        )
-    }.first()
 }

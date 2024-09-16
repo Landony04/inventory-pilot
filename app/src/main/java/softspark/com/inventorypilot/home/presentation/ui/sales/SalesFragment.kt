@@ -69,6 +69,7 @@ class SalesFragment : Fragment(), SaleSelectedListener {
         when (result) {
             is Result.Error -> {
                 binding?.salesPb?.visibility = View.GONE
+                println("Error: ${result.exception.message}")
                 showToast(result.exception.message ?: EMPTY_STRING)
                 showAndHideSalesList(arrayListOf())
             }

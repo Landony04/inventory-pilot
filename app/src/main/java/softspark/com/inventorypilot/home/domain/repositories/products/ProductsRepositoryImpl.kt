@@ -19,6 +19,8 @@ import softspark.com.inventorypilot.common.data.util.DispatcherProvider
 import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.common.utils.Constants.FIVE_MINUTES
 import softspark.com.inventorypilot.common.utils.NetworkUtils
+import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferences
+import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferencesImpl.Companion.USER_BRANCH_ID_PREFERENCE
 import softspark.com.inventorypilot.home.data.local.dao.products.ProductDao
 import softspark.com.inventorypilot.home.data.mapper.products.toAddProductRequest
 import softspark.com.inventorypilot.home.data.mapper.products.toProductDomain
@@ -34,6 +36,7 @@ import java.time.Duration
 import javax.inject.Inject
 
 class ProductsRepositoryImpl @Inject constructor(
+    private val preferences: InventoryPilotPreferences,
     private val dispatchers: DispatcherProvider,
     private val productsApi: ProductsApi,
     private val productDao: ProductDao,
@@ -45,7 +48,10 @@ class ProductsRepositoryImpl @Inject constructor(
         productDao.insertProduct(product.toProductEntity())
 
         resultOf {
-            productsApi.insertOrUpdateProduct(product.toAddProductRequest(product.id))
+            productsApi.insertOrUpdateProduct(
+                preferences.getValuesString(USER_BRANCH_ID_PREFERENCE),
+                product.toAddProductRequest(product.id)
+            )
         }.onFailure {
             productDao.insertProductSync(product.toProductSyncEntity())
         }
@@ -54,7 +60,9 @@ class ProductsRepositoryImpl @Inject constructor(
     override suspend fun getProductsForPage(): Flow<List<Product>> = flow {
         if (networkUtils.isInternetAvailable()) {
             try {
-                val apiResult = productsApi.getAllProducts().toProductListDomain()
+                val apiResult =
+                    productsApi.getAllProducts(preferences.getValuesString(USER_BRANCH_ID_PREFERENCE))
+                        .toProductListDomain()
                 insertProducts(apiResult)
             } catch (exception: Exception) {
                 println("exception: ${exception.message}")
@@ -112,7 +120,10 @@ class ProductsRepositoryImpl @Inject constructor(
         productDao.updateProduct(product.toProductEntity())
 
         resultOf {
-            productsApi.insertOrUpdateProduct(product.toAddProductRequest(product.id))
+            productsApi.insertOrUpdateProduct(
+                preferences.getValuesString(USER_BRANCH_ID_PREFERENCE),
+                product.toAddProductRequest(product.id)
+            )
         }.onFailure {
             productDao.insertProductSync(product.toProductSyncEntity())
         }

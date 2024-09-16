@@ -10,10 +10,6 @@ fun UserProfile.toAddUserRequest(id: String): AddUserRequest {
     return mapOf(id to this.toUserDto())
 }
 
-fun UserProfile.toModifiedUserRequest(id: String): AddUserRequest {
-    return mapOf(id to this.toUserDto())
-}
-
 fun UserProfile.toUserDto(): UserDto = UserDto(
     email = email,
     firstName = firstName,

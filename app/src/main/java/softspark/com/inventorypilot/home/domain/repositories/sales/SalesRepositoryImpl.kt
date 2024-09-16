@@ -20,6 +20,9 @@ import softspark.com.inventorypilot.common.data.util.DispatcherProvider
 import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.common.utils.Constants.VALUE_ZERO
 import softspark.com.inventorypilot.common.utils.NetworkUtils
+import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferences
+import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferencesImpl
+import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferencesImpl.Companion.USER_BRANCH_ID_PREFERENCE
 import softspark.com.inventorypilot.home.data.local.dao.products.ProductDao
 import softspark.com.inventorypilot.home.data.local.dao.sales.SalesDao
 import softspark.com.inventorypilot.home.data.local.entity.products.ProductEntity
@@ -43,6 +46,7 @@ import java.time.Duration
 import javax.inject.Inject
 
 class SalesRepositoryImpl @Inject constructor(
+    private val preferences: InventoryPilotPreferences,
     private val dispatchers: DispatcherProvider,
     private val networkUtils: NetworkUtils,
     private val productDao: ProductDao,
@@ -56,7 +60,10 @@ class SalesRepositoryImpl @Inject constructor(
         flow<Result<ArrayList<Sale>>> {
 
             if (networkUtils.isInternetAvailable()) {
-                val apiResult = salesApi.getSalesForDate(date).toSaleListDomain()
+                val apiResult = salesApi.getSalesForDate(
+                    preferences.getValuesString(USER_BRANCH_ID_PREFERENCE),
+                    date
+                ).toSaleListDomain()
 
                 insertSales(apiResult)
             }
@@ -98,7 +105,10 @@ class SalesRepositoryImpl @Inject constructor(
         salesDao.insertSale(sale.toSaleEntity())
 
         resultOf {
-            salesApi.insertSale(sale.toSaleRequestDto())
+            salesApi.insertSale(
+                preferences.getValuesString(USER_BRANCH_ID_PREFERENCE),
+                sale.toSaleRequestDto()
+            )
             updateProductsStock(sale.products.toList())
         }.onFailure {
             salesDao.insertSaleSync(sale.toSyncEntity())
@@ -125,6 +135,7 @@ class SalesRepositoryImpl @Inject constructor(
                     val newStock = productValue.stock - soldProduct.quantity
                     if (newStock >= VALUE_ZERO) {
                         salesApi.updateProductStock(
+                            preferences.getValuesString(USER_BRANCH_ID_PREFERENCE),
                             soldProduct.id,
                             UpdateProductRequest(
                                 stock = newStock

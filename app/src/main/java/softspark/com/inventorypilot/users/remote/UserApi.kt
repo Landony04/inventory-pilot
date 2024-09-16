@@ -8,10 +8,10 @@ import softspark.com.inventorypilot.users.remote.dto.user.ModifiedUserRequest
 
 interface UserApi {
 
-    @PATCH("businesses/business_info_id_1/users.json")
+    @PATCH("businesses/users.json")
     suspend fun addUser(@Body addUserRequest: AddUserRequest)
 
-    @PATCH("businesses/business_info_id_1/users/{id}.json")
+    @PATCH("businesses/users/{id}.json")
     suspend fun changeUserStatus(
         @Path("id") userId: String,
         @Body modifiedUserRequest: ModifiedUserRequest

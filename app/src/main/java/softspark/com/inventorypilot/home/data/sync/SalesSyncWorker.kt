@@ -10,6 +10,8 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.supervisorScope
 import softspark.com.inventorypilot.common.utils.Constants.VALUE_ZERO
+import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferences
+import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferencesImpl.Companion.USER_BRANCH_ID_PREFERENCE
 import softspark.com.inventorypilot.home.data.local.dao.products.ProductDao
 import softspark.com.inventorypilot.home.data.local.dao.sales.SalesDao
 import softspark.com.inventorypilot.home.data.local.entity.products.ProductEntity
@@ -25,6 +27,7 @@ import softspark.com.inventorypilot.home.remote.util.resultOf
 class SalesSyncWorker @AssistedInject constructor(
     @Assisted val context: Context,
     @Assisted val workerParameters: WorkerParameters,
+    private val preferences: InventoryPilotPreferences,
     private val salesApi: SalesApi,
     private val salesDao: SalesDao,
     private val productDao: ProductDao
@@ -52,7 +55,10 @@ class SalesSyncWorker @AssistedInject constructor(
             salesDao.getSaleById(saleSyncEntity.id).toSaleDomain().toSaleRequestDto()
         val products = salesDao.getSaleById(saleSyncEntity.id).products
         resultOf {
-            salesApi.insertSale(sale)
+            salesApi.insertSale(
+                preferences.getValuesString(USER_BRANCH_ID_PREFERENCE),
+                sale
+            )
             updateProductsStock(products.products)
         }.onSuccess {
             salesDao.deleteSaleSync(saleSyncEntity)
@@ -68,6 +74,7 @@ class SalesSyncWorker @AssistedInject constructor(
                 val newStock = productValue.stock - soldProduct.quantity
                 if (newStock >= VALUE_ZERO) {
                     salesApi.updateProductStock(
+                        preferences.getValuesString(USER_BRANCH_ID_PREFERENCE),
                         soldProduct.id,
                         UpdateProductRequest(
                             stock = newStock

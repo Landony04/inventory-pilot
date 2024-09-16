@@ -9,6 +9,8 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.supervisorScope
+import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferences
+import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferencesImpl.Companion.USER_BRANCH_ID_PREFERENCE
 import softspark.com.inventorypilot.home.data.local.dao.products.ProductDao
 import softspark.com.inventorypilot.home.data.local.entity.products.ProductSyncEntity
 import softspark.com.inventorypilot.home.data.mapper.products.toAddProductRequest
@@ -21,6 +23,7 @@ import softspark.com.inventorypilot.home.remote.util.resultOf
 class ProductSyncWorker @AssistedInject constructor(
     @Assisted val context: Context,
     @Assisted val workerParameters: WorkerParameters,
+    private val preferences: InventoryPilotPreferences,
     private val productsApi: ProductsApi,
     private val productDao: ProductDao
 ) : CoroutineWorker(context, workerParameters) {
@@ -48,7 +51,10 @@ class ProductSyncWorker @AssistedInject constructor(
             productDao.getProductById(productSyncEntity.id)
         val productDomain = product.toProductDomain()
         resultOf {
-            productsApi.insertOrUpdateProduct(productDomain.toAddProductRequest(productDomain.id))
+            productsApi.insertOrUpdateProduct(
+                preferences.getValuesString(USER_BRANCH_ID_PREFERENCE),
+                productDomain.toAddProductRequest(productDomain.id)
+            )
         }.onSuccess {
             productDao.deleteProductSync(product.toProductSyncEntity())
         }.onFailure {
