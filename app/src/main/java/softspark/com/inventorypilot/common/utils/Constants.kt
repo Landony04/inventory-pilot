@@ -16,4 +16,5 @@ object Constants {
     const val DELAY_TIME = 1000L
     const val FIVE_MINUTES = 5L
     const val RETRY_SEND_DATA_FROM_WORK = 3
+    const val COMPLETED_STATUS = "completed"
 }

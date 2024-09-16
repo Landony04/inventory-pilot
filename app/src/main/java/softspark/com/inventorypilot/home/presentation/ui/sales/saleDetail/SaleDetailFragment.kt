@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import softspark.com.inventorypilot.R
 import softspark.com.inventorypilot.common.entities.base.Result
+import softspark.com.inventorypilot.common.utils.Constants.PENDING_STATUS
 import softspark.com.inventorypilot.common.utils.components.MenuProviderUtils
 import softspark.com.inventorypilot.common.utils.dialogs.DialogBuilder
 import softspark.com.inventorypilot.databinding.FragmentSaleDetailBinding
@@ -88,7 +90,6 @@ class SaleDetailFragment : Fragment() {
 
     private fun initAdapter() {
         binding?.productsSaleRv?.apply {
-//            isNestedScrollingEnabled = false
             setHasFixedSize(false)
             layoutManager = LinearLayoutManager(requireContext())
             adapter = productSaleDetailAdapter
@@ -96,6 +97,15 @@ class SaleDetailFragment : Fragment() {
     }
 
     private fun setData(sale: SaleDetail) {
+        if (sale.status == PENDING_STATUS) {
+            binding?.statusSaleTv?.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.colorWarning
+                )
+            )
+        }
+
         binding?.statusSaleTv?.text = sale.statusWithFormat
         binding?.dateSaleTv?.text = sale.dateWithFormat
         binding?.totalPriceTv?.text =

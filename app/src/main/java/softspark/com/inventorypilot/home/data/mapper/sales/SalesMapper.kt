@@ -1,11 +1,14 @@
 package softspark.com.inventorypilot.home.data.mapper.sales
 
 import softspark.com.inventorypilot.common.data.extension.formatDateUTCWithoutHours
+import softspark.com.inventorypilot.common.data.extension.formatUtcToReadableDate
+import softspark.com.inventorypilot.common.utils.Constants.COMPLETED_STATUS
 import softspark.com.inventorypilot.home.data.local.entity.products.SaleProductsList
 import softspark.com.inventorypilot.home.data.local.entity.sales.SaleEntity
 import softspark.com.inventorypilot.home.data.local.entity.sales.SaleSyncEntity
 import softspark.com.inventorypilot.home.domain.models.sales.ProductSale
 import softspark.com.inventorypilot.home.domain.models.sales.Sale
+import softspark.com.inventorypilot.home.domain.models.sales.SaleDetail
 import softspark.com.inventorypilot.home.remote.dto.sales.GetSalesResponse
 import softspark.com.inventorypilot.home.remote.dto.sales.ProductSaleDto
 import softspark.com.inventorypilot.home.remote.dto.sales.ProductsSaleResponse
@@ -49,6 +52,19 @@ fun SaleEntity.toSaleDomain(): Sale = Sale(
     status = status
 )
 
+fun SaleEntity.toSaleDetail(
+    fistName: String,
+    lastName: String,
+    products: List<ProductSale>
+): SaleDetail = SaleDetail(
+    status = status,
+    statusWithFormat = if (status == COMPLETED_STATUS) "Completada" else "Pendiente",
+    dateWithFormat = date.formatUtcToReadableDate(),
+    userNameWithFormat = "$fistName $lastName",
+    totalAmount = totalAmount.toString(),
+    products = products
+)
+
 fun ProductsSaleResponse.toProductSaleDomain(): List<ProductSale> {
     return entries.map {
         val id = it.key
@@ -70,7 +86,7 @@ fun Sale.toSaleRequestDto(): GetSalesResponse {
         totalAmount = totalAmount,
         userId = userId,
         products = toProductMap(ArrayList(products.map { it.toProductSaleDto(it.id) })),
-        status = "completed",
+        status = COMPLETED_STATUS,
     )
 
     return mapOf(id to dto)

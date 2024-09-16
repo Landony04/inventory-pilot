@@ -7,6 +7,7 @@ import softspark.com.inventorypilot.home.data.local.entity.products.ProductSyncE
 import softspark.com.inventorypilot.home.domain.models.products.Product
 import softspark.com.inventorypilot.home.domain.models.products.ProductCategory
 import softspark.com.inventorypilot.home.domain.models.sales.CartItem
+import softspark.com.inventorypilot.home.domain.models.sales.ProductSale
 import softspark.com.inventorypilot.home.remote.dto.categoryProduct.AddCategoryRequest
 import softspark.com.inventorypilot.home.remote.dto.products.AddProductRequest
 import softspark.com.inventorypilot.home.remote.dto.products.GetProductsResponse
@@ -86,6 +87,13 @@ fun ProductEntity.toProductDomain(): Product = Product(
     stock = stock,
     addDate = addDate,
     createBy = createBy
+)
+
+fun ProductEntity.toProductSale(): ProductSale = ProductSale(
+    id = productId,
+    quantity = stock,
+    price = price,
+    name = name
 )
 
 fun Product.toCartItem(quantity: Int): CartItem = CartItem(

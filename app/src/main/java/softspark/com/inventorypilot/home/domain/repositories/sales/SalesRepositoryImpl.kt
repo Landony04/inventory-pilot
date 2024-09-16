@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.withContext
-import softspark.com.inventorypilot.common.data.extension.formatUtcToReadableDate
 import softspark.com.inventorypilot.common.data.local.dao.UserProfileDao
 import softspark.com.inventorypilot.common.data.util.DispatcherProvider
 import softspark.com.inventorypilot.common.entities.base.Result
@@ -24,6 +23,8 @@ import softspark.com.inventorypilot.common.utils.NetworkUtils
 import softspark.com.inventorypilot.home.data.local.dao.products.ProductDao
 import softspark.com.inventorypilot.home.data.local.dao.sales.SalesDao
 import softspark.com.inventorypilot.home.data.local.entity.products.ProductEntity
+import softspark.com.inventorypilot.home.data.mapper.products.toProductSale
+import softspark.com.inventorypilot.home.data.mapper.sales.toSaleDetail
 import softspark.com.inventorypilot.home.data.mapper.sales.toSaleDomain
 import softspark.com.inventorypilot.home.data.mapper.sales.toSaleEntity
 import softspark.com.inventorypilot.home.data.mapper.sales.toSaleListDomain
@@ -77,31 +78,12 @@ class SalesRepositoryImpl @Inject constructor(
             val user = userProfileDao.getUserProfileById(data.userOwnerId).toUserProfile()
             val products = mutableListOf<ProductSale>()
 
-            //Crear mapper para SaleDetail
-            //Agregar el valor status y validar en el adapter para mostrar verde si es completed o amarillo si es pending.
-
             data.products.products.forEach { product ->
                 val productEntity = getProductById(product.id)
-                products.add(
-                    ProductSale(
-                        id = product.id,
-                        name = productEntity.name,
-                        price = productEntity.price,
-                        quantity = product.quantity
-                    )
-                )
+                products.add(productEntity.toProductSale())
             }
 
-            val saleDetail = SaleDetail(
-                statusWithFormat = if (data.status == "completed") "Completada" else "Pendiente",
-                dateWithFormat = data.date.formatUtcToReadableDate(),
-                userNameWithFormat = "${user.firstName} ${user.lastName}",
-                totalAmount = data.totalAmount.toString(),
-                products = products
-            )
-
-
-            emit(Result.Success(data = saleDetail))
+            emit(Result.Success(data = data.toSaleDetail(user.firstName, user.lastName, products)))
         }.onStart {
             emit(Result.Loading)
         }.catch {
@@ -165,6 +147,6 @@ class SalesRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getProductById(productId: String): ProductEntity {
-        return  productDao.getProductById(productId)
+        return productDao.getProductById(productId)
     }
 }
