@@ -9,6 +9,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
 import softspark.com.inventorypilot.login.data.repositories.AuthenticationRepository
 import softspark.com.inventorypilot.login.domain.matcher.EmailMatcher
+import softspark.com.inventorypilot.login.domain.useCases.authentication.GetBranchesUseCase
+import softspark.com.inventorypilot.login.domain.useCases.authentication.GetBranchesUseCaseImpl
 import softspark.com.inventorypilot.login.domain.useCases.authentication.GetUserProfileUseCase
 import softspark.com.inventorypilot.login.domain.useCases.authentication.GetUserProfileUseCaseImpl
 import softspark.com.inventorypilot.login.domain.useCases.authentication.LoginUseCase
@@ -45,4 +47,10 @@ object UseCaseModule {
     fun provideValidatePasswordUseCase(
         @ApplicationContext context: Context
     ): ValidatePasswordUseCase = ValidatePasswordUseCaseImpl(context)
+
+    @ViewModelScoped
+    @Provides
+    fun provideGetBranchesUseCase(
+        authenticationRepository: AuthenticationRepository
+    ): GetBranchesUseCase = GetBranchesUseCaseImpl(authenticationRepository)
 }

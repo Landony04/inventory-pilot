@@ -84,7 +84,10 @@ class LoginActivity : AppCompatActivity() {
                 binding.loginButton.visibility = View.VISIBLE
             }
 
-            is Result.Success -> loginViewModel.getUserProfile(getEmail())
+            is Result.Success -> {
+                loginViewModel.getBranches()
+                loginViewModel.getUserProfile(getEmail())
+            }
 
             Result.Loading -> {
                 binding.loginButton.visibility = View.GONE

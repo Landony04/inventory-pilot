@@ -5,7 +5,9 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import softspark.com.inventorypilot.common.data.local.dao.BranchDao
 import softspark.com.inventorypilot.common.data.local.dao.UserProfileDao
+import softspark.com.inventorypilot.common.data.local.entity.BranchEntity
 import softspark.com.inventorypilot.common.data.local.entity.UserProfileEntity
 import softspark.com.inventorypilot.home.data.local.dao.cart.CartDao
 import softspark.com.inventorypilot.home.data.local.dao.products.ProductCategoryDao
@@ -26,7 +28,7 @@ import softspark.com.inventorypilot.users.data.local.entity.user.UserSyncEntity
 
 @TypeConverters(value = [SalesTypeConverters::class])
 @Database(
-    entities = [UserProfileEntity::class, ProductCategoryEntity::class, ProductEntity::class, SaleEntity::class, CartItemEntity::class, SaleSyncEntity::class, ProductSyncEntity::class, UserSyncEntity::class, CategoryProductSyncEntity::class, UpdateUserSyncEntity::class],
+    entities = [UserProfileEntity::class, ProductCategoryEntity::class, ProductEntity::class, SaleEntity::class, CartItemEntity::class, SaleSyncEntity::class, ProductSyncEntity::class, UserSyncEntity::class, CategoryProductSyncEntity::class, UpdateUserSyncEntity::class, BranchEntity::class],
     version = 1,
     exportSchema = false
 )
@@ -42,6 +44,8 @@ abstract class InventoryPilotDatabase : RoomDatabase() {
     abstract fun cartDao(): CartDao
 
     abstract fun userDao(): UserDao
+
+    abstract fun branchDao(): BranchDao
 }
 
 val MIGRATION_1_2: Migration = object : Migration(1, 2) {

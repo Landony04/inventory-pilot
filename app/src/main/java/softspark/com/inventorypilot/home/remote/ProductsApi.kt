@@ -11,19 +11,19 @@ import softspark.com.inventorypilot.home.remote.dto.products.ProductCategoryResp
 
 interface ProductsApi {
 
-    @GET("businesses/{branchId}/categories.json")
+    @GET("businesses/branches/{branchId}/categories.json")
     suspend fun getProductCategories(@Path("branchId") branchId: String): ProductCategoryResponse
 
-    @PATCH("businesses/{branchId}/categories.json")
+    @PATCH("businesses/branches/{branchId}/categories.json")
     suspend fun insertCategory(
         @Path("branchId") branchId: String,
         @Body addCategoryRequest: AddCategoryRequest
     )
 
-    @GET("businesses/{branchId}/products.json")
+    @GET("businesses/branches/{branchId}/products.json")
     suspend fun getAllProducts(@Path("branchId") branchId: String): GetProductsResponse
 
-    @PATCH("businesses/{branchId}/products.json")
+    @PATCH("businesses/branches/{branchId}/products.json")
     suspend fun insertOrUpdateProduct(
         @Path("branchId") branchId: String,
         @Body addProductRequest: AddProductRequest

@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.login.domain.entities.PasswordResult
 import softspark.com.inventorypilot.login.domain.models.UserProfile
+import softspark.com.inventorypilot.login.domain.useCases.authentication.GetBranchesUseCase
 import softspark.com.inventorypilot.login.domain.useCases.authentication.GetUserProfileUseCase
 import softspark.com.inventorypilot.login.domain.useCases.authentication.LoginUseCase
 import softspark.com.inventorypilot.login.domain.useCases.authentication.ValidateEmailUseCase
@@ -20,7 +21,8 @@ class LoginViewModel @Inject constructor(
     private val getUserProfileUseCase: GetUserProfileUseCase,
     private val loginUseCase: LoginUseCase,
     private val validateEmailUseCase: ValidateEmailUseCase,
-    private val validatePasswordUseCase: ValidatePasswordUseCase
+    private val validatePasswordUseCase: ValidatePasswordUseCase,
+    private val getBranchesUseCase: GetBranchesUseCase
 ) : ViewModel() {
 
     private val _userProfileData = MutableLiveData<Result<UserProfile>>()
@@ -63,6 +65,12 @@ class LoginViewModel @Inject constructor(
                     _emailValidateData.value = false
                 }
             }
+        }
+    }
+
+    fun getBranches() {
+        viewModelScope.launch {
+            getBranchesUseCase()
         }
     }
 }
