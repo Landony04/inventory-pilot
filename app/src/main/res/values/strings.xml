@@ -94,4 +94,5 @@
     <!-- SALE DETAIL   -->
     <string name="text_title_sale_detail">Detalles de la venta</string>
     <string name="text_title_sale">Venta</string>
+    <string name="text_error_get_sale_by_id">Ocurrió un error al obtener la venta</string>
 </resources>

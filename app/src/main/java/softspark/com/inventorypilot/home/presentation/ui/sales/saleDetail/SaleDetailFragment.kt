@@ -67,8 +67,7 @@ class SaleDetailFragment : Fragment() {
     private fun handleGetSaleDetail(result: Result<SaleDetail>) {
         when (result) {
             is Result.Error -> {
-                showToast("Ocurrió un error al obtener la venta - ${result.exception.message}")
-                println("Error: ${result.exception.message}")
+                showToast(getString(R.string.text_error_get_sale_by_id))
                 findNavController().navigateUp()
             }
 
