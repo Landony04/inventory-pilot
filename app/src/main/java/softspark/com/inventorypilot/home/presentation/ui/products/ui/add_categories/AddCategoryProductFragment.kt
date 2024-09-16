@@ -50,10 +50,17 @@ class AddCategoryProductFragment : Fragment() {
     }
 
     private fun addCategory() {
-        showAndHideProgressBarSave(true)
-        addCategoryProductViewModel.addCategory(
-            binding?.nameCategoryTie?.text?.toString() ?: EMPTY_STRING
-        )
+        showAlertDialog(
+            getString(R.string.text_title_add_category),
+            getString(R.string.text_warning_add_category),
+            getString(R.string.text_save),
+            getString(R.string.text_no)
+        ) {
+            showAndHideProgressBarSave(true)
+            addCategoryProductViewModel.addCategory(
+                binding?.nameCategoryTie?.text?.toString() ?: EMPTY_STRING
+            )
+        }
     }
 
     private fun hideActionBarOptions() {
@@ -109,5 +116,23 @@ class AddCategoryProductFragment : Fragment() {
         super.onDestroyView()
         addCategoryProductViewModel.categoryData.removeObservers(viewLifecycleOwner)
         _binding = null
+    }
+
+    private fun showAlertDialog(
+        title: String,
+        message: String,
+        positiveButton: String,
+        negativeButton: String?,
+        onAcceptedClicked: (() -> Unit)
+    ) {
+        dialogBuilder.showAlertDialog(
+            requireContext(),
+            title,
+            message,
+            positiveButton,
+            negativeButton,
+            { onAcceptedClicked() },
+            { }
+        )
     }
 }

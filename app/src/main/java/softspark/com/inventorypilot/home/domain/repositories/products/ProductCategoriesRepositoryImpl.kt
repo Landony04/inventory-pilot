@@ -63,7 +63,7 @@ class ProductCategoriesRepositoryImpl @Inject constructor(
 
             val localResult =
                 productCategoryDao.getProductCategories()
-                    .map { category -> category.toCategoryDomain() }
+                    .map { category -> category.toCategoryDomain() }.sortedBy { it.name }
 
             emit(Result.Success(data = ArrayList(localResult)))
         }.onStart {

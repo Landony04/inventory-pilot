@@ -75,16 +75,28 @@ class AddProductFragment : Fragment(), ItemSelectedFromSpinnerListener {
     }
 
     private fun addProduct() {
-        showAndHideButtonSave(false)
-        addProductViewModel.addOrUpdateProduct(
-            productCategoryIdCurrent,
-            binding?.nameProductTie?.text?.toString() ?: EMPTY_STRING,
-            binding?.descriptionProductTie?.text?.toString() ?: EMPTY_STRING,
-            binding?.stockProductTie?.text?.toString() ?: EMPTY_STRING,
-            binding?.priceProductTie?.text?.toString() ?: EMPTY_STRING,
-            args.productId,
-            args.productId != null
-        )
+        val title =
+            if (args.productId != null) getString(R.string.text_title_modified_product) else getString(
+                R.string.text_title_add_product
+            )
+
+        showAlertDialog(
+            title,
+            getString(R.string.text_message_add_product),
+            getString(R.string.text_save),
+            getString(R.string.text_no)
+        ) {
+            showAndHideButtonSave(false)
+            addProductViewModel.addOrUpdateProduct(
+                productCategoryIdCurrent,
+                binding?.nameProductTie?.text?.toString() ?: EMPTY_STRING,
+                binding?.descriptionProductTie?.text?.toString() ?: EMPTY_STRING,
+                binding?.stockProductTie?.text?.toString() ?: EMPTY_STRING,
+                binding?.priceProductTie?.text?.toString() ?: EMPTY_STRING,
+                args.productId,
+                args.productId != null
+            )
+        }
     }
 
     private fun getProductById(productId: String) {
@@ -248,5 +260,23 @@ class AddProductFragment : Fragment(), ItemSelectedFromSpinnerListener {
             val selectedCategory = parent?.getItemAtPosition(position) as ProductCategory
             productCategoryIdCurrent = selectedCategory.id
         }
+    }
+
+    private fun showAlertDialog(
+        title: String,
+        message: String,
+        positiveButton: String,
+        negativeButton: String?,
+        onAcceptedClicked: (() -> Unit)
+    ) {
+        dialogBuilder.showAlertDialog(
+            requireContext(),
+            title,
+            message,
+            positiveButton,
+            negativeButton,
+            { onAcceptedClicked() },
+            { }
+        )
     }
 }

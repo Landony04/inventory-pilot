@@ -124,7 +124,15 @@ class HomeActivity : AppCompatActivity() {
             }
 
             R.id.action_logout -> {
-                doLogout()
+                dialogBuilder.showAlertDialog(
+                    this,
+                    getString(R.string.text_title_logout),
+                    getString(R.string.text_message_logout),
+                    getString(R.string.text_yes),
+                    getString(R.string.text_no),
+                    { doLogout() },
+                    { }
+                )
                 true
             }
 

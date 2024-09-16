@@ -34,6 +34,12 @@
     <string name="product_image_description">product_image</string>
     <string name="text_total_amount_sale">Total: GTQ %1$s</string>
     <string name="text_delete_item_from_sale_success">Producto eliminado exitosamente.</string>
+    <string name="text_sale_successfully">Venta realizada exitosamente</string>
+    <string name="text_title_finish_sale">Finalizar Venta</string>
+    <string name="text_title_cancel_sale">Cancelar Venta</string>
+    <string name="text_message_finish_sale">¿Desea finalizar la venta?</string>
+    <string name="text_message_cancel_sale">¿Desea cancelar la venta?</string>
+    <string name="text_error_get_cart">Error al obtener el carrito.</string>
 
     <!-- ADD PRODUCTS   -->
     <string name="title_action_bar_add_product">Agregar producto</string>
@@ -49,6 +55,9 @@
     <string name="hint_text_add_description_product">Ingresa la descripción del producto</string>
     <string name="hint_text_add_price_product">Ingresa el precio del producto</string>
     <string name="hint_text_add_quantity_product">Ingresa la cantidad del producto</string>
+    <string name="text_title_add_product">Agregar producto</string>
+    <string name="text_title_modified_product">Modificar producto</string>
+    <string name="text_message_add_product">¿Seguro que toda la informacioón es correcta?</string>
 
     <!-- ADD DISPATCHERS   -->
     <string name="text_add_dispatchers">Agregar usuario</string>
@@ -68,6 +77,8 @@
     <string name="text_dispatcher_role">Despachador</string>
     <string name="text_all_roles">Todos los roles</string>
     <string name="text_title_add_filter">Aplicar filtro</string>
+    <string name="text_title_add_user">Agregar Usuario</string>
+    <string name="text_message_add_user">¿Desea agregar el usuario?</string>
 
     <!-- UPDATE PRODUCTS   -->
     <string name="text_modified_product_successfully">Producto modificado exitosamente.</string>
@@ -77,8 +88,12 @@
     <string name="text_two_values">%1$s %2$s</string>
     <string name="title_action_bar_users">Listado de usuarios</string>
     <string name="text_error_get_users">Hubo un problema al obtener los usuarios.</string>
+    <string name="text_modified_user_successfully">Usuario modificado exitosamente.</string>
+    <string name="text_message_user">¿Está seguro de %1$s a este usuario?</string>
 
     <!-- LOGOUT   -->
+    <string name="text_title_logout">Cerrar sesión</string>
+    <string name="text_message_logout">¿Estás seguro de cerrar sesión?</string>
     <string name="text_logout">Cerrar sesión</string>
     <string name="text_failure_logout">No se pudo cerrar sesión.</string>
     <string name="text_success_logout">Sesión cerrada con exito.</string>
@@ -90,9 +105,14 @@
     <string name="text_name_empty_error">El campo no puede estar vacío.</string>
     <string name="text_button_disabled">Deshabilitar</string>
     <string name="text_button_enabled">Habilitar</string>
+    <string name="text_title_add_category">Agregar categoría</string>
+    <string name="text_warning_add_category">¿Desea agregar esta categoría?</string>
 
     <!-- SALE DETAIL   -->
     <string name="text_title_sale_detail">Detalles de la venta</string>
     <string name="text_title_sale">Venta</string>
     <string name="text_error_get_sale_by_id">Ocurrió un error al obtener la venta</string>
+
+    <string name="text_yes">Si</string>
+    <string name="text_no">No</string>
 </resources>

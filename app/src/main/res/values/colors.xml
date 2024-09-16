@@ -2,35 +2,35 @@
 <resources>
     <!-- Primary Palette -->
     <color name="colorPrimary">#4CAF50</color> <!-- Green -->
-    <color name="colorPrimaryDark">#388E3C</color> <!-- Dark Green -->
-    <color name="colorAccent">#FFEB3B</color> <!-- Yellow -->
+    <!-- Dark Green -->
+    <!-- Yellow -->
 
     <!-- Secondary Palette -->
     <color name="colorSecondary">#8BC34A</color> <!-- Light Green -->
-    <color name="colorSecondaryDark">#689F38</color> <!-- Dark Light Green -->
+    <!-- Dark Light Green -->
 
     <!-- Text Colors -->
-    <color name="colorTextPrimary">#212121</color> <!-- Dark Gray -->
-    <color name="colorTextSecondary">#757575</color> <!-- Medium Gray -->
-    <color name="colorTextHint">#BDBDBD</color> <!-- Light Gray -->
+    <!-- Dark Gray -->
+    <!-- Medium Gray -->
+    <!-- Light Gray -->
 
     <!-- Background Colors -->
     <color name="colorBackground">#FFFFFF</color> <!-- White -->
-    <color name="colorSurface">#F5F5F5</color> <!-- Light Gray -->
+    <!-- Light Gray -->
 
     <!-- Error Colors -->
     <color name="colorError">#D32F2F</color> <!-- Red -->
 
     <!-- Custom Colors -->
-    <color name="colorSuccess">#81C784</color> <!-- Light Green (Success) -->
+    <!-- Light Green (Success) -->
     <color name="colorWarning">#FFA000</color> <!-- Amber (Warning) -->
-    <color name="colorInfo">#29B6F6</color> <!-- Light Blue (Info) -->
+    <!-- Light Blue (Info) -->
 
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBlack">#000000</color>
 
     <color name="buttonTextColor">#FFFFFF</color> <!-- White -->
-    <color name="buttonBackgroundColor">#4CAF50</color> <!-- Green -->
+    <!-- Green -->
     <color name="buttonBackgroundColorPressed">#388E3C</color> <!-- Dark Green -->
     <color name="buttonBorderColor">#388E3C</color> <!-- Dark Green -->
 

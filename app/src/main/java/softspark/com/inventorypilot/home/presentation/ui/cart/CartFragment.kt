@@ -57,7 +57,7 @@ class CartFragment : Fragment(), CartSelectedEvents {
             cartAdapter.currentList.toList(),
             calculateTotalAmount(cartAdapter.currentList)
         )
-        showToast("Venta realizada exitosamente.")
+        showToast(getString(R.string.text_sale_successfully))
     }
 
     private fun emptyCart() {
@@ -80,7 +80,10 @@ class CartFragment : Fragment(), CartSelectedEvents {
 
     private fun handleGetCart(result: Result<ArrayList<CartItem>>) {
         when (result) {
-            is Result.Error -> println("Error al obtener el carro")
+            is Result.Error -> {
+                getCart()
+                showToast(getString(R.string.text_error_get_cart))
+            }
 
             is Result.Success -> validateIfShowSale(result.data)
 
@@ -102,12 +105,26 @@ class CartFragment : Fragment(), CartSelectedEvents {
 
     private fun initListeners() {
         binding?.cancelSaleButton?.setOnClickListener {
-            emptyCart()
+            showAlertDialog(
+                getString(R.string.text_title_cancel_sale),
+                getString(R.string.text_message_cancel_sale),
+                getString(R.string.text_yes),
+                getString(R.string.text_no)
+            ) {
+                emptyCart()
+            }
         }
 
         binding?.finishSaleButton?.setOnClickListener {
-            addSale()
-            emptyCart()
+            showAlertDialog(
+                getString(R.string.text_title_finish_sale),
+                getString(R.string.text_message_finish_sale),
+                getString(R.string.text_yes),
+                getString(R.string.text_no)
+            ) {
+                addSale()
+                emptyCart()
+            }
         }
 
         cartAdapter.initListener(this)
@@ -120,7 +137,7 @@ class CartFragment : Fragment(), CartSelectedEvents {
 
     private fun setUpObservers() {
         (requireActivity() as? AppCompatActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(false)
-        
+
         cartViewModel.emptyCartData.observe(viewLifecycleOwner, ::handleEmptyCart)
 
         cartViewModel.getCartData.observe(viewLifecycleOwner, ::handleGetCart)
@@ -170,5 +187,23 @@ class CartFragment : Fragment(), CartSelectedEvents {
         if (cartAdapter.currentList.size <= VALUE_ONE) {
             getCart()
         }
+    }
+
+    private fun showAlertDialog(
+        title: String,
+        message: String,
+        positiveButton: String,
+        negativeButton: String?,
+        onAcceptedClicked: (() -> Unit)
+    ) {
+        dialogBuilder.showAlertDialog(
+            requireContext(),
+            title,
+            message,
+            positiveButton,
+            negativeButton,
+            { onAcceptedClicked() },
+            { }
+        )
     }
 }

@@ -12,4 +12,14 @@ interface DialogBuilder {
         context: Context,
         message: String
     )
+
+    fun showAlertDialog(
+        context: Context,
+        title: String,
+        message: String,
+        positiveButtonText: String,
+        textNegative: String? = null,
+        onAcceptedClicked: (() -> Unit)? = null,
+        onCancelClicked: (() -> Unit)? = null
+    )
 }
