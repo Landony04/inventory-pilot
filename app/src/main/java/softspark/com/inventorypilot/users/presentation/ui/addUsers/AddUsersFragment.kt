@@ -118,14 +118,21 @@ class AddUsersFragment : Fragment(), ItemSelectedFromSpinnerListener {
     }
 
     private fun saveUser() {
-        showAndHideProgressBarSave(true)
-        addUserViewModel.addUser(
-            binding?.emailUserTie?.text?.toString() ?: EMPTY_STRING,
-            binding?.firstNameUserTie?.text?.toString() ?: EMPTY_STRING,
-            binding?.lastNameUserTie?.text?.toString() ?: EMPTY_STRING,
-            roleSelectCurrent,
-            binding?.cellphoneUserTie?.text?.toString() ?: EMPTY_STRING
-        )
+        showAlertDialog(
+            getString(R.string.text_title_add_user),
+            getString(R.string.text_message_add_user),
+            getString(R.string.text_save),
+            getString(R.string.text_no)
+        ) {
+            showAndHideProgressBarSave(true)
+            addUserViewModel.addUser(
+                binding?.emailUserTie?.text?.toString() ?: EMPTY_STRING,
+                binding?.firstNameUserTie?.text?.toString() ?: EMPTY_STRING,
+                binding?.lastNameUserTie?.text?.toString() ?: EMPTY_STRING,
+                roleSelectCurrent,
+                binding?.cellphoneUserTie?.text?.toString() ?: EMPTY_STRING
+            )
+        }
     }
 
     private fun showAndHideProgressBarSave(show: Boolean) {
@@ -167,5 +174,23 @@ class AddUsersFragment : Fragment(), ItemSelectedFromSpinnerListener {
             roleSelectCurrent = allRolesMap.filterValues { it == selectedValue }.keys.first()
             println("Role selected: $selectedValue - $roleSelectCurrent")
         }
+    }
+
+    private fun showAlertDialog(
+        title: String,
+        message: String,
+        positiveButton: String,
+        negativeButton: String?,
+        onAcceptedClicked: (() -> Unit)
+    ) {
+        dialogBuilder.showAlertDialog(
+            requireContext(),
+            title,
+            message,
+            positiveButton,
+            negativeButton,
+            { onAcceptedClicked() },
+            { }
+        )
     }
 }

@@ -51,4 +51,31 @@ class DialogBuilderImpl @Inject constructor() : DialogBuilder {
     override fun showToast(context: Context, message: String) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
+
+    override fun showAlertDialog(
+        context: Context,
+        title: String,
+        message: String,
+        positiveButtonText: String,
+        textNegative: String?,
+        onAcceptedClicked: (() -> Unit)?,
+        onCancelClicked: (() -> Unit)?
+    ) {
+        CreateDialogBuilder().createSimpleDialog(
+            title,
+            message,
+            positiveButtonText,
+            textNegative,
+            context,
+            object : InterfaceDialog {
+                override fun onConfirm() {
+                    onAcceptedClicked?.let { it() }
+                }
+
+                override fun onCancel() {
+                    onCancelClicked?.let { it() }
+                }
+            }
+        )
+    }
 }

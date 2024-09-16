@@ -20,6 +20,7 @@ import softspark.com.inventorypilot.login.domain.models.UserProfile
 import softspark.com.inventorypilot.users.presentation.adapters.UsersAdapter
 import softspark.com.inventorypilot.users.presentation.ui.utils.UserSelectedListener
 import softspark.com.inventorypilot.users.presentation.viewModel.UsersViewModel
+import softspark.com.inventorypilot.users.utils.UserConstants.USER_STATUS_ENABLED
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -120,13 +121,48 @@ class UsersFragment : Fragment(), UserSelectedListener {
     }
 
     override fun disableOrEnabledUser(user: UserProfile) {
-        usersViewModel.updateUserStatus(user)
-        updateUserInList(user)
+        val title =
+            if (user.status != USER_STATUS_ENABLED) getString(R.string.text_button_disabled) else getString(
+                R.string.text_button_enabled
+            )
+
+        val message = String.format(
+            getString(R.string.text_message_user),
+            title.lowercase()
+        )
+
+        showAlertDialog(
+            "$title usuario",
+            message,
+            getString(R.string.text_yes),
+            getString(R.string.text_no)
+        ) {
+            usersViewModel.updateUserStatus(user)
+            updateUserInList(user)
+        }
     }
 
     private fun updateUserInList(user: UserProfile) {
         val position = usersAdapter.currentList.indexOfFirst { it.id == user.id }
         usersAdapter.updateItem(position, user)
-        showToast("Usuario modificado exitosamente.")
+        showToast(getString(R.string.text_modified_user_successfully))
+    }
+
+    private fun showAlertDialog(
+        title: String,
+        message: String,
+        positiveButton: String,
+        negativeButton: String?,
+        onAcceptedClicked: (() -> Unit)
+    ) {
+        dialogBuilder.showAlertDialog(
+            requireContext(),
+            title,
+            message,
+            positiveButton,
+            negativeButton,
+            { onAcceptedClicked() },
+            { }
+        )
     }
 }
