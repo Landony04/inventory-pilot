@@ -4,6 +4,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferences
 import softspark.com.inventorypilot.home.data.local.dao.products.ProductCategoryDao
 import softspark.com.inventorypilot.home.data.local.dao.products.ProductDao
 import softspark.com.inventorypilot.home.data.local.dao.sales.SalesDao
@@ -23,29 +24,32 @@ object HomeWorkerModule {
     @Provides
     @Singleton
     fun provideCategoryProductWorkerFactory(
+        preferences: InventoryPilotPreferences,
         productsApi: ProductsApi,
         productCategoryDao: ProductCategoryDao
     ): CustomWorkerFactoryCategoryProduct = CustomWorkerFactoryCategoryProduct(
-        productsApi, productCategoryDao
+        preferences, productsApi, productCategoryDao
     )
 
     @Provides
     @Singleton
     fun provideWorkerFactorySales(
+        preferences: InventoryPilotPreferences,
         salesApi: SalesApi,
         salesDao: SalesDao,
         productDao: ProductDao
     ): CustomWorkerFactory = CustomWorkerFactory(
-        salesApi, salesDao, productDao
+        preferences, salesApi, salesDao, productDao
     )
 
     @Provides
     @Singleton
     fun provideWorkerFactoryProduct(
+        preferences: InventoryPilotPreferences,
         productsApi: ProductsApi,
         productDao: ProductDao
     ): CustomWorkerFactoryProduct = CustomWorkerFactoryProduct(
-        productsApi, productDao
+        preferences, productsApi, productDao
     )
 
     @Provides

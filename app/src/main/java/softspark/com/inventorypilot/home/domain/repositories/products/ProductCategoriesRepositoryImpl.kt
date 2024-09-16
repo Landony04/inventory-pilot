@@ -21,6 +21,8 @@ import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.common.utils.Constants
 import softspark.com.inventorypilot.common.utils.Constants.FIVE_MINUTES
 import softspark.com.inventorypilot.common.utils.NetworkUtils
+import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferences
+import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferencesImpl.Companion.USER_BRANCH_ID_PREFERENCE
 import softspark.com.inventorypilot.home.data.local.dao.products.ProductCategoryDao
 import softspark.com.inventorypilot.home.data.mapper.products.toAddCategoryProductRequest
 import softspark.com.inventorypilot.home.data.mapper.products.toCategoryDomain
@@ -36,6 +38,7 @@ import java.time.Duration
 import javax.inject.Inject
 
 class ProductCategoriesRepositoryImpl @Inject constructor(
+    private val preferences: InventoryPilotPreferences,
     private val dispatchers: DispatcherProvider,
     private val productsApi: ProductsApi,
     private val productCategoryDao: ProductCategoryDao,
@@ -47,7 +50,10 @@ class ProductCategoriesRepositoryImpl @Inject constructor(
 
         delay(Constants.DELAY_TIME)
         resultOf {
-            productsApi.insertCategory(productCategory.toAddCategoryProductRequest(productCategory.id))
+            productsApi.insertCategory(
+                preferences.getValuesString(USER_BRANCH_ID_PREFERENCE),
+                productCategory.toAddCategoryProductRequest(productCategory.id)
+            )
         }.onFailure {
             productCategoryDao.insertCategoryProductSync(productCategory.toCategorySyncEntity())
         }
@@ -57,7 +63,10 @@ class ProductCategoriesRepositoryImpl @Inject constructor(
         flow<Result<ArrayList<ProductCategory>>> {
 
             if (networkUtils.isInternetAvailable()) {
-                val apiResult = productsApi.getProductCategories().toCategoryListDomain()
+                val apiResult = productsApi.getProductCategories(
+                    preferences.getValuesString(USER_BRANCH_ID_PREFERENCE)
+                ).toCategoryListDomain()
+
                 insertProductCategories(apiResult)
             }
 

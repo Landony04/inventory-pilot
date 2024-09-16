@@ -17,6 +17,7 @@ class InventoryPilotPreferencesImpl @Inject constructor(
         //Preferences
         const val USER_ID_PREFERENCE = "user_id"
         const val USER_ROLE_PREFERENCE = "role"
+        const val USER_BRANCH_ID_PREFERENCE = "branch_id"
     }
 
     init {

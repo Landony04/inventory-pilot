@@ -6,5 +6,6 @@ data class UserProfileDto(
     val lastName: String,
     val role: String,
     val cellPhone: String,
-    val status: String
+    val status: String,
+    val branchId: String
 )

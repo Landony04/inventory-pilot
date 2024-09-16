@@ -7,5 +7,6 @@ data class UserProfile(
     val lastName: String,
     val role: String,
     var cellPhone: String,
-    var status: String
+    var status: String,
+    val branchId: String
 )

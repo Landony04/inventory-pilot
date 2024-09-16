@@ -12,6 +12,7 @@ import softspark.com.inventorypilot.common.data.local.InventoryPilotDatabase
 import softspark.com.inventorypilot.common.data.local.dao.UserProfileDao
 import softspark.com.inventorypilot.common.data.util.DispatcherProvider
 import softspark.com.inventorypilot.common.utils.NetworkUtils
+import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferences
 import softspark.com.inventorypilot.home.data.local.dao.cart.CartDao
 import softspark.com.inventorypilot.home.data.local.dao.products.ProductCategoryDao
 import softspark.com.inventorypilot.home.data.local.dao.products.ProductDao
@@ -36,6 +37,7 @@ object HomeRepositoryModule {
     @Provides
     @Singleton
     fun provideProductCategoriesRepository(
+        preferences: InventoryPilotPreferences,
         dispatcherProvider: DispatcherProvider,
         productsApi: ProductsApi,
         productCategoryDao: ProductCategoryDao,
@@ -43,6 +45,7 @@ object HomeRepositoryModule {
         workManager: WorkManager
     ): ProductCategoriesRepository =
         ProductCategoriesRepositoryImpl(
+            preferences,
             dispatcherProvider,
             productsApi,
             productCategoryDao,
@@ -53,6 +56,7 @@ object HomeRepositoryModule {
     @Provides
     @Singleton
     fun provideProductsRepository(
+        preferences: InventoryPilotPreferences,
         dispatcherProvider: DispatcherProvider,
         productsApi: ProductsApi,
         productDao: ProductDao,
@@ -60,6 +64,7 @@ object HomeRepositoryModule {
         workManager: WorkManager
     ): ProductsRepository =
         ProductsRepositoryImpl(
+            preferences,
             dispatcherProvider,
             productsApi,
             productDao,
@@ -70,6 +75,7 @@ object HomeRepositoryModule {
     @Provides
     @Singleton
     fun provideSalesRepository(
+        preferences: InventoryPilotPreferences,
         dispatcherProvider: DispatcherProvider,
         productDao: ProductDao,
         salesApi: SalesApi,
@@ -79,6 +85,7 @@ object HomeRepositoryModule {
         workManager: WorkManager
     ): SalesRepository =
         SalesRepositoryImpl(
+            preferences,
             dispatcherProvider,
             networkUtils,
             productDao,

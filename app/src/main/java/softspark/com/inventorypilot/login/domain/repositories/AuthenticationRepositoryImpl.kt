@@ -14,6 +14,7 @@ import softspark.com.inventorypilot.common.data.util.DispatcherProvider
 import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.common.utils.NetworkUtils
 import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferences
+import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferencesImpl.Companion.USER_BRANCH_ID_PREFERENCE
 import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferencesImpl.Companion.USER_ID_PREFERENCE
 import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferencesImpl.Companion.USER_ROLE_PREFERENCE
 import softspark.com.inventorypilot.login.data.mapper.toDomain
@@ -45,6 +46,7 @@ class AuthenticationRepositoryImpl @Inject constructor(
 
             inventoryPilotPreferences.setValuesString(USER_ID_PREFERENCE, user.id)
             inventoryPilotPreferences.setValuesString(USER_ROLE_PREFERENCE, user.role)
+            inventoryPilotPreferences.setValuesString(USER_BRANCH_ID_PREFERENCE, user.branchId)
             emit(Result.Success(data = user))
         }.onStart {
             emit(Result.Loading)

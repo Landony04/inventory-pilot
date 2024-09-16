@@ -35,7 +35,8 @@ class AddUserViewModel @Inject constructor(
         firstName: String,
         lastName: String,
         role: String,
-        cellPhone: String
+        cellPhone: String,
+        branchId: String
     ) {
         viewModelScope.launch {
             validateEmailUseCase(email).collect { isValid ->
@@ -55,7 +56,8 @@ class AddUserViewModel @Inject constructor(
                                         lastName = lastName,
                                         role = role,
                                         cellPhone = cellPhone,
-                                        status = UserConstants.USER_STATUS_ENABLED
+                                        status = UserConstants.USER_STATUS_ENABLED,
+                                        branchId = branchId
                                     )
                                 )
                                 _validateUserData.value = validateResult
