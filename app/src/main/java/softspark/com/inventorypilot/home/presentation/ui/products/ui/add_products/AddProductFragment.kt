@@ -7,8 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuHost
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,6 +21,7 @@ import softspark.com.inventorypilot.common.utils.Constants.EMPTY_STRING
 import softspark.com.inventorypilot.common.utils.Constants.VALUE_ZERO
 import softspark.com.inventorypilot.common.utils.components.ItemSelectedFromSpinnerListener
 import softspark.com.inventorypilot.common.utils.components.ItemSelectedSpinner
+import softspark.com.inventorypilot.common.utils.components.MenuProviderUtils
 import softspark.com.inventorypilot.common.utils.dialogs.DialogBuilder
 import softspark.com.inventorypilot.databinding.FragmentAddProductBinding
 import softspark.com.inventorypilot.home.domain.entities.AddProductResult
@@ -57,6 +60,7 @@ class AddProductFragment : Fragment(), ItemSelectedFromSpinnerListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        hideActionBarOptions()
         getArgs()
         getInitialData()
         initListeners()
@@ -151,6 +155,14 @@ class AddProductFragment : Fragment(), ItemSelectedFromSpinnerListener {
 
             Result.Loading -> println("Mostrar progress")
         }
+    }
+
+    private fun hideActionBarOptions() {
+        // Obtener el MenuHost (generalmente es la Activity)
+        val menuHost: MenuHost = requireActivity()
+
+        // Agregar un MenuProvider para gestionar el menú
+        menuHost.addMenuProvider(MenuProviderUtils(), viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     private fun initAdapterSpinner(categories: ArrayList<ProductCategory>) {

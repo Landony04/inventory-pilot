@@ -29,10 +29,10 @@
     <!--CART  -->
     <string name="title_action_bar_cart">Realizar Venta</string>
     <string name="text_button_details">Detalles</string>
-    <string name="text_pay_for_item">GTQ%1$s</string>
+    <string name="text_pay_for_item">GTQ %1$s</string>
     <string name="text_add_product">Agregar</string>
     <string name="product_image_description">product_image</string>
-    <string name="text_total_amount_sale">Total: GTQ%1$s</string>
+    <string name="text_total_amount_sale">Total: GTQ %1$s</string>
     <string name="text_delete_item_from_sale_success">Producto eliminado exitosamente.</string>
 
     <!-- ADD PRODUCTS   -->
@@ -90,4 +90,9 @@
     <string name="text_name_empty_error">El campo no puede estar vacío.</string>
     <string name="text_button_disabled">Deshabilitar</string>
     <string name="text_button_enabled">Habilitar</string>
+
+    <!-- SALE DETAIL   -->
+    <string name="text_title_sale_detail">Detalles de la venta</string>
+    <string name="text_title_sale">Venta</string>
+    <string name="text_error_get_sale_by_id">Ocurrió un error al obtener la venta</string>
 </resources>

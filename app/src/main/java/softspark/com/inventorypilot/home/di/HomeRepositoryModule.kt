@@ -9,6 +9,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import softspark.com.inventorypilot.common.data.local.InventoryPilotDatabase
+import softspark.com.inventorypilot.common.data.local.dao.UserProfileDao
 import softspark.com.inventorypilot.common.data.util.DispatcherProvider
 import softspark.com.inventorypilot.common.utils.NetworkUtils
 import softspark.com.inventorypilot.home.data.local.dao.cart.CartDao
@@ -73,6 +74,7 @@ object HomeRepositoryModule {
         productDao: ProductDao,
         salesApi: SalesApi,
         salesDao: SalesDao,
+        userProfileDao: UserProfileDao,
         networkUtils: NetworkUtils,
         workManager: WorkManager
     ): SalesRepository =
@@ -82,6 +84,7 @@ object HomeRepositoryModule {
             productDao,
             salesApi,
             salesDao,
+            userProfileDao,
             workManager
         )
 

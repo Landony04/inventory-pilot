@@ -19,12 +19,17 @@
     <fragment
         android:id="@+id/navigation_shoping_cart"
         android:name="softspark.com.inventorypilot.home.presentation.ui.cart.CartFragment"
-        tools:layout="@layout/fragment_sales" />
+        tools:layout="@layout/fragment_cart" />
 
     <fragment
         android:id="@+id/navigation_sales"
         android:name="softspark.com.inventorypilot.home.presentation.ui.sales.SalesFragment"
-        tools:layout="@layout/fragment_cart" />
+        tools:layout="@layout/fragment_sales">
+        <action
+            android:id="@+id/action_from_sales_to_sale_detail"
+            app:destination="@id/navigation_sale_detail"
+            app:popUpTo="@id/navigation_sales" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_add_product"
@@ -54,4 +59,15 @@
         android:name="softspark.com.inventorypilot.home.presentation.ui.products.ui.add_categories.AddCategoryProductFragment"
         android:label="@string/text_title_add_categories"
         tools:layout="@layout/fragment_add_category_product" />
+
+    <fragment
+        android:id="@+id/navigation_sale_detail"
+        android:name="softspark.com.inventorypilot.home.presentation.ui.sales.saleDetail.SaleDetailFragment"
+        android:label="@string/text_title_sale_detail"
+        tools:layout="@layout/fragment_sale_detail">
+        <argument
+            android:name="saleId"
+            app:argType="string"
+            app:nullable="false" />
+    </fragment>
 </navigation>

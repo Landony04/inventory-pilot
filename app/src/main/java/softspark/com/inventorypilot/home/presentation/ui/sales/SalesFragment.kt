@@ -7,18 +7,22 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import softspark.com.inventorypilot.R
+import softspark.com.inventorypilot.common.data.extension.formatDateUTCWithoutHours
 import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.common.utils.Constants
+import softspark.com.inventorypilot.common.utils.Constants.EMPTY_STRING
 import softspark.com.inventorypilot.common.utils.dialogs.DialogBuilder
 import softspark.com.inventorypilot.databinding.FragmentSalesBinding
 import softspark.com.inventorypilot.home.domain.models.sales.Sale
+import softspark.com.inventorypilot.home.presentation.ui.utils.SaleSelectedListener
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SalesFragment : Fragment() {
+class SalesFragment : Fragment(), SaleSelectedListener {
 
     private var _binding: FragmentSalesBinding? = null
     private val binding get() = _binding
@@ -57,7 +61,7 @@ class SalesFragment : Fragment() {
 
     private fun getInitialData() {
         salesViewModel.getSalesByDate(
-            salesViewModel.getCurrentDateUtc()
+            salesViewModel.getCurrentDateUtc().formatDateUTCWithoutHours()
         )
     }
 
@@ -65,10 +69,12 @@ class SalesFragment : Fragment() {
         when (result) {
             is Result.Error -> {
                 binding?.salesPb?.visibility = View.GONE
+                showToast(result.exception.message ?: EMPTY_STRING)
                 showAndHideSalesList(arrayListOf())
             }
 
             is Result.Success -> {
+                println("result.data ${result.data}")
                 binding?.salesPb?.visibility = View.GONE
                 salesAdapter.submitList(result.data)
                 showAndHideSalesList(result.data)
@@ -92,6 +98,18 @@ class SalesFragment : Fragment() {
         binding?.filterContainer?.setOnClickListener {
             showDatePicker()
         }
+
+        salesAdapter.initListeners(this)
+    }
+
+    private fun navigateToSaleDetails(saleId: String) {
+        try {
+            val action =
+                SalesFragmentDirections.actionFromSalesToSaleDetail(saleId = saleId)
+            findNavController().navigate(action)
+        } catch (exception: Exception) {
+            showToast(exception.message ?: Constants.EMPTY_STRING)
+        }
     }
 
     private fun setInitDate() {
@@ -103,6 +121,10 @@ class SalesFragment : Fragment() {
             binding?.dateSaleTv?.text = selectedDate
             salesViewModel.getSalesByDate(selectedDateUTC)
         }
+    }
+
+    private fun showToast(message: String) {
+        dialogBuilder.showToast(requireContext(), message)
     }
 
     private fun setUpActionBar() {
@@ -134,5 +156,9 @@ class SalesFragment : Fragment() {
         super.onDestroyView()
         salesViewModel.saleData.removeObservers(viewLifecycleOwner)
         _binding = null
+    }
+
+    override fun showSaleDetails(saleId: String) {
+        navigateToSaleDetails(saleId = saleId)
     }
 }

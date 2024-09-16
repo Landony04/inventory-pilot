@@ -5,7 +5,7 @@ object Constants {
     const val VALUE_ONE = 1
     const val QUERY_LENGTH = 3
     const val UTC_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'"
-    const val UTC_DATE_FORMAT_WITHOUT_HOURS = "yyyy-MM-dd'T''Z'"
+    const val UTC_DATE_FORMAT_WITHOUT_HOURS = "yyyy-MM-dd"
     const val UTC_FORMAT_ID = "UTC"
     const val FRIENDLY_DATE_FORMAT = "dd MMMM yyyy - hh:mm aa"
     const val DD_MMM_DATE_FORMAT = "dd MMM"
@@ -16,4 +16,5 @@ object Constants {
     const val DELAY_TIME = 1000L
     const val FIVE_MINUTES = 5L
     const val RETRY_SEND_DATA_FROM_WORK = 3
+    const val COMPLETED_STATUS = "completed"
 }
