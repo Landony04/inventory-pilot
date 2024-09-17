@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import softspark.com.inventorypilot.common.data.local.dao.BranchDao
 import softspark.com.inventorypilot.common.data.local.dao.UserProfileDao
 import softspark.com.inventorypilot.common.data.util.DispatcherProvider
 import softspark.com.inventorypilot.common.entities.base.Result
@@ -17,16 +18,20 @@ import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPrefe
 import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferencesImpl.Companion.USER_BRANCH_ID_PREFERENCE
 import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferencesImpl.Companion.USER_ID_PREFERENCE
 import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferencesImpl.Companion.USER_ROLE_PREFERENCE
+import softspark.com.inventorypilot.login.data.mapper.toBranchEntity
+import softspark.com.inventorypilot.login.data.mapper.toBranchesDomain
 import softspark.com.inventorypilot.login.data.mapper.toDomain
 import softspark.com.inventorypilot.login.data.mapper.toEntity
 import softspark.com.inventorypilot.login.data.mapper.toUserProfile
 import softspark.com.inventorypilot.login.data.repositories.AuthenticationRepository
+import softspark.com.inventorypilot.login.domain.models.Branch
 import softspark.com.inventorypilot.login.domain.models.UserProfile
 import softspark.com.inventorypilot.login.remote.LoginApi
 import javax.inject.Inject
 
 class AuthenticationRepositoryImpl @Inject constructor(
     private val userDao: UserProfileDao,
+    private val branchDao: BranchDao,
     private val dispatchers: DispatcherProvider,
     private val firebaseAuth: FirebaseAuth,
     private val loginApi: LoginApi,
@@ -68,4 +73,14 @@ class AuthenticationRepositoryImpl @Inject constructor(
         }.catch {
             emit(Result.Error(it))
         }.flowOn(dispatchers.io())
+
+    override suspend fun getBranches() = withContext(dispatchers.io()) {
+        val branches = loginApi.getBranches().toBranchesDomain()
+
+        insertBranches(branches)
+    }
+
+    override suspend fun insertBranches(branches: List<Branch>) = withContext(dispatchers.io()) {
+        branchDao.insertBranch(branches.map { branch -> async { branch.toBranchEntity() }.await() })
+    }
 }

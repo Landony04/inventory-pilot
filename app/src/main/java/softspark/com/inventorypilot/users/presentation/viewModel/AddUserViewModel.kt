@@ -10,10 +10,13 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import softspark.com.inventorypilot.R
 import softspark.com.inventorypilot.common.domain.useCases.GenerateIdUseCase
+import softspark.com.inventorypilot.common.entities.base.Result
+import softspark.com.inventorypilot.login.domain.models.Branch
 import softspark.com.inventorypilot.login.domain.models.UserProfile
 import softspark.com.inventorypilot.login.domain.useCases.authentication.ValidateEmailUseCase
 import softspark.com.inventorypilot.users.domain.entities.AddUserResult
 import softspark.com.inventorypilot.users.domain.useCases.AddUserUseCase
+import softspark.com.inventorypilot.users.domain.useCases.GetBranchesFromLocalUseCase
 import softspark.com.inventorypilot.users.domain.useCases.ValidateUserUseCase
 import softspark.com.inventorypilot.users.utils.UserConstants
 import javax.inject.Inject
@@ -23,12 +26,16 @@ class AddUserViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val addUserUseCase: AddUserUseCase,
     private val generateIdUseCase: GenerateIdUseCase,
+    private val getBranchesFromLocalUseCase: GetBranchesFromLocalUseCase,
     private val validateUserProfileUseCase: ValidateUserUseCase,
     private val validateEmailUseCase: ValidateEmailUseCase
 ) : ViewModel() {
 
     private val _validateUserData = MutableLiveData<AddUserResult>()
     val validateUserData: LiveData<AddUserResult> get() = _validateUserData
+
+    private val _branchesData = MutableLiveData<Result<List<Branch>>>()
+    val branchesData: LiveData<Result<List<Branch>>> get() = _branchesData
 
     fun addUser(
         email: String,
@@ -42,7 +49,7 @@ class AddUserViewModel @Inject constructor(
             validateEmailUseCase(email).collect { isValid ->
                 if (isValid) {
                     validateUserProfileUseCase(
-                        email, firstName, lastName, role, cellPhone
+                        email, firstName, lastName, role, cellPhone, branchId
                     ).collect { validateResult ->
                         when (validateResult) {
                             is AddUserResult.Invalid -> _validateUserData.value = validateResult
@@ -68,6 +75,14 @@ class AddUserViewModel @Inject constructor(
                     _validateUserData.value =
                         AddUserResult.Invalid(context.getString(R.string.text_error_invalid_email))
                 }
+            }
+        }
+    }
+
+    fun getBranches() {
+        viewModelScope.launch {
+            getBranchesFromLocalUseCase().collect { result ->
+                _branchesData.value = result
             }
         }
     }
