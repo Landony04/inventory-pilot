@@ -14,7 +14,7 @@
 
     <!-- PRODUCTS   -->
     <string name="title_action_bar_products">Listado de productos</string>
-    <string name="title_first_option_spinner">Todas las categorías</string>
+    <string name="title_first_option_spinner">Selecciona una categoría</string>
     <string name="hint_search_product">Buscar producto</string>
 
     <!-- SALES   -->
@@ -65,6 +65,7 @@
     <string name="text_error_without_first_name">Debes agregar el primer nombres.</string>
     <string name="text_error_without_last_name">Debes agregar apellido.</string>
     <string name="text_error_without_role">Debes seleccionar un rol para el usuario.</string>
+    <string name="text_error_without_branch">Debes seleccionar una sucursal para el usuario.</string>
     <string name="text_error_without_cellphone">Debes agregar un número de teléfono.</string>
     <string name="text_error_without_email">Debes agregar un correo eléctronico.</string>
     <string name="text_save">Guardar</string>
@@ -75,10 +76,12 @@
     <string name="text_add_user_successfully">Usuario agregado exitosamente.</string>
     <string name="text_owner_role">Dueño</string>
     <string name="text_dispatcher_role">Despachador</string>
-    <string name="text_all_roles">Todos los roles</string>
+    <string name="text_all_roles">Selecciona un rol</string>
     <string name="text_title_add_filter">Aplicar filtro</string>
     <string name="text_title_add_user">Agregar Usuario</string>
     <string name="text_message_add_user">¿Desea agregar el usuario?</string>
+    <string name="text_error_get_branches">No se pudieron obtener las sucursales</string>
+    <string name="title_first_option_branch_spinner">Selecciona una sucursal</string>
 
     <!-- UPDATE PRODUCTS   -->
     <string name="text_modified_product_successfully">Producto modificado exitosamente.</string>

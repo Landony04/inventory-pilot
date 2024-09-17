@@ -5,9 +5,9 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import softspark.com.inventorypilot.common.data.local.dao.BranchDao
 import softspark.com.inventorypilot.common.data.local.dao.UserProfileDao
 import softspark.com.inventorypilot.common.data.util.DispatcherProvider
-import softspark.com.inventorypilot.common.utils.NetworkUtils
 import softspark.com.inventorypilot.users.data.local.dao.UserDao
 import softspark.com.inventorypilot.users.data.repositories.UserRepository
 import softspark.com.inventorypilot.users.domain.repositories.UserRepositoryImpl
@@ -24,15 +24,15 @@ object UserRepositoryModule {
         dispatcherProvider: DispatcherProvider,
         userApi: UserApi,
         userDao: UserDao,
+        branchDao: BranchDao,
         userProfileDao: UserProfileDao,
-        networkUtils: NetworkUtils,
         workerManager: WorkManager
     ): UserRepository = UserRepositoryImpl(
         dispatcherProvider,
         userApi,
         userDao,
+        branchDao,
         userProfileDao,
-        networkUtils,
         workerManager
     )
 }

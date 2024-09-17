@@ -9,6 +9,7 @@ interface ValidateUserUseCase {
         firstName: String,
         lastName: String,
         role: String,
-        cellPhone: String
+        cellPhone: String,
+        branch: String
     ): Flow<AddUserResult>
 }

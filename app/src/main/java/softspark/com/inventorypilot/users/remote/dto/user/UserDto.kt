@@ -6,5 +6,6 @@ data class UserDto(
     val lastName: String? = null,
     val role: String? = null,
     val cellPhone: String? = null,
-    val status: String? = null
+    val status: String? = null,
+    val branchId: String? = null
 )

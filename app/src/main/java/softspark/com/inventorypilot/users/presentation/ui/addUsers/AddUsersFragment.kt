@@ -15,14 +15,19 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import softspark.com.inventorypilot.R
+import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.common.utils.Constants
 import softspark.com.inventorypilot.common.utils.Constants.EMPTY_STRING
+import softspark.com.inventorypilot.common.utils.Constants.VALUE_ZERO
 import softspark.com.inventorypilot.common.utils.components.ItemSelectedFromSpinnerListener
 import softspark.com.inventorypilot.common.utils.components.ItemSelectedSpinner
 import softspark.com.inventorypilot.common.utils.components.MenuProviderUtils
 import softspark.com.inventorypilot.common.utils.dialogs.DialogBuilder
 import softspark.com.inventorypilot.databinding.FragmentAddUsersBinding
+import softspark.com.inventorypilot.home.domain.models.products.ProductCategory
+import softspark.com.inventorypilot.login.domain.models.Branch
 import softspark.com.inventorypilot.users.domain.entities.AddUserResult
+import softspark.com.inventorypilot.users.presentation.adapters.BranchSpinnerAdapter
 import softspark.com.inventorypilot.users.presentation.viewModel.AddUserViewModel
 import javax.inject.Inject
 
@@ -39,6 +44,7 @@ class AddUsersFragment : Fragment(), ItemSelectedFromSpinnerListener {
 
     private var userInteraction = false
     private var roleSelectCurrent = EMPTY_STRING
+    private var branchSelectCurrent = EMPTY_STRING
     private lateinit var allRolesMap: Map<String, String>
 
     override fun onCreateView(
@@ -66,6 +72,8 @@ class AddUsersFragment : Fragment(), ItemSelectedFromSpinnerListener {
             Constants.DISPATCHER_ROLE to getString(R.string.text_dispatcher_role),
             Constants.OWNER_ROLE to getString(R.string.text_owner_role)
         )
+
+        addUserViewModel.getBranches()
     }
 
     private fun initAdapterSpinner() {
@@ -101,8 +109,43 @@ class AddUsersFragment : Fragment(), ItemSelectedFromSpinnerListener {
         }
     }
 
+    private fun handleGetBranches(result: Result<List<Branch>>) {
+        when (result) {
+            is Result.Error -> {
+                showToast(getString(R.string.text_error_get_branches))
+                findNavController().navigateUp()
+            }
+
+            is Result.Success -> initAdapterSpinner(ArrayList(result.data))
+
+            Result.Loading -> println("Mostrar progress")
+        }
+    }
+
+    private fun initAdapterSpinner(branches: ArrayList<Branch>) {
+        val allBranches =
+            listOf(
+                Branch(
+                    Constants.VALUE_ZERO.toString(),
+                    getString(R.string.title_first_option_branch_spinner),
+                    EMPTY_STRING
+                )
+            ) + branches
+
+        val adapter = BranchSpinnerAdapter(requireContext(), ArrayList(allBranches))
+        binding?.branchSpinner?.adapter = adapter
+    }
+
     private fun initListeners() {
         binding?.roleSpinner?.setOnTouchListener { view, event ->
+            if (event.action == MotionEvent.ACTION_UP) {
+                userInteraction = true
+                view.performClick()
+            }
+            false
+        }
+
+        binding?.branchSpinner?.setOnTouchListener { view, event ->
             if (event.action == MotionEvent.ACTION_UP) {
                 userInteraction = true
                 view.performClick()
@@ -115,6 +158,8 @@ class AddUsersFragment : Fragment(), ItemSelectedFromSpinnerListener {
         }
 
         binding?.roleSpinner?.onItemSelectedListener = ItemSelectedSpinner(this)
+
+        binding?.branchSpinner?.onItemSelectedListener = ItemSelectedSpinner(this)
     }
 
     private fun saveUser() {
@@ -131,7 +176,7 @@ class AddUsersFragment : Fragment(), ItemSelectedFromSpinnerListener {
                 binding?.lastNameUserTie?.text?.toString() ?: EMPTY_STRING,
                 roleSelectCurrent,
                 binding?.cellphoneUserTie?.text?.toString() ?: EMPTY_STRING,
-                ""
+                branchSelectCurrent
             )
         }
     }
@@ -150,6 +195,8 @@ class AddUsersFragment : Fragment(), ItemSelectedFromSpinnerListener {
 
     private fun setUpObservers() {
         addUserViewModel.validateUserData.observe(viewLifecycleOwner, ::handleAddUSer)
+
+        addUserViewModel.branchesData.observe(viewLifecycleOwner, ::handleGetBranches)
     }
 
     private fun showToast(message: String) {
@@ -159,6 +206,7 @@ class AddUsersFragment : Fragment(), ItemSelectedFromSpinnerListener {
     override fun onDestroyView() {
         super.onDestroyView()
         addUserViewModel.validateUserData.removeObservers(viewLifecycleOwner)
+        addUserViewModel.branchesData.removeObservers(viewLifecycleOwner)
         _binding = null
     }
 
@@ -169,11 +217,16 @@ class AddUsersFragment : Fragment(), ItemSelectedFromSpinnerListener {
 
         userInteraction = false
 
-        if (position > Constants.VALUE_ZERO) {
-            // Obtener la clave basada en la posición seleccionada
+        val branchSelected = parent?.getItemAtPosition(position) as? Branch
+
+        if (branchSelected != null) {
+            branchSelectCurrent = if (position == VALUE_ZERO) EMPTY_STRING else branchSelected.id
+        } else {
             val selectedValue = parent?.getItemAtPosition(position).toString()
-            roleSelectCurrent = allRolesMap.filterValues { it == selectedValue }.keys.first()
-            println("Role selected: $selectedValue - $roleSelectCurrent")
+            roleSelectCurrent = when (selectedValue) {
+                getString(R.string.text_all_roles) -> EMPTY_STRING
+                else -> allRolesMap.filterValues { it == selectedValue }.keys.first()
+            }
         }
     }
 

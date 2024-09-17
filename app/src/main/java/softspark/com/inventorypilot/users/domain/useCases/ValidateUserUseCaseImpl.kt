@@ -5,6 +5,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import softspark.com.inventorypilot.R
+import softspark.com.inventorypilot.common.utils.Constants.VALUE_ZERO
 import softspark.com.inventorypilot.users.domain.entities.AddUserResult
 import javax.inject.Inject
 
@@ -16,7 +17,8 @@ class ValidateUserUseCaseImpl @Inject constructor(
         firstName: String,
         lastName: String,
         role: String,
-        cellPhone: String
+        cellPhone: String,
+        branch: String
     ): Flow<AddUserResult> = flow {
 
         if (firstName.isEmpty()) {
@@ -27,7 +29,7 @@ class ValidateUserUseCaseImpl @Inject constructor(
             return@flow emit(AddUserResult.Invalid(context.getString(R.string.text_error_without_last_name)))
         }
 
-        if (role.isEmpty()) {
+        if (role.isEmpty() || role == context.getString(R.string.text_all_roles)) {
             return@flow emit(AddUserResult.Invalid(context.getString(R.string.text_error_without_role)))
         }
 
@@ -37,6 +39,10 @@ class ValidateUserUseCaseImpl @Inject constructor(
 
         if (email.isEmpty()) {
             return@flow emit(AddUserResult.Invalid(context.getString(R.string.text_error_without_email)))
+        }
+
+        if (branch.isEmpty() || branch == VALUE_ZERO.toString()) {
+            return@flow emit(AddUserResult.Invalid(context.getString(R.string.text_error_without_branch)))
         }
 
         return@flow emit(AddUserResult.Valid)

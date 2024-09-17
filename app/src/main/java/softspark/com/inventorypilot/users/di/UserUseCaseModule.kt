@@ -14,6 +14,8 @@ import softspark.com.inventorypilot.users.domain.useCases.EnabledOrDisabledUserU
 import softspark.com.inventorypilot.users.domain.useCases.EnabledOrDisabledUserUseCaseImpl
 import softspark.com.inventorypilot.users.domain.useCases.GetAllUsersUseCase
 import softspark.com.inventorypilot.users.domain.useCases.GetAllUsersUseCaseImpl
+import softspark.com.inventorypilot.users.domain.useCases.GetBranchesFromLocalUseCase
+import softspark.com.inventorypilot.users.domain.useCases.GetBranchesFromLocalUseCaseImpl
 import softspark.com.inventorypilot.users.domain.useCases.SyncUserUseCase
 import softspark.com.inventorypilot.users.domain.useCases.SyncUserUseCaseImpl
 import softspark.com.inventorypilot.users.domain.useCases.ValidateUserUseCase
@@ -55,4 +57,11 @@ object UserUseCaseModule {
     fun provideEnabledOrDisabledUserUseCase(
         userRepository: UserRepository
     ): EnabledOrDisabledUserUseCase = EnabledOrDisabledUserUseCaseImpl(userRepository)
+
+    //USE CASES FOR GET BRANCHES
+    @ViewModelScoped
+    @Provides
+    fun provideGetBranchesUseCase(
+        userRepository: UserRepository
+    ): GetBranchesFromLocalUseCase = GetBranchesFromLocalUseCaseImpl(userRepository)
 }
