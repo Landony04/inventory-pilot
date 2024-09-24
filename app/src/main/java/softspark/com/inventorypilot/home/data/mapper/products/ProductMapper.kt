@@ -89,9 +89,9 @@ fun ProductEntity.toProductDomain(): Product = Product(
     createBy = createBy
 )
 
-fun ProductEntity.toProductSale(): ProductSale = ProductSale(
+fun ProductEntity.toProductSale(quantity: Int): ProductSale = ProductSale(
     id = productId,
-    quantity = stock,
+    quantity = quantity,
     price = price,
     name = name
 )

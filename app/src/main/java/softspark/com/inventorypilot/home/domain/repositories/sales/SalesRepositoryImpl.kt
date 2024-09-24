@@ -18,11 +18,13 @@ import kotlinx.coroutines.withContext
 import softspark.com.inventorypilot.common.data.local.dao.UserProfileDao
 import softspark.com.inventorypilot.common.data.util.DispatcherProvider
 import softspark.com.inventorypilot.common.entities.base.Result
+import softspark.com.inventorypilot.common.utils.Constants.OWNER_ROLE
 import softspark.com.inventorypilot.common.utils.Constants.VALUE_ZERO
 import softspark.com.inventorypilot.common.utils.NetworkUtils
 import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferences
-import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferencesImpl
 import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferencesImpl.Companion.USER_BRANCH_ID_PREFERENCE
+import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferencesImpl.Companion.USER_ID_PREFERENCE
+import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferencesImpl.Companion.USER_ROLE_PREFERENCE
 import softspark.com.inventorypilot.home.data.local.dao.products.ProductDao
 import softspark.com.inventorypilot.home.data.local.dao.sales.SalesDao
 import softspark.com.inventorypilot.home.data.local.entity.products.ProductEntity
@@ -68,9 +70,14 @@ class SalesRepositoryImpl @Inject constructor(
                 insertSales(apiResult)
             }
 
-            val localResult =
-                salesDao.getSalesByDate(date)
+            val localResult = when (preferences.getValuesString(USER_ROLE_PREFERENCE)) {
+                OWNER_ROLE -> salesDao.getSalesByDate(date)
                     .map { saleEntity -> saleEntity.toSaleDomain() }
+
+                else -> salesDao.getSalesByDate(date)
+                    .map { saleEntity -> saleEntity.toSaleDomain() }
+                    .filter { sale -> sale.userId == preferences.getValuesString(USER_ID_PREFERENCE) }
+            }
 
             emit(Result.Success(data = ArrayList(localResult)))
         }.onStart {
@@ -87,7 +94,7 @@ class SalesRepositoryImpl @Inject constructor(
 
             data.products.products.forEach { product ->
                 val productEntity = getProductById(product.id)
-                products.add(productEntity.toProductSale())
+                products.add(productEntity.toProductSale(product.quantity))
             }
 
             emit(Result.Success(data = data.toSaleDetail(user.firstName, user.lastName, products)))
