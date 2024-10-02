@@ -10,7 +10,9 @@ interface ProductsRepository {
         product: Product
     )
 
-    suspend fun getProductsForPage(): Flow<List<Product>>
+    suspend fun getProductsForPage(pageSize: Int, currentPage: Int): Flow<Result<List<Product>>>
+
+    suspend fun getProductsFromApi()
 
     suspend fun getProductsByCategoryId(
         categoryId: String
@@ -21,8 +23,6 @@ interface ProductsRepository {
     ): List<Product>
 
     suspend fun getProductsById(productId: String): Flow<Result<Product>>
-
-    suspend fun insertProducts(products: List<Product>)
 
     suspend fun syncProducts()
 

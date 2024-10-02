@@ -42,6 +42,8 @@ import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsByC
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsByCategoryIdUseCaseImpl
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsByNameUseCase
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsByNameUseCaseImpl
+import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsFromApiUseCase
+import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsFromApiUseCaseImpl
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsUseCase
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsUseCaseImpl
 import softspark.com.inventorypilot.home.domain.useCases.products.UpdateProductUseCase
@@ -128,6 +130,12 @@ object HomeUseCaseModule {
     fun provideUpdateProduct(
         productsRepository: ProductsRepository
     ): UpdateProductUseCase = UpdateProductUseCaseImpl(productsRepository)
+
+    @ViewModelScoped
+    @Provides
+    fun provideGetProductsFromApi(
+        productsRepository: ProductsRepository
+    ): GetProductsFromApiUseCase = GetProductsFromApiUseCaseImpl(productsRepository)
 
     //USE CASES FOR SALES
     @ViewModelScoped

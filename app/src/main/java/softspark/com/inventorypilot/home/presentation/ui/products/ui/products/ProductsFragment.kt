@@ -12,9 +12,16 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SimpleItemAnimator
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import softspark.com.inventorypilot.R
 import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.common.presentation.products.SpinnerAdapter
@@ -35,6 +42,7 @@ import softspark.com.inventorypilot.home.presentation.ui.products.adapters.Produ
 import softspark.com.inventorypilot.home.presentation.ui.products.utils.ProductSelectedListener
 import softspark.com.inventorypilot.home.presentation.ui.products.viewModel.ProductViewModel
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ProductSelectedListener {
@@ -63,6 +71,10 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ProductSel
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentProductsBinding.inflate(inflater, container, false)
+
+        getInitData()
+        initAdapter()
+
         return binding?.root
     }
 
@@ -73,28 +85,22 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ProductSel
 
         setUpActionBar()
         setUpObservers()
-        getInitData()
-        initAdapter()
         initListeners()
     }
 
     private fun getInitData() {
         getProducts()
-        productCategoryViewModel.getProductCategories()
-
         if (preferences.getValuesString(USER_ROLE_PREFERENCE) == OWNER_ROLE) {
             binding?.addProductFab?.visibility = View.VISIBLE
         }
     }
 
-    private fun getProducts() {
-        if (!productCategoryViewModel.isLoading) {
-            productCategoryViewModel.getAllProducts()
-        }
-    }
-
     private fun handleGetAllProducts(result: List<Product>) {
         productsAdapter.submitList(result)
+    }
+
+    private fun getProducts() {
+        productCategoryViewModel.getAllProducts()
     }
 
     private fun handleGetProductCategory(result: Result<ArrayList<ProductCategory>>) {
@@ -116,8 +122,10 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ProductSel
     private fun initAdapter() {
         binding?.productsRv?.apply {
             setHasFixedSize(true)
-            adapter = productsAdapter
             layoutManager = GridLayoutManager(requireContext(), 2)
+            itemAnimator = DefaultItemAnimator()
+            (itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+            adapter = productsAdapter
         }
     }
 
@@ -158,6 +166,22 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ProductSel
         binding?.addProductFab?.setOnClickListener {
             navigateToAddProduct()
         }
+
+        // Detecta cuando llegamos al final del scroll para cargar más productos
+        binding?.productsRv?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val layoutManager = recyclerView.layoutManager as GridLayoutManager
+                val visibleItemCount = layoutManager.childCount
+                val totalItemCount = layoutManager.itemCount
+                val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+
+                if (firstVisibleItemPosition + visibleItemCount >= totalItemCount) {
+                    getProducts()
+                }
+            }
+        })
     }
 
     private fun navigateToAddProduct(productId: String? = null) {
@@ -178,12 +202,35 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ProductSel
     }
 
     private fun setUpObservers() {
-        productCategoryViewModel.productsData.observe(viewLifecycleOwner, ::handleGetAllProducts)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                productCategoryViewModel.productsData.collect {
+                    handleGetAllProducts(it)
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                productCategoryViewModel.loadingState.collect { isLoading ->
+                    if (isLoading) {
+                        binding?.progressBarProducts?.visibility = View.VISIBLE
+                    } else {
+                        binding?.progressBarProducts?.visibility = View.GONE
+                    }
+                }
+            }
+        }
 
         productCategoryViewModel.productCategoryData.observe(
             viewLifecycleOwner,
             ::handleGetProductCategory
         )
+    }
+
+    override fun onPause() {
+        super.onPause()
+        productCategoryViewModel.resetValues()
     }
 
     private fun showToast(message: String) {
@@ -216,7 +263,6 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ProductSel
 
     override fun onDestroyView() {
         super.onDestroyView()
-        productCategoryViewModel.productsData.removeObservers(viewLifecycleOwner)
         productCategoryViewModel.productCategoryData.removeObservers(viewLifecycleOwner)
         _binding = null
     }
@@ -238,8 +284,19 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ProductSel
     }
 
     override fun addToCartProductSelected(product: Product, position: Int) {
-        showToast(getString(R.string.text_add_item_from_sale_success))
-        cartViewModel.addProductToCart(product, VALUE_ONE)
+        if (product.stock > VALUE_ZERO) {
+            showToast(getString(R.string.text_add_item_from_sale_success))
+            cartViewModel.addProductToCart(product, VALUE_ONE)
+        } else {
+            dialogBuilder.showAlertDialog(
+                requireContext(),
+                getString(R.string.text_title_without_stock),
+                getString(R.string.text_message_without_stock),
+                getString(R.string.text_accept_button)
+            ) {
+
+            }
+        }
     }
 
     override fun editProductSelected(productId: String, position: Int) {

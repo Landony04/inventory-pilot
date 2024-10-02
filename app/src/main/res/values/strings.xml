@@ -25,6 +25,9 @@
     <string name="text_add_item_from_sale_success">Producto agregado exitosamente.</string>
     <string name="text_status_pending">PENDIENTE</string>
     <string name="text_status_completed">COMPLETADA</string>
+    <string name="text_title_without_stock">Aviso</string>
+    <string name="text_message_without_stock">No hay stock suficiente</string>
+    <string name="text_accept_button">Aceptar</string>
 
     <!--CART  -->
     <string name="title_action_bar_cart">Realizar Venta</string>
