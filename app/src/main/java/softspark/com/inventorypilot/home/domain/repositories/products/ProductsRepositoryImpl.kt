@@ -8,9 +8,9 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onStart
@@ -57,22 +57,35 @@ class ProductsRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getProductsForPage(): Flow<List<Product>> = flow {
+    override suspend fun getProductsForPage(
+        pageSize: Int,
+        currentPage: Int
+    ): Flow<Result<List<Product>>> =
+        flow<Result<List<Product>>> {
+            val offset = currentPage * pageSize
+
+            val products = productDao.getProductsForPage(pageSize, offset).first()
+                .map { productEntity -> productEntity.toProductDomain() }
+
+            emit(Result.Success(data = products))
+        }.catch {
+            emit(Result.Error(it))
+        }.onStart {
+            emit(Result.Loading)
+        }.flowOn(dispatchers.io())
+
+    override suspend fun getProductsFromApi() = withContext(dispatchers.io()) {
         if (networkUtils.isInternetAvailable()) {
             try {
                 val apiResult =
                     productsApi.getAllProducts(preferences.getValuesString(USER_BRANCH_ID_PREFERENCE))
                         .toProductListDomain()
-                insertProducts(apiResult)
+                productDao.insertProducts(apiResult.map { product -> product.toProductEntity() })
             } catch (exception: Exception) {
                 println("exception: ${exception.message}")
             }
         }
-
-        productDao.getProductsForPage().collect {
-            emit(it.map { productEntity -> productEntity.toProductDomain() })
-        }
-    }.flowOn(dispatchers.io())
+    }
 
     override suspend fun getProductsByCategoryId(categoryId: String): List<Product> =
         withContext(dispatchers.io()) {
@@ -97,10 +110,6 @@ class ProductsRepositoryImpl @Inject constructor(
         }.catch {
             emit(Result.Error(it))
         }.flowOn(dispatchers.io())
-
-    override suspend fun insertProducts(products: List<Product>) = withContext(dispatchers.io()) {
-        productDao.insertProducts(products.map { product -> async { product.toProductEntity() }.await() })
-    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun syncProducts() {

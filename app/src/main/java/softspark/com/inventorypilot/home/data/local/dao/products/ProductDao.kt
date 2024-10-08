@@ -21,8 +21,8 @@ interface ProductDao {
     @Query("SELECT * FROM ProductEntity WHERE productId = :id")
     fun getProductById(id: String): ProductEntity
 
-    @Query("SELECT * FROM ProductEntity ORDER BY LOWER(name) ASC")
-    fun getProductsForPage(): Flow<List<ProductEntity>>
+    @Query("SELECT * FROM ProductEntity ORDER BY addDate ASC LIMIT :limit OFFSET :offset")
+    fun getProductsForPage(limit: Int, offset: Int): Flow<List<ProductEntity>>
 
     @Query("SELECT * FROM ProductEntity WHERE categoryId = :categoryId ORDER BY name ASC")
     fun getProductsByCategoryId(categoryId: String): List<ProductEntity>

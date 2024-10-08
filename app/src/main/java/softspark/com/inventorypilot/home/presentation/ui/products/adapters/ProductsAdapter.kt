@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.qualifiers.ApplicationContext
 import softspark.com.inventorypilot.R
 import softspark.com.inventorypilot.common.utils.Constants.OWNER_ROLE
-import softspark.com.inventorypilot.common.utils.Constants.VALUE_ZERO
 import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferences
 import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferencesImpl.Companion.USER_ROLE_PREFERENCE
 import softspark.com.inventorypilot.databinding.ItemLayoutCardProductBinding
@@ -35,10 +34,6 @@ class ProductsAdapter @Inject constructor(
             productSelected: (Product, Boolean) -> Unit
         ) {
             with(itemBinding) {
-                if (productSection.stock <= VALUE_ZERO) {
-                    addCartButton.visibility = View.GONE
-                }
-
                 if (inventoryPilotPreferences.getValuesString(USER_ROLE_PREFERENCE) == OWNER_ROLE) {
                     editProductIv.visibility = View.VISIBLE
                 }
