@@ -33,6 +33,9 @@ interface ProductDao {
     @Update
     suspend fun updateProduct(productEntity: ProductEntity)
 
+    @Query("UPDATE ProductEntity SET stock = :stock WHERE productId = :id")
+    suspend fun updateProductStock(id: String, stock: Int)
+
     @Query("SELECT * FROM ProductSyncEntity")
     fun getAllProductSync(): List<ProductSyncEntity>
 
