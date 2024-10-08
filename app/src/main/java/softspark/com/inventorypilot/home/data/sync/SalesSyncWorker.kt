@@ -80,6 +80,7 @@ class SalesSyncWorker @AssistedInject constructor(
                             stock = newStock
                         )
                     )
+                    productDao.updateProductStock(soldProduct.id, newStock)
                 } else {
                     println("Stock insuficiente para el producto ${soldProduct.id}")
                 }

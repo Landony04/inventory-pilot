@@ -64,6 +64,7 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ProductSel
 
     private var userInteraction = false
     private var endClearDrawable: Drawable? = null
+    private var currentCategory = EMPTY_STRING
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -100,7 +101,9 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ProductSel
     }
 
     private fun getProducts() {
-        productCategoryViewModel.getAllProducts()
+        if(currentCategory.isEmpty() && binding?.searchEditText?.text?.isEmpty() == true) {
+            productCategoryViewModel.getAllProducts()
+        }
     }
 
     private fun handleGetProductCategory(result: Result<ArrayList<ProductCategory>>) {
@@ -228,8 +231,16 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ProductSel
         )
     }
 
+    override fun onResume() {
+        super.onResume()
+        getProducts()
+    }
+
     override fun onPause() {
         super.onPause()
+        productsAdapter.submitList(emptyList())
+        binding?.searchEditText?.text?.clear()
+        currentCategory = EMPTY_STRING
         productCategoryViewModel.resetValues()
     }
 
@@ -255,6 +266,7 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ProductSel
     private fun validateIfCleanSearchInput() {
         val endDrawable = binding?.searchIl?.endIconDrawable
         if (endDrawable != null && endDrawable.constantState == endClearDrawable?.constantState) {
+            currentCategory = EMPTY_STRING
             binding?.searchEditText?.text?.clear()
             resetValues()
             getProducts()
@@ -276,8 +288,10 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ProductSel
 
         if (position > VALUE_ZERO) {
             val selectedCategory = parent?.getItemAtPosition(position) as ProductCategory
+            currentCategory = selectedCategory.id
             productCategoryViewModel.getProductsByCategoryId(selectedCategory.id)
         } else {
+            currentCategory = EMPTY_STRING
             resetValues()
             getProducts()
         }
