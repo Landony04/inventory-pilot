@@ -115,6 +115,7 @@ fun Product.toProductToDto(): UpdateProductDto = UpdateProductDto(
     name = name,
     description = description,
     price = price,
+    priceCost = priceCost,
     stock = stock,
     addDate = addDate,
     createBy = createBy

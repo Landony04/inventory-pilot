@@ -156,6 +156,7 @@ class AddProductFragment : Fragment(), ItemSelectedFromSpinnerListener {
                     binding?.descriptionProductTie?.setText(this.description)
                     binding?.stockProductTie?.setText("${this.stock}")
                     binding?.priceProductTie?.setText("${this.price}")
+                    binding?.priceCostProductTie?.setText("${this.priceCost}")
                     productCategoryIdCurrent = this.categoryId
                     addDateProduct = this.addDate
                     createByProduct = this.createBy

@@ -101,7 +101,7 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ProductSel
     }
 
     private fun getProducts() {
-        if(currentCategory.isEmpty() && binding?.searchEditText?.text?.isEmpty() == true) {
+        if (currentCategory.isEmpty() && binding?.searchEditText?.text?.isEmpty() == true) {
             productCategoryViewModel.getAllProducts()
         }
     }
@@ -180,7 +180,7 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ProductSel
                 val totalItemCount = layoutManager.itemCount
                 val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
 
-                if (firstVisibleItemPosition + visibleItemCount >= totalItemCount) {
+                if (dy > VALUE_ZERO && firstVisibleItemPosition + visibleItemCount >= totalItemCount) {
                     getProducts()
                 }
             }
@@ -206,15 +206,15 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ProductSel
 
     private fun setUpObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                productCategoryViewModel.productsData.collect {
-                    handleGetAllProducts(it)
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                productCategoryViewModel.productsData.collect { products ->
+                    handleGetAllProducts(products)
                 }
             }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 productCategoryViewModel.loadingState.collect { isLoading ->
                     if (isLoading) {
                         binding?.progressBarProducts?.visibility = View.VISIBLE
@@ -229,11 +229,6 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ProductSel
             viewLifecycleOwner,
             ::handleGetProductCategory
         )
-    }
-
-    override fun onResume() {
-        super.onResume()
-        getProducts()
     }
 
     override fun onPause() {
