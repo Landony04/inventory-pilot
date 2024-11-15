@@ -65,9 +65,11 @@ class SalesRepositoryImpl @Inject constructor(
                 val apiResult = salesApi.getSalesForDate(
                     preferences.getValuesString(USER_BRANCH_ID_PREFERENCE),
                     date
-                ).toSaleListDomain()
+                )?.toSaleListDomain()
 
-                insertSales(apiResult)
+                apiResult?.let {
+                    insertSales(apiResult)
+                }
             }
 
             val localResult = when (preferences.getValuesString(USER_ROLE_PREFERENCE)) {

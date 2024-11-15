@@ -93,6 +93,7 @@ class AddProductFragment : Fragment(), ItemSelectedFromSpinnerListener {
                 binding?.descriptionProductTie?.text?.toString() ?: EMPTY_STRING,
                 binding?.stockProductTie?.text?.toString() ?: EMPTY_STRING,
                 binding?.priceProductTie?.text?.toString() ?: EMPTY_STRING,
+                binding?.priceCostProductTie?.text?.toString() ?: EMPTY_STRING,
                 args.productId,
                 args.productId != null
             )
@@ -105,10 +106,6 @@ class AddProductFragment : Fragment(), ItemSelectedFromSpinnerListener {
 
     private fun getInitialData() {
         addProductViewModel.getProductCategories()
-    }
-
-    private fun handleAddProduct() {
-        findNavController().navigateUp()
     }
 
     private fun handleGetProductCategory(result: Result<ArrayList<ProductCategory>>) {

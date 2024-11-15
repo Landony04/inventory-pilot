@@ -15,8 +15,8 @@ android {
         applicationId = "softspark.com.inventorypilot"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.tarjetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.1"
+        versionCode = 2
+        versionName = "1.1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -45,6 +45,23 @@ android {
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
+    }
+
+    buildFeatures {
+        buildConfig = true
+    }
+
+    flavorDimensions += "business"
+
+    productFlavors {
+        create("agropecuaria") {
+            dimension = "business"
+            buildConfigField("String", "FIREBASE_DATABASE_URL", "\"https://inventory-pilot-default-rtdb.firebaseio.com/\"")
+        }
+        create("ferreteria") {
+            dimension = "business"
+            buildConfigField("String", "FIREBASE_DATABASE_URL", "\"https://santa-cruz-app-62239-default-rtdb.firebaseio.com\"")
+        }
     }
 }
 
