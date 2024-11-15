@@ -71,6 +71,26 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/price_cost_product_til"
+        style="@style/CustomTextInputEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="@string/hint_text_add_price_cost_product"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_default="wrap"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/price_product_til">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/price_cost_product_tie"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:nextFocusForward="@id/stock_product_tie" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/stock_product_til"
         style="@style/CustomTextInputEditText"
         android:layout_width="match_parent"
@@ -80,7 +100,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_default="wrap"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/price_product_til">
+        app:layout_constraintTop_toBottomOf="@+id/price_cost_product_til">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/stock_product_tie"

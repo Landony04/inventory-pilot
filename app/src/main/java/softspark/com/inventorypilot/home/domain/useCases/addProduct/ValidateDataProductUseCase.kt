@@ -9,6 +9,7 @@ interface ValidateDataProductUseCase {
         name: String,
         description: String,
         stock: String,
-        price: String
+        price: String,
+        priceCost: String
     ): Flow<AddProductResult>
 }

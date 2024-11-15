@@ -16,7 +16,8 @@ class ValidateDataProductUseCaseImpl @Inject constructor(
         name: String,
         description: String,
         stock: String,
-        price: String
+        price: String,
+        priceCost: String
     ): Flow<AddProductResult> {
         return flow {
             if (stock.toIntOrNull() == null) {
@@ -45,6 +46,10 @@ class ValidateDataProductUseCaseImpl @Inject constructor(
 
             if (categoryId.isEmpty()) {
                 return@flow emit(AddProductResult.Invalid(context.getString(R.string.text_error_without_category)))
+            }
+
+            if (priceCost.toDoubleOrNull() == null) {
+                return@flow emit(AddProductResult.Invalid(context.getString(R.string.text_error_price_cost_invalid)))
             }
 
             return@flow emit(AddProductResult.Valid)

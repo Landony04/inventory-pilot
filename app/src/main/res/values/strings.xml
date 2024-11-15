@@ -49,6 +49,7 @@
     <string name="text_add_product_successfully">Producto agregado exitosamente.</string>
     <string name="text_error_stock_invalid">El stock ingresado no es un número válido.</string>
     <string name="text_error_price_invalid">El precio ingresado no es un número válido.</string>
+    <string name="text_error_price_cost_invalid">El precio costo ingresado no es un número válido.</string>
     <string name="text_error_without_name">Colocale nombre a tu producto.</string>
     <string name="text_error_without_description">Colocale una descripción a tu producto.</string>
     <string name="text_error_without_stock">Coloca la cantidad ingresada a tu producto.</string>
@@ -57,6 +58,7 @@
     <string name="hint_text_add_name_product">Ingresa el nombre del producto</string>
     <string name="hint_text_add_description_product">Ingresa la descripción del producto</string>
     <string name="hint_text_add_price_product">Ingresa el precio del producto</string>
+    <string name="hint_text_add_price_cost_product">Ingresa el precio costo del producto</string>
     <string name="hint_text_add_quantity_product">Ingresa la cantidad del producto</string>
     <string name="text_title_add_product">Agregar producto</string>
     <string name="text_title_modified_product">Modificar producto</string>

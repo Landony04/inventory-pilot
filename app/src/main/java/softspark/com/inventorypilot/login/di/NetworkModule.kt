@@ -10,6 +10,7 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import softspark.com.inventorypilot.BuildConfig
 import softspark.com.inventorypilot.login.remote.LoginApi
 import javax.inject.Singleton
 
@@ -24,7 +25,7 @@ object NetworkModule {
     @Singleton
     @Provides
     fun provideLoginApi(client: OkHttpClient): LoginApi {
-        return Retrofit.Builder().baseUrl(LoginApi.BASE_URL).client(client)
+        return Retrofit.Builder().baseUrl(BuildConfig.FIREBASE_DATABASE_URL).client(client)
             .addConverterFactory(MoshiConverterFactory.create()).build()
             .create(LoginApi::class.java)
     }

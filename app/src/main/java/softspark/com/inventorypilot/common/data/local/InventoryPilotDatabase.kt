@@ -29,7 +29,7 @@ import softspark.com.inventorypilot.users.data.local.entity.user.UserSyncEntity
 @TypeConverters(value = [SalesTypeConverters::class])
 @Database(
     entities = [UserProfileEntity::class, ProductCategoryEntity::class, ProductEntity::class, SaleEntity::class, CartItemEntity::class, SaleSyncEntity::class, ProductSyncEntity::class, UserSyncEntity::class, CategoryProductSyncEntity::class, UpdateUserSyncEntity::class, BranchEntity::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class InventoryPilotDatabase : RoomDatabase() {
@@ -50,6 +50,6 @@ abstract class InventoryPilotDatabase : RoomDatabase() {
 
 val MIGRATION_1_2: Migration = object : Migration(1, 2) {
     override fun migrate(database: SupportSQLiteDatabase) {
-        database.execSQL("ALTER TABLE UserProfileEntity ADD COLUMN cellPhone TEXT")
+        database.execSQL("ALTER TABLE ProductEntity ADD COLUMN priceCost REAL NOT NULL DEFAULT 0.0")
     }
 }

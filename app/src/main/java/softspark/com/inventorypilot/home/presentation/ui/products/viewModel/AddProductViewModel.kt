@@ -50,6 +50,7 @@ class AddProductViewModel @Inject constructor(
         description: String,
         stock: String,
         price: String,
+        priceCost: String,
         productId: String? = null,
         isUpdate: Boolean
     ) {
@@ -60,7 +61,8 @@ class AddProductViewModel @Inject constructor(
                 name = name,
                 description = description,
                 stock = stock,
-                price = price
+                price = price,
+                priceCost = priceCost
             ).collect { productResult ->
                 when (productResult) {
                     is AddProductResult.Invalid -> _validateProductData.value = productResult
@@ -71,6 +73,7 @@ class AddProductViewModel @Inject constructor(
                             name = name,
                             description = description,
                             price = price.toDouble(),
+                            priceCost = priceCost.toDouble(),
                             stock = stock.toInt(),
                             getCurrentDateUtc(),
                             getUserIdUseCase()

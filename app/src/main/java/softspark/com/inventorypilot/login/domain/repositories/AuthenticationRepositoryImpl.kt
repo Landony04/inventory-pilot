@@ -74,10 +74,12 @@ class AuthenticationRepositoryImpl @Inject constructor(
             emit(Result.Error(it))
         }.flowOn(dispatchers.io())
 
-    override suspend fun getBranches() = withContext(dispatchers.io()) {
-        val branches = loginApi.getBranches().toBranchesDomain()
+    override suspend fun getBranches(): Unit = withContext(dispatchers.io()) {
+        val branches = loginApi.getBranches()?.toBranchesDomain()
 
-        insertBranches(branches)
+        branches?.let {
+            insertBranches(branches)
+        }
     }
 
     override suspend fun insertBranches(branches: List<Branch>) = withContext(dispatchers.io()) {

@@ -9,6 +9,7 @@ data class Product(
     var name: String,
     var description: String,
     var price: Double,
+    var priceCost: Double,
     var stock: Int,
     var addDate: String,
     var createBy: String
@@ -18,6 +19,7 @@ data class Product(
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readString() ?: "",
+        parcel.readDouble(),
         parcel.readDouble(),
         parcel.readInt(),
         parcel.readString() ?: "",
@@ -31,6 +33,7 @@ data class Product(
         parcel.writeString(name)
         parcel.writeString(description)
         parcel.writeDouble(price)
+        parcel.writeDouble(priceCost)
         parcel.writeInt(stock)
     }
 
