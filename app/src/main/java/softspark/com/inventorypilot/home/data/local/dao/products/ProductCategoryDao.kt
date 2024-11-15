@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 import softspark.com.inventorypilot.home.data.local.entity.products.CategoryProductSyncEntity
 import softspark.com.inventorypilot.home.data.local.entity.products.ProductCategoryEntity
 
@@ -20,7 +21,7 @@ interface ProductCategoryDao {
     fun getCategoryById(id: String): ProductCategoryEntity
 
     @Query("SELECT * FROM ProductCategoryEntity")
-    fun getProductCategories(): List<ProductCategoryEntity>
+    fun getProductCategories(): Flow<List<ProductCategoryEntity>>
 
     @Query("SELECT * FROM CategoryProductSyncEntity")
     fun getAllCategoriesProductSync(): List<CategoryProductSyncEntity>

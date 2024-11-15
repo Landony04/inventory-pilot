@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.withContext
 import softspark.com.inventorypilot.common.data.util.DispatcherProvider
@@ -66,6 +67,11 @@ class ProductsRepositoryImpl @Inject constructor(
 
             val products = productDao.getProductsForPage(pageSize, offset).first()
                 .map { productEntity -> productEntity.toProductDomain() }
+
+            productDao.getProductsForPage(pageSize, offset).collect { productList ->
+                val list = productList.map { productEntity -> productEntity.toProductDomain()  }
+                emit(Result.Success(data = list))
+            }
 
             emit(Result.Success(data = products))
         }.catch {

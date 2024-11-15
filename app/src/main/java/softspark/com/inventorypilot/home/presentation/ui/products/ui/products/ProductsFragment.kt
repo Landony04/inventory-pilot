@@ -180,7 +180,7 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ProductSel
                 val totalItemCount = layoutManager.itemCount
                 val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
 
-                if (dy > VALUE_ZERO && firstVisibleItemPosition + visibleItemCount >= totalItemCount) {
+                if (firstVisibleItemPosition + visibleItemCount >= totalItemCount) {
                     getProducts()
                 }
             }
@@ -237,6 +237,11 @@ class ProductsFragment : Fragment(), ItemSelectedFromSpinnerListener, ProductSel
         binding?.searchEditText?.text?.clear()
         currentCategory = EMPTY_STRING
         productCategoryViewModel.resetValues()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getInitData()
     }
 
     private fun showToast(message: String) {

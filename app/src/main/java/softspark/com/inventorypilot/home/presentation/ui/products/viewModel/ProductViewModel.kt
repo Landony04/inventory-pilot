@@ -89,7 +89,21 @@ class ProductViewModel @Inject constructor(
                             if (it.data.isEmpty()) {
                                 endReached = true
                             } else {
-                                _productsData.value += it.data
+                                // Obtener la lista actual de productos
+                                val currentProducts = _productsData.value.toMutableList()
+
+                                // Filtrar los nuevos productos para evitar duplicados por ID
+                                val newProducts = it.data.filter { newProduct ->
+                                    // Verificar si el producto ya está en la lista
+                                    !currentProducts.any { existingProduct -> existingProduct.id == newProduct.id }
+                                }
+
+                                // Si hay productos nuevos, agregarlos a la lista
+                                currentProducts.addAll(newProducts)
+
+                                // Actualizar el estado con los productos sin duplicados
+                                _productsData.value = currentProducts
+
                                 currentPage++
                             }
                         }

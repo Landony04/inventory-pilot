@@ -12,6 +12,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onStart
@@ -70,11 +71,16 @@ class ProductCategoriesRepositoryImpl @Inject constructor(
                 insertProductCategories(apiResult)
             }
 
-            val localResult =
-                productCategoryDao.getProductCategories()
-                    .map { category -> category.toCategoryDomain() }.sortedBy { it.name }
+            val localResult = productCategoryDao.getProductCategories().first()
+                .map { category -> category.toCategoryDomain() }
 
-            emit(Result.Success(data = ArrayList(localResult)))
+            productCategoryDao.getProductCategories().collect { products ->
+                val list =
+                    products.map { productCategoryEntity -> productCategoryEntity.toCategoryDomain() }
+                emit(Result.Success(ArrayList(list.sortedBy { it.name })))
+            }
+
+            emit(Result.Success(data = ArrayList(localResult.sortedBy { it.name })))
         }.onStart {
             emit(Result.Loading)
         }.catch {
