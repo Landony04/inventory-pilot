@@ -26,4 +26,8 @@ interface SalesRepository {
     suspend fun getCurrentStockFromDataBase(productId: String): ProductEntity?
 
     suspend fun getProductById(productId: String): ProductEntity
+
+    suspend fun getDailyProfits(date: String): Flow<Result<Map<String, Double>>>
+
+    suspend fun getMonthlyProfits(month: String): Flow<Result<Map<String, Double>>>
 }

@@ -2,6 +2,7 @@ package softspark.com.inventorypilot.common.utils
 
 object Constants {
     const val VALUE_ZERO = 0
+    const val VALUE_ZERO_DOUBLE = 0.0
     const val VALUE_ONE = 1
     const val QUERY_LENGTH = 3
     const val UTC_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'"

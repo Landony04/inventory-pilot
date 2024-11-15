@@ -13,6 +13,12 @@
         android:title="@string/text_title_add_categories" />
 
     <item
+        android:id="@+id/action_profits"
+        android:icon="@drawable/ic_profits_30"
+        android:showAsAction="always"
+        android:title="@string/text_title_see_profits" />
+
+    <item
         android:id="@+id/action_users"
         android:icon="@drawable/ic_people_outline_30"
         android:showAsAction="always"

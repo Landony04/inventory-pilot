@@ -9,6 +9,7 @@ fun CartItem.toCartItemEntity(): CartItemEntity = CartItemEntity(
     productId = productId,
     quantity = quantity,
     price = price,
+    priceCost = priceCost,
     totalAmount = totalAmount ?: price,
     productName = productName
 )
@@ -18,6 +19,7 @@ fun CartItemEntity.toCartItem(): CartItem = CartItem(
     productId = productId,
     quantity = quantity,
     price = price,
+    priceCost = priceCost,
     productName = productName,
     totalAmount = totalAmount
 )
@@ -25,6 +27,7 @@ fun CartItemEntity.toCartItem(): CartItem = CartItem(
 fun CartItem.toProductSale(): ProductSale = ProductSale(
     id = productId,
     price = price,
+    priceCost = priceCost,
     quantity = quantity
 )
 

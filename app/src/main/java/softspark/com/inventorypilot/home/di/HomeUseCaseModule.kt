@@ -48,6 +48,10 @@ import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsUse
 import softspark.com.inventorypilot.home.domain.useCases.products.GetProductsUseCaseImpl
 import softspark.com.inventorypilot.home.domain.useCases.products.UpdateProductUseCase
 import softspark.com.inventorypilot.home.domain.useCases.products.UpdateProductUseCaseImpl
+import softspark.com.inventorypilot.home.domain.useCases.profits.GetDailyProfitsUseCase
+import softspark.com.inventorypilot.home.domain.useCases.profits.GetDailyProfitsUseCaseImpl
+import softspark.com.inventorypilot.home.domain.useCases.profits.GetMonthlyProfitsUseCase
+import softspark.com.inventorypilot.home.domain.useCases.profits.GetMonthlyProfitsUseCaseImpl
 import softspark.com.inventorypilot.home.domain.useCases.sales.GetSaleByIdUseCase
 import softspark.com.inventorypilot.home.domain.useCases.sales.GetSaleByIdUseCaseImpl
 import softspark.com.inventorypilot.home.domain.useCases.sales.GetSalesByDateUseCase
@@ -161,6 +165,18 @@ object HomeUseCaseModule {
     fun provideGetSaleByIdUseCase(
         salesRepository: SalesRepository
     ): GetSaleByIdUseCase = GetSaleByIdUseCaseImpl(salesRepository)
+
+    @ViewModelScoped
+    @Provides
+    fun provideGetDailyProfitsUseCase(
+        salesRepository: SalesRepository
+    ): GetDailyProfitsUseCase = GetDailyProfitsUseCaseImpl(salesRepository = salesRepository)
+
+    @ViewModelScoped
+    @Provides
+    fun provideGetMonthlyProfitsUseCase(
+        salesRepository: SalesRepository
+    ): GetMonthlyProfitsUseCase = GetMonthlyProfitsUseCaseImpl(salesRepository = salesRepository)
 
     //USE CASES FOR CART
     @ViewModelScoped

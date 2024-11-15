@@ -123,6 +123,11 @@ class HomeActivity : AppCompatActivity() {
                 true
             }
 
+            R.id.action_profits -> {
+                navController.navigate(R.id.navigation_see_profits)
+                true
+            }
+
             R.id.action_logout -> {
                 dialogBuilder.showAlertDialog(
                     this,

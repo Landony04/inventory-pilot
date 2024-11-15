@@ -96,6 +96,7 @@ fun ProductEntity.toProductSale(quantity: Int): ProductSale = ProductSale(
     id = productId,
     quantity = quantity,
     price = price,
+    priceCost = priceCost,
     name = name
 )
 
@@ -103,6 +104,7 @@ fun Product.toCartItem(quantity: Int): CartItem = CartItem(
     productId = id,
     quantity = quantity,
     price = price,
+    priceCost = priceCost,
     productName = name
 )
 
