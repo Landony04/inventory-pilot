@@ -37,4 +37,7 @@ interface SalesDao {
 
     @Delete
     suspend fun deleteSaleSync(saleSyncEntity: SaleSyncEntity)
+
+    @Query("SELECT * FROM SaleEntity WHERE dateWithoutHours LIKE :month")
+    fun getSalesByMonth(month: String): List<SaleEntity>
 }

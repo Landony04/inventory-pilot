@@ -73,6 +73,7 @@ fun ProductsSaleResponse.toProductSaleDomain(): List<ProductSale> {
         ProductSale(
             id = id,
             price = dto.price,
+            priceCost = dto.priceCost,
             quantity = dto.quantity
         )
     }
@@ -99,5 +100,6 @@ fun toProductMap(products: ArrayList<ProductSaleDto>): ProductsSaleResponse {
 fun ProductSale.toProductSaleDto(id: String): ProductSaleDto = ProductSaleDto(
     id = id,
     price = price,
+    priceCost = priceCost,
     quantity = quantity
 )

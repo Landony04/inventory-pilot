@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_gray_4"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="@string/text_title_profits"
+        android:textSize="20sp" />
+
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/spinner_timeframe"
+        style="@style/SpinnerTheme"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:layout_margin="16dp"
+        android:padding="5dp"
+        android:background="@color/colorWhite" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_profits"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="16dp" />
+
+    <ProgressBar
+        android:id="@+id/pb_profits"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="20dp"
+        android:visibility="invisible" />
+</LinearLayout>

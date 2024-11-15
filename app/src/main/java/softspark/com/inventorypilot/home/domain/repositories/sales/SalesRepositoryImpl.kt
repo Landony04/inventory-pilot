@@ -20,6 +20,7 @@ import softspark.com.inventorypilot.common.data.util.DispatcherProvider
 import softspark.com.inventorypilot.common.entities.base.Result
 import softspark.com.inventorypilot.common.utils.Constants.OWNER_ROLE
 import softspark.com.inventorypilot.common.utils.Constants.VALUE_ZERO
+import softspark.com.inventorypilot.common.utils.Constants.VALUE_ZERO_DOUBLE
 import softspark.com.inventorypilot.common.utils.NetworkUtils
 import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferences
 import softspark.com.inventorypilot.common.utils.preferences.InventoryPilotPreferencesImpl.Companion.USER_BRANCH_ID_PREFERENCE
@@ -65,11 +66,9 @@ class SalesRepositoryImpl @Inject constructor(
                 val apiResult = salesApi.getSalesForDate(
                     preferences.getValuesString(USER_BRANCH_ID_PREFERENCE),
                     date
-                )?.toSaleListDomain()
+                ).toSaleListDomain()
 
-                apiResult?.let {
-                    insertSales(apiResult)
-                }
+                insertSales(apiResult)
             }
 
             val localResult = when (preferences.getValuesString(USER_ROLE_PREFERENCE)) {
@@ -170,4 +169,52 @@ class SalesRepositoryImpl @Inject constructor(
     override suspend fun getProductById(productId: String): ProductEntity {
         return productDao.getProductById(productId)
     }
+
+    override suspend fun getDailyProfits(date: String): Flow<Result<Map<String, Double>>> =
+        flow<Result<Map<String, Double>>> {
+            val sales = salesDao.getSalesByDate(date)
+            val salesGroupedByDate = sales.groupBy { it.dateWithoutHours }
+
+            val dailyProfits: Map<String, Double> = salesGroupedByDate.mapValues { entry ->
+                entry.value.sumOf { sale ->
+                    sale.products.products.sumOf { product ->
+                        if (product.priceCost > VALUE_ZERO_DOUBLE) {
+                            (product.price - product.priceCost) * product.quantity
+                        } else {
+                            VALUE_ZERO_DOUBLE
+                        }
+                    }
+                }
+            }.filter { map -> map.value > VALUE_ZERO_DOUBLE }
+
+            emit(Result.Success(data = dailyProfits))
+        }.onStart {
+            emit(Result.Loading)
+        }.catch {
+            emit(Result.Error(it))
+        }.flowOn(dispatchers.io())
+
+    override suspend fun getMonthlyProfits(month: String): Flow<Result<Map<String, Double>>> =
+        flow<Result<Map<String, Double>>> {
+            val sales = salesDao.getSalesByMonth("$month-%") // Ejemplo de filtro: "2024-11-%"
+            val salesGroupedByDate = sales.groupBy { it.dateWithoutHours }
+
+            val monthlyProfits: Map<String, Double> = salesGroupedByDate.mapValues { entry ->
+                entry.value.sumOf { sale ->
+                    sale.products.products.sumOf { product ->
+                        if (product.priceCost > VALUE_ZERO_DOUBLE) {
+                            (product.price - product.priceCost) * product.quantity
+                        } else {
+                            VALUE_ZERO_DOUBLE
+                        }
+                    }
+                }
+            }.filter { map -> map.value > VALUE_ZERO_DOUBLE }
+
+            emit(Result.Success(data = monthlyProfits))
+        }.onStart {
+            emit(Result.Loading)
+        }.catch {
+            emit(Result.Error(it))
+        }.flowOn(dispatchers.io())
 }

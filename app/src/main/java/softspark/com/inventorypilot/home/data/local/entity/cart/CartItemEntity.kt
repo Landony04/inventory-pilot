@@ -10,6 +10,7 @@ data class CartItemEntity(
     val productId: String,
     val quantity: Int,
     val price: Double,
+    val priceCost: Double,
     val totalAmount: Double,
     val productName: String
 )

@@ -70,4 +70,10 @@
             app:argType="string"
             app:nullable="false" />
     </fragment>
+
+    <fragment
+        android:id="@+id/navigation_see_profits"
+        android:name="softspark.com.inventorypilot.home.presentation.ui.profits.ProfitsFragment"
+        android:label="@string/text_title_see_profits"
+        tools:layout="@layout/fragment_profits" />
 </navigation>
